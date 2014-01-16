@@ -1,12 +1,19 @@
 #!/bin/bash
 
+# global settings
+# set -o nounset
+set -o errexit
+
 # build TiddlyWiki5 for tiddlywiki.com
 
+# get command path info 
 ARG0=$(basename $0 .sh)
 ARG0DIR=$(dirname $0)
 [ $ARG0DIR == "." ] && ARG0DIR=$PWD 
 
 # Set up the build output directory
+# You can set a custom environment variable in your .bashrc to overwrite the default setting.
+# With the "-d Option" this setting can be overwritten too. The command line Option will win!
 if [ -z "$TW5_BUILD_OUTPUT" ]; then
     TW5_BUILD_OUTPUT=../jermolene.github.com
 fi
@@ -15,24 +22,19 @@ if [ -z "$TW5_CNAME" ]; then
     TW5_CNAME=tiddlywiki.com
 fi
 
-if [  ! -d "$TW5_BUILD_OUTPUT" ]; then
+if [ ! -d "$TW5_BUILD_OUTPUT" ]; then
+    echo TW5_BUILD_OUTPUT is ["$TW5_BUILD_OUTPUT"]
     echo 'A valid TW5_BUILD_OUTPUT environment variable must be set'
     exit 1
 fi
 
-# global settings
-set -o nounset
-set -o errexit
-
-
-# Create the CNAME file that GitHub Pages requires
-cname () {
-	echo $TW5_CNAME > $TW5_BUILD_OUTPUT/CNAME
-}
-
+# Create output directory and do some cleaning.
 init() {
+	_log "TW5_BUILD_OUTPUT directory created on demand: [$TW5_BUILD_OUTPUT]"
+	mkdir -p "$TW5_BUILD_OUTPUT"
+
 	# create the CNAME file for GitHub pages
-	cname
+	echo $TW5_CNAME > "$TW5_BUILD_OUTPUT"/CNAME
 
 	# Create the `static` directories if necessary
 	# Delete any existing content .. no error message
@@ -98,6 +100,9 @@ e () {
 	encrypted
 }
 
+# -------- all editions below could be optimized --------
+# TODO
+
 # tahoelafs.html: empty wiki with plugin for Tahoe-LAFS
 tahoe () {
 	_log "create tahoelafs.html"
@@ -146,7 +151,7 @@ md () {
 
 # highlightdemo.html: wiki to demo highlight plugin
 highlight () {
-	_log "create highlightdemo.html (???????? author ???????)"
+	_log "create highlightdemo.html"
 	node ./tiddlywiki.js \
 		./editions/highlightdemo \
 		--verbose \
@@ -167,12 +172,11 @@ tests () {
 		|| exit 1
 }
 
-# helper functions
-
+# ---- helper functions ----
 _log () {
 	echo
 	echo "---> $1"
-	echo "---> using [$TW5_BUILD_OUTPUT] as TW5_BUILD_OUTPUT directory!"
+#	echo "---> using [$TW5_BUILD_OUTPUT] as TW5_BUILD_OUTPUT directory!"
 }
 
 version () {
@@ -202,12 +206,15 @@ help() {
 	echo $'\t'cm, codemirror $'\t' .. codemirror demo. see: http://tiddlywiki.com/codemirrordemo.html
 	echo $'\t'md, markdown $'\t'   .. markdown demo. see: http://tiddlywiki.com/markdowndemo.html
 	echo $'\t'hl, highlight $'\t'  .. code highlighting demo. see: ????
+	echo $'\t'serve $'\t'$'\t'     .. start the dev server [port] [username] [password] [custom IP]. 
+	echo $'\t'$'\t'$'\t'     .. default IP is 127.0.0.1 
 	echo
 	echo Options:
 	echo
-	echo $'\t'-e .. Specify any Edition to load from.
-	echo $'\t'-d .. Output Directory for the compiled file.
-	echo $'\t'-o .. "Output file name (.html will be added by the script)"
+	echo $'\t'-e .. Editions path. Can be relative. default: ./editions
+	echo $'\t'-d .. Output Directory for the compiled file. default: ../jermolene.github.com
+	echo $'\t'-o .. "Output file name. default: [Editions name].html"
+	echo $'\t'-c .. CNAME needed for GitHub pages. default: tiddlywiki.com
 	echo
 	echo $'\t'-v .. Version
 	echo $'\t'-h .. Help
@@ -220,6 +227,7 @@ error() {
     exit 1
 }
 
+# create all files
 all () {
 	tw5com		# contains index
 	encrypted
@@ -233,13 +241,46 @@ all () {
 	tests
 }
 
+custom () {
+	# define default variables
+	[ -z $TW5_EDITION_DIR ] && TW5_EDITION_DIR=./editions
+	[ -z $TW5_EDITION ] && TW5_EDITION=custom
+	[ -z $TW5_OUTFILE ] && TW5_OUTFILE="$TW5_EDITION".html
+	
+	_log "create custom build / edition"
+	
+	node ./tiddlywiki.js \
+		"$TW5_EDITION_DIR"/"$TW5_EDITION" \
+		--verbose \
+		--rendertiddler $:/core/save/all "$TW5_BUILD_OUTPUT"/"$TW5_OUTFILE" text/plain \
+		--savetiddler $:/favicon.ico $TW5_BUILD_OUTPUT/favicon.ico \
+		|| exit 1
+}
+
+# start the server
+# TODO ... remove the hardcoded params.
+serve () {
+	node ./tiddlywiki.js \
+		./editions/clientserver \
+		--verbose \
+		--server 8080 $:/core/save/all text/plain text/html $1 $2 $3 \
+		|| exit 1
+}
+
 # the handler
-while getopts vhe:d:o: flag
+while getopts vhe:d:o:c: flag
 do
     case "$flag" in
-    (e) EDITION="$OPTARG";;
-    (d) TW5_BUILD_OUTPUT="$OPTARG";;
-    (o) OUTFILE="$OPTARG";;
+    (e) TW5_EDITION_DIR="$OPTARG"
+		#echo $TW5_EDITION_DIR
+		;;
+    (d) TW5_BUILD_OUTPUT="$OPTARG"
+		#echo $TW5_BUILD_OUTPUT
+		;;
+    (o) TW5_OUTFILE="$OPTARG"
+		#echo $TW5_OUTFILE
+		;;
+    (c) TW5_CNAME="$OPTARG";;
     (h) help; exit 0;;
     (v) version; exit 0;;
     (*) help
