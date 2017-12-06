@@ -222,14 +222,14 @@ Widget.prototype.computeAttributes = function() {
 		self = this,
 		value;
 	$tw.utils.each(this.parseTreeNode.attributes,function(attribute,name) {
-		if(attribute.type === "filtered") {
+		if(attribute.type === "string") {
+			value = attribute.value;
+		}else if(attribute.type === "filtered") {
 			value = self.wiki.filterTiddlers(attribute.filter,self)[0] || "";
 		} else if(attribute.type === "indirect") {
 			value = self.wiki.getTextReference(attribute.textReference,"",self.getVariable("currentTiddler"));
 		} else if(attribute.type === "macro") {
 			value = self.getVariable(attribute.value.name,{params: attribute.value.params});
-		} else { // String attribute
-			value = attribute.value;
 		}
 		// Check whether the attribute has changed
 		if(self.attributes[name] !== value) {
