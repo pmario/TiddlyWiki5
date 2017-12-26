@@ -177,7 +177,7 @@ RevealWidget.prototype.refresh = function(changedTiddlers) {
 				refreshed = true;
 			}
 		}
-		return this.refreshChildren(changedTiddlers) || refreshed;
+		return refreshed || this.refreshChildren(changedTiddlers);
 	}
 };
 
