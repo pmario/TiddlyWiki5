@@ -30,27 +30,30 @@ RevealWidget.prototype.render = function(parent,nextSibling) {
 	this.parentDomNode = parent;
 	this.computeAttributes();
 	this.execute();
-	var tag = this.parseTreeNode.isBlock ? "div" : "span";
-	if(this.revealTag && $tw.config.htmlUnsafeElements.indexOf(this.revealTag) === -1) {
-		tag = this.revealTag;
+
+	if (this.isOpen || (this.retain === "yes")) {
+		var tag = this.parseTreeNode.isBlock ? "div" : "span";
+		if(this.revealTag && $tw.config.htmlUnsafeElements.indexOf(this.revealTag) === -1) {
+			tag = this.revealTag;
+		}
+		var domNode = this.document.createElement(tag);
+//		var classes = this["class"].split(" ") || [];
+//		classes.push("tc-reveal");
+//		domNode.className = classes.join(" ");
+		if(this.style) {
+			domNode.setAttribute("style",this.style);
+		}
+		parent.insertBefore(domNode,nextSibling);
+		this.renderChildren(domNode,null);
+		if(!domNode.isTiddlyWikiFakeDom && this.type === "popup" && this.isOpen) {
+			this.positionPopup(domNode);
+			$tw.utils.addClass(domNode,"tc-popup"); // Make sure that clicks don't dismiss popups within the revealed content
+		}
+		if(!this.isOpen) {
+			domNode.setAttribute("hidden","true");
+		}
+		this.domNodes.push(domNode);
 	}
-	var domNode = this.document.createElement(tag);
-	var classes = this["class"].split(" ") || [];
-	classes.push("tc-reveal");
-	domNode.className = classes.join(" ");
-	if(this.style) {
-		domNode.setAttribute("style",this.style);
-	}
-	parent.insertBefore(domNode,nextSibling);
-	this.renderChildren(domNode,null);
-	if(!domNode.isTiddlyWikiFakeDom && this.type === "popup" && this.isOpen) {
-		this.positionPopup(domNode);
-		$tw.utils.addClass(domNode,"tc-popup"); // Make sure that clicks don't dismiss popups within the revealed content
-	}
-	if(!this.isOpen) {
-		domNode.setAttribute("hidden","true");
-	}
-	this.domNodes.push(domNode);
 };
 
 RevealWidget.prototype.positionPopup = function(domNode) {
