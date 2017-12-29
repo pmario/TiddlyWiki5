@@ -40,6 +40,7 @@ RevealWidget.prototype.render = function(parent,nextSibling) {
 //		var classes = this["class"].split(" ") || [];
 //		classes.push("tc-reveal");
 //		domNode.className = classes.join(" ");
+		domNode.className = this["class"];
 		if(this.style) {
 			domNode.setAttribute("style",this.style);
 		}
