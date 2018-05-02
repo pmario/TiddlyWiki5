@@ -16,6 +16,26 @@ to the current URL, such as a WebDAV server.
 "use strict";
 
 /*
+Retrieve ETag if available
+*/
+var RetrieveETag = function(self) {
+	var headers = { "Accept": "*/*;charset=UTF-8" };
+	var xxEtag;
+	$tw.utils.httpRequest({
+		url: self.uri(),
+		type: "HEAD",
+		headers: headers,
+		callback: function(err, data, xhr) {
+			if(!err) {
+				xxEtag = xhr.getResponseHeader("ETag").replace(/^W\//,"");
+				self.etag = xxEtag;//xhr.getResponseHeader("ETag");
+			}
+		}
+	});
+};
+
+
+/*
 Select the appropriate saver module and set it up
 */
 var PutSaver = function(wiki) {
@@ -34,18 +54,7 @@ var PutSaver = function(wiki) {
 			}
 		}
 	});
-	// Retrieve ETag if available
-	var headers = { "Content-Type": "*/*;charset=UTF-8" };
-	$tw.utils.httpRequest({
-		url: uri,
-		type: "HEAD",
-		headers: headers,
-		callback: function(err, data, xhr) {
-			if(!err) {
-				self.etag = xhr.getResponseHeader("ETag");
-			}
-		}
-	});
+	RetrieveETag(this);
 };
 
 PutSaver.prototype.uri = function() {
@@ -71,15 +80,20 @@ PutSaver.prototype.save = function(text, method, callback) {
 		data: text,
 		callback: function(err, data, xhr) {
 			if(err) {
-				callback(err);
-			} else if(xhr.status === 200 || xhr.status === 201) {
-				self.etag = xhr.getResponseHeader("ETag");
-				callback(null); // success
-			} else if(xhr.status === 412) { // edit conflict
-				var message = $tw.language.getString("Error/EditConflict");
-				callback(message);
+				// response is textual: "XMLHttpRequest error code: 412"
+				const status = Number(err.substring(err.indexOf(':') + 2, err.length))
+				if(status === 412) { // edit conflict
+					var message = $tw.language.getString("Error/EditConflict");
+					callback(message);
+				} else {
+					callback(err); // fail
+				}
 			} else {
-				callback(xhr.responseText); // fail
+				self.etag = xhr.getResponseHeader("ETag");
+				if (self.etag == null) {
+					RetrieveETag(self);
+				}
+				callback(null); // success
 			}
 		}
 	});
