@@ -35,9 +35,11 @@ var PutSaver = function(wiki) {
 		}
 	});
 	// Retrieve ETag if available
+	var headers = { "Content-Type": "*/*;charset=UTF-8" };
 	$tw.utils.httpRequest({
 		url: uri,
 		type: "HEAD",
+		headers: headers,
 		callback: function(err, data, xhr) {
 			if(!err) {
 				self.etag = xhr.getResponseHeader("ETag");
