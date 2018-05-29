@@ -6,19 +6,13 @@ tc-page-container tc-page-view-$(themeTitle)$ tc-language-$(languageTitle)$
 
 <$importvariables filter="[[$:/core/ui/PageMacros]] [all[shadows+tiddlers]tag[$:/tags/Macro]!has[draft.of]]">
 
-<$set name="tv-config-toolbar-icons" value={{$:/config/Toolbar/Icons}}>
-
-<$set name="tv-config-toolbar-text" value={{$:/config/Toolbar/Text}}>
-
-<$set name="tv-config-toolbar-class" value={{$:/config/Toolbar/ButtonClass}}>
-
-<$set name="themeTitle" value={{$:/view}}>
-
-<$set name="currentTiddler" value={{$:/language}}>
-
-<$set name="languageTitle" value={{!!name}}>
-
-<$set name="currentTiddler" value="">
+<$vars tv-config-toolbar-icons={{$:/config/Toolbar/Icons}} 
+tv-config-toolbar-text={{$:/config/Toolbar/Text}}
+tv-config-toolbar-class={{$:/config/Toolbar/ButtonClass}}
+themeTitle={{$:/view}}
+currentTiddler={{$:/language}}
+languageTitle={{!!name}}
+currentTiddler="">
 
 <div class=<<containerClasses>>>
 
@@ -38,18 +32,6 @@ tc-page-container tc-page-view-$(themeTitle)$ tc-language-$(languageTitle)$
 
 </div>
 
-</$set>
-
-</$set>
-
-</$set>
-
-</$set>
-
-</$set>
-
-</$set>
-
-</$set>
+</$vars>
 
 </$importvariables>
