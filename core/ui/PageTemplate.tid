@@ -20,11 +20,7 @@ currentTiddler="">
 
 <$dropzone>
 
-<$list filter="[all[shadows+tiddlers]tag[$:/tags/PageTemplate]!has[draft.of]]" variable="listItem">
-
-<$transclude tiddler=<<listItem>>/>
-
-</$list>
+<$transclude tiddler="$:/tags/PageTemplate"/>
 
 </$dropzone>
 
