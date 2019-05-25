@@ -1,0 +1,13 @@
+created: 20190513121635167
+modified: 20190513122112078
+tags: $:/tags/Stylesheet
+title: toc-style
+type: text/vnd.tiddlywiki
+
+.tc-table-of-contents .toc-item-selected >a {
+  color: red;
+}
+
+.tc-sidebar-lists a.toc-item-selected {
+  color: blue;
+}

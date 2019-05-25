@@ -1,0 +1,8 @@
+created: 20190514104521505
+description: This thiddler allows plugins to define the "focused-tiddler" setting
+modified: 20190514105054753
+tags: 
+title: $:/core/macros/toc/item-class
+type: text/vnd.tiddlywiki
+
+[all[current]]-[<tv-history-list>get[current-tiddler]]

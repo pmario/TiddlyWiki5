@@ -1,0 +1,9 @@
+created: 20190517120948716
+modified: 20190517121113392
+title: $:/core/macros/toc/template/external-link
+type: text/vnd.tiddlywiki
+
+<$linkcatcher story="$:/StoryList" history="$:/HistoryList" >
+<h1><<toc-caption>></h1>
+<$transclude mode="block"></$transclude>
+</$linkcatcher>

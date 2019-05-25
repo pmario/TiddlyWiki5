@@ -1,0 +1,32 @@
+created: 20190517102716895
+modified: 20190517152431207
+tags: 
+title: test-tabbed-internal
+type: text/vnd.tiddlywiki
+
+\define toc-tabbed-external-nav(tag,sort:"",unselectedText,missingText,template:"$:/core/macros/toc/template/external-link")
+<$macrocall $name="toc-tabbed-internal-nav" tag=<<__tag__>> sort=<<__sort__>> unselectedText=<<__unselectedText__>> missingText=<<__missingText__>> template=<<__template__>> />
+\end
+
+\define toc-tabbed-internal-nav(tag,sort:"",unselectedText,missingText,template:"$:/core/macros/toc/template/internal-link")
+\whitespace trim
+<$navigator story=<<qualify "$:/StoryList">> history=<<qualify "$:/state/popup/HistoryList">> openLinkFromInsideRiver=below openLinkFromOutsideRiver=bottom}}>
+<$linkcatcher message="tm-close-other-tiddlers" >
+  <div class="tc-tabbed-table-of-contents">
+      <div class="tc-table-of-contents">
+        <$macrocall $name="toc-selective-expandable" tag=<<__tag__>> sort=<<__sort__>>/>
+      </div>
+    <div class="tc-tabbed-table-of-contents-content">
+          <$list filter="[list<tv-story-list>]" history=<<tv-history-list>> template=<<__template__>> emptyMessage=<<__unselectedText__>>/>
+    </div>
+  </div>
+</$linkcatcher>
+</$navigator>
+\end
+
+
+<$macrocall
+	$name="toc-tabbed-internal-nav"
+	tag="TableOfContents"
+	unselectedText="<p>Select a topic in the table of contents. Click the arrow to expand a topic.</p>"
+/>
