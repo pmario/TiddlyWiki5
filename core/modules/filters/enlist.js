@@ -16,7 +16,10 @@ Filter operator returning its operand parsed as a list
 Export our filter function
 */
 exports.enlist = function(source,operator,options) {
-	var allowDuplicates = false;
+	var allowDuplicates = false,
+		createFilter = false;
+	var list = [];
+	
 	switch(operator.suffix) {
 		case "raw":
 			allowDuplicates = true;
@@ -24,8 +27,12 @@ exports.enlist = function(source,operator,options) {
 		case "dedupe":
 			allowDuplicates = false;
 			break;
+		case "text":
+			allowDuplicates = false;
+			createFilter=true;
+			break;
 	}
-	var list = $tw.utils.parseStringArray(operator.operand,allowDuplicates);
+	list = (createFilter) ? $tw.utils.parseFilterArray(operator.operand,allowDuplicates) : $tw.utils.parseStringArray(operator.operand,allowDuplicates);
 	if(operator.prefix === "!") {
 		var results = [];
 		source(function(tiddler,title) {

@@ -353,6 +353,31 @@ $tw.utils.parseStringArray = function(value, allowDuplicate) {
 	}
 };
 
+// Parse a string field and return a filter-array. For example "OneTiddler [[Another Tiddler]] [subfilter{$:/DefaultTiddlers}]]"
+// It will return a filter in results["OneTiddler", "[[Another Tiddler]]" "[subfilter{$:/DefaultTiddlers}]]"]
+$tw.utils.parseFilterArray = function(value, allowDuplicate) {
+	if(typeof value === "string") {
+		var memberRegExp = /[+|\-|~]?([[](?:[^\]])*\]+)|([+|-|~|\S]\S*)/mg,
+			results = [], names = {},
+			match;
+		do {
+			match = memberRegExp.exec(value);
+			if(match) {
+				var item = match[1] || match[2];
+				if(item !== undefined && (!$tw.utils.hop(names,item) || allowDuplicate)) {
+					results.push(item);
+					names[item] = true;
+				}
+			}
+		} while(match);
+		return results;
+	} else if($tw.utils.isArray(value)) {
+		return value;
+	} else {
+		return null;
+	}
+};
+
 // Parse a block of name:value fields. The `fields` object is used as the basis for the return value
 $tw.utils.parseFields = function(text,fields) {
 	fields = fields || Object.create(null);
