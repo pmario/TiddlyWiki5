@@ -9,7 +9,7 @@ Filter operator returning its operand parsed as a list
 (function(){
 
 /*jslint node: true, browser: true */
-/*global $tw: false */
+/*global $tw: false, exports: false */
 "use strict";
 
 /*

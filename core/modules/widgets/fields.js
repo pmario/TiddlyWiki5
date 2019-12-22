@@ -3,13 +3,13 @@ title: $:/core/modules/widgets/fields.js
 type: application/javascript
 module-type: widget
 
-Fields widget
+unifields widget, derived from Fields Widget
 
 \*/
 (function(){
 
 /*jslint node: true, browser: true */
-/*global $tw: false */
+/*global $tw: false, require:false, exports:false */
 "use strict";
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
@@ -42,44 +42,55 @@ FieldsWidget.prototype.execute = function() {
 	// Get parameters from our attributes
 	this.tiddlerTitle = this.getAttribute("tiddler",this.getVariable("currentTiddler"));
 	this.template = this.getAttribute("template");
+	this.sort = this.getAttribute("sort","yes") === "yes";
 	this.exclude = this.getAttribute("exclude");
+	this.include = this.getAttribute("include",null);
 	this.stripTitlePrefix = this.getAttribute("stripTitlePrefix","no") === "yes";
+	this.sortReverse = this.getAttribute("sortReverse","no") === "yes";
 	// Get the value to display
 	var tiddler = this.wiki.getTiddler(this.tiddlerTitle);
-	// Get the exclusion list
-	var exclude;
-	if(this.exclude) {
-		exclude = this.exclude.split(" ");
-	} else {
-		exclude = ["text"]; 
-	}
+
+	// Get the inclusion and exclusion list
+	var exclude = (this.exclude) ? this.exclude.split(" ") : ["text"];
+	// If inclusion is defined, everything else is auto excluded
+	var include = (this.include) ? this.include.split(" ") : null;
+
 	// Compose the template
 	var text = [];
 	if(this.template && tiddler) {
 		var fields = [];
-		for(var fieldName in tiddler.fields) {
-			if(exclude.indexOf(fieldName) === -1) {
-				fields.push(fieldName);
+		if (include) {
+			for(var i=0; i<include.length; i++) {
+				if(tiddler.fields[include[i]]) {
+					fields.push(include[i]);
+				}
+			}
+		} else {
+			for(var fieldName in tiddler.fields) {
+				if(exclude.indexOf(fieldName) === -1) {
+					fields.push(fieldName);
+				}
 			}
 		}
-		fields.sort();
-		for(var f=0; f<fields.length; f++) {
+		if (this.sort) fields.sort();
+		if (this.sortReverse) fields.reverse();
+		for(var f=0, fmax=fields.length; f<fmax; f++) {
 			fieldName = fields[f];
-			if(exclude.indexOf(fieldName) === -1) {
-				var row = this.template,
-					value = tiddler.getFieldString(fieldName);
-				if(this.stripTitlePrefix && fieldName === "title") {
-					var reStrip = /^\{[^\}]+\}(.+)/mg,
-						reMatch = reStrip.exec(value);
-					if(reMatch) {
-						value = reMatch[1];
-					}
+//			if(exclude.indexOf(fieldName) === -1) {
+			var row = this.template,
+				value = tiddler.getFieldString(fieldName);
+			if(this.stripTitlePrefix && fieldName === "title") {
+				var reStrip = /^\{[^\}]+\}(.+)/mg,
+					reMatch = reStrip.exec(value);
+				if(reMatch) {
+					value = reMatch[1];
 				}
-				row = $tw.utils.replaceString(row,"$name$",fieldName);
-				row = $tw.utils.replaceString(row,"$value$",value);
-				row = $tw.utils.replaceString(row,"$encoded_value$",$tw.utils.htmlEncode(value));
-				text.push(row);
 			}
+			row = $tw.utils.replaceString(row,"$name$",fieldName);
+			row = $tw.utils.replaceString(row,"$value$",value);
+			row = $tw.utils.replaceString(row,"$encoded_value$",$tw.utils.htmlEncode(value));
+			text.push(row);
+//			}
 		}
 	}
 	this.text = text.join("");
@@ -94,10 +105,10 @@ FieldsWidget.prototype.refresh = function(changedTiddlers) {
 		this.refreshSelf();
 		return true;
 	} else {
-		return false;	
+		return false;
 	}
 };
 
-exports.fields = FieldsWidget;
+exports["fields"] = FieldsWidget;
 
 })();

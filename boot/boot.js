@@ -11,7 +11,7 @@ On the server this file is executed directly to boot TiddlyWiki. In the browser,
 var _boot = (function($tw) {
 
 /*jslint node: true, browser: true */
-/*global modules: false, $tw: false */
+/*global require:false, document:false, console:false, window:false, process:false*/
 "use strict";
 
 // Include bootprefix if we're not given module data
@@ -127,7 +127,7 @@ $tw.utils.each = function(object,callback) {
 				if(next === false) {
 					break;
 				}
-		    }
+			}
 		} else {
 			var keys = Object.keys(object);
 			for (f=0, length=keys.length; f<length; f++) {
