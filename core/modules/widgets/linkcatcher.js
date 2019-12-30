@@ -9,7 +9,7 @@ Linkcatcher widget
 (function(){
 
 /*jslint node: true, browser: true */
-/*global $tw: false */
+/*global $tw: false, require:false, exports:false */
 "use strict";
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
@@ -40,12 +40,24 @@ LinkCatcherWidget.prototype.render = function(parent,nextSibling) {
 Compute the internal state of the widget
 */
 LinkCatcherWidget.prototype.execute = function() {
+	var self = this;
 	// Get our parameters
 	this.catchTo = this.getAttribute("to");
 	this.catchMessage = this.getAttribute("message");
 	this.catchSet = this.getAttribute("set");
 	this.catchSetTo = this.getAttribute("setTo");
 	this.catchActions = this.getAttribute("actions");
+	this.variables = {};
+
+	// keys from above are usedKeys and need to be excluded.
+	// Extend this array, if the above elements are changed!
+	var usedKeys = ["to", "message", "set", "setTo", "actions"];
+	
+	$tw.utils.each(this.attributes,function(val,key) {
+		if(usedKeys.indexOf(key) === -1 ) {
+			self.variables[key] = val;
+		}
+	});
 	// Construct the child widgets
 	this.makeChildWidgets();
 	// When executing actions we avoid trapping navigate events, so that we don't trigger ourselves recursively
@@ -61,7 +73,7 @@ LinkCatcherWidget.prototype.refresh = function(changedTiddlers) {
 		this.refreshSelf();
 		return true;
 	} else {
-		return this.refreshChildren(changedTiddlers);		
+		return this.refreshChildren(changedTiddlers);
 	}
 };
 
@@ -78,7 +90,8 @@ LinkCatcherWidget.prototype.handleNavigateEvent = function(event) {
 			this.parentWidget.dispatchEvent({
 				type: this.catchMessage,
 				param: event.navigateTo,
-				navigateTo: event.navigateTo
+				navigateTo: event.navigateTo,
+				variables: this.variables
 			});
 		}
 		if(this.catchSet) {
@@ -95,7 +108,8 @@ LinkCatcherWidget.prototype.handleNavigateEvent = function(event) {
 		this.parentWidget.dispatchEvent({
 			type: "tm-navigate",
 			param: event.navigateTo,
-			navigateTo: event.navigateTo
+			navigateTo: event.navigateTo,
+			variables: event.variables
 		});
 	}
 	return false;
