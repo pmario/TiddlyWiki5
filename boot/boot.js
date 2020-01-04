@@ -313,11 +313,14 @@ $tw.utils.parseDate = function(value) {
 
 // Stringify an array of tiddler titles into a list string
 $tw.utils.stringifyList = function(value) {
+	var filterStart = "[+-~";
 	if($tw.utils.isArray(value)) {
 		var result = new Array(value.length);
 		for(var t=0, l=value.length; t<l; t++) {
 			var entry = value[t] || "";
-			if(entry.indexOf(" ") !== -1) {
+			if(filterStart.indexOf(entry[0]) !== -1) {
+				result[t] = entry;
+			} else if(entry.indexOf(" ") !== -1) {
 				result[t] = "[[" + entry + "]]";
 			} else {
 				result[t] = entry;
@@ -357,7 +360,7 @@ $tw.utils.parseStringArray = function(value, allowDuplicate) {
 // It will return a filter in results["OneTiddler", "[[Another Tiddler]]" "[subfilter{$:/DefaultTiddlers}]]"]
 $tw.utils.parseFilterArray = function(value, allowDuplicate) {
 	if(typeof value === "string") {
-		var memberRegExp = /[+|\-|~]?([[](?:[^\]])*\]+)|([+|-|~|\S]\S*)/mg,
+		var memberRegExp = /([+|\-|~]?[[](?:[^\]])*\]+)|([+|-|~|\S]\S*)/mg,
 			results = [], names = {},
 			match;
 		do {
