@@ -19,14 +19,15 @@ Information about this macro
 exports.name = "qualify";
 
 exports.params = [
-	{name: "title"}
+	{name: "title"},
+	{name: "name"},
 ];
 
 /*
 Run the macro
 */
-exports.run = function(title) {
-	return title + "-" + this.getStateQualifier();
+exports.run = function(title,name) {
+	return title + "-" + this.getStateQualifier(name);
 };
 
 })();
