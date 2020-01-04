@@ -9,7 +9,7 @@ Set variable widget
 (function(){
 
 /*jslint node: true, browser: true */
-/*global $tw: false */
+/*global $tw: false, require:false, exports:false  */
 "use strict";
 
 var Widget = require("$:/core/modules/widgets/widget.js").widget;
@@ -84,7 +84,7 @@ SetWidget.prototype.getValue = function() {
 			if(select !== undefined) {
 				value = results[select] || "";
 			} else {
-				value = $tw.utils.stringifyList(results);			
+				value = $tw.utils.stringifyList(results);
 			}
 		}
 		if(results.length === 0 && this.setEmptyValue !== undefined) {
@@ -102,7 +102,7 @@ Selectively refreshes the widget if needed. Returns true if the widget or any of
 SetWidget.prototype.refresh = function(changedTiddlers) {
 	var changedAttributes = this.computeAttributes();
 	if(changedAttributes.name || changedAttributes.filter || changedAttributes.select || changedAttributes.tiddler || (this.setTiddler && changedTiddlers[this.setTiddler]) || changedAttributes.field || changedAttributes.index || changedAttributes.value || changedAttributes.emptyValue ||
-	   (this.setFilter && this.getValue() != this.variables[this.setName].value)) {
+		(this.setFilter && this.getValue() != this.variables[this.setName].value)) {
 		this.refreshSelf();
 		return true;
 	} else {
