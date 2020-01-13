@@ -20,14 +20,16 @@ exports.name = "qualify";
 
 exports.params = [
 	{name: "title"},
-	{name: "name"},
+	{name: "uniqueTitle"}
 ];
 
 /*
 Run the macro
 */
-exports.run = function(title,name) {
-	return title + "-" + this.getStateQualifier(name);
+exports.run = function(title,uniqueTitle) {
+	var unique = uniqueTitle === "yes" || false;
+	if (unique) return title
+	else return title + "-" + this.getStateQualifier(name);
 };
 
 })();
