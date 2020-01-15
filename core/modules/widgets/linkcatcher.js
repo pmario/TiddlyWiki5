@@ -36,6 +36,8 @@ LinkCatcherWidget.prototype.render = function(parent,nextSibling) {
 	this.renderChildren(parent,nextSibling);
 };
 
+var ATTRIBUTES = ["to","message","set","setTo","actions"];
+
 /*
 Compute the internal state of the widget
 */
@@ -57,11 +59,11 @@ Selectively refreshes the widget if needed. Returns true if the widget or any of
 */
 LinkCatcherWidget.prototype.refresh = function(changedTiddlers) {
 	var changedAttributes = this.computeAttributes();
-	if(changedAttributes.to || changedAttributes.message || changedAttributes.set || changedAttributes.setTo) {
+	if($tw.utils.count(changedAttributes) > 0) {
 		this.refreshSelf();
 		return true;
 	} else {
-		return this.refreshChildren(changedTiddlers);		
+		return this.refreshChildren(changedTiddlers);
 	}
 };
 
@@ -69,6 +71,12 @@ LinkCatcherWidget.prototype.refresh = function(changedTiddlers) {
 Handle a tm-navigate event
 */
 LinkCatcherWidget.prototype.handleNavigateEvent = function(event) {
+	var paramObject = event.paramObject || {};
+	$tw.utils.each(this.attributes,function(attribute,name) {
+		if(ATTRIBUTES.indexOf(name) === -1) {
+			paramObject[name] = attribute;
+		}
+	});
 	if(!this.executingActions) {
 		// Execute the actions
 		if(this.catchTo) {
@@ -78,7 +86,8 @@ LinkCatcherWidget.prototype.handleNavigateEvent = function(event) {
 			this.parentWidget.dispatchEvent({
 				type: this.catchMessage,
 				param: event.navigateTo,
-				navigateTo: event.navigateTo
+				navigateTo: event.navigateTo,
+				paramObject: paramObject
 			});
 		}
 		if(this.catchSet) {
@@ -95,7 +104,8 @@ LinkCatcherWidget.prototype.handleNavigateEvent = function(event) {
 		this.parentWidget.dispatchEvent({
 			type: "tm-navigate",
 			param: event.navigateTo,
-			navigateTo: event.navigateTo
+			navigateTo: event.navigateTo,
+			paramObject: paramObject
 		});
 	}
 	return false;
