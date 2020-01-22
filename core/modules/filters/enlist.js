@@ -17,7 +17,8 @@ Export our filter function
 */
 exports.enlist = function(source,operator,options) {
 	var allowDuplicates = false,
-		createFilter = false;
+		useFilterArray = false,
+		mode = "filter"; // default - detect filter string elements
 	var list = [];
 	
 	switch(operator.suffix) {
@@ -27,12 +28,17 @@ exports.enlist = function(source,operator,options) {
 		case "dedupe":
 			allowDuplicates = false;
 			break;
-		case "text":
-			allowDuplicates = false;
-			createFilter=true;
+		case "array":
+			allowDuplicates = true;
+			useFilterArray = true;
+			break;
+		case "stringify":
+			allowDuplicates = true;
+			useFilterArray = true;
+			mode = "stringify";
 			break;
 	}
-	list = (createFilter) ? $tw.utils.parseFilterArray(operator.operand,allowDuplicates) : $tw.utils.parseStringArray(operator.operand,allowDuplicates);
+	list = (useFilterArray) ? $tw.utils.parseFilterArray(operator.operand,allowDuplicates,mode) : $tw.utils.parseStringArray(operator.operand,allowDuplicates);
 	if(operator.prefix === "!") {
 		var results = [];
 		source(function(tiddler,title) {

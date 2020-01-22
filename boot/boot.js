@@ -313,7 +313,7 @@ $tw.utils.parseDate = function(value) {
 
 // Stringify an array of tiddler titles into a list string
 $tw.utils.stringifyList = function(value) {
-	var filterStart = "[+-~";
+	var filterStart = "[+-~=";
 	if($tw.utils.isArray(value)) {
 		var result = new Array(value.length);
 		for(var t=0, l=value.length; t<l; t++) {
@@ -358,15 +358,22 @@ $tw.utils.parseStringArray = function(value, allowDuplicate) {
 
 // Parse a string field and return a filter-array. For example "OneTiddler [[Another Tiddler]] [subfilter{$:/DefaultTiddlers}]]"
 // It will return a filter in results["OneTiddler", "[[Another Tiddler]]" "[subfilter{$:/DefaultTiddlers}]]"]
-$tw.utils.parseFilterArray = function(value, allowDuplicate) {
+$tw.utils.parseFilterArray = function(value, allowDuplicate, mode) {
+	var item;
 	if(typeof value === "string") {
-		var memberRegExp = /([+|\-|~]?[[](?:[^\]])*\]+)|([+|-|~|\S]\S*)/mg,
+//		var memberRegExp = /([+|\-|~]?[[](?:[^\]])*\]+)|([+|-|~|\S]\S*)/mg,
+		var memberRegExp = /\[\[((?:[^\]])*)\]\]|["']((?:[^\]"'])*)["']|(\[?\[.*?[\]|\>|}]\])|([+|\-|~|=]\[(?:[^\]])*[\]]+)|([+|\-|~|=]\S*)|([^[\s]?\S+)/mg,
 			results = [], names = {},
 			match;
 		do {
 			match = memberRegExp.exec(value);
 			if(match) {
-				var item = match[1] || match[2];
+				if ((match[1] || match[2]) && mode==="stringify") {
+					item = match[1] || match[2];
+					item = "[[" + item + "]]";
+				} else { // "filter mode is active""
+					item = match[1] || match[2] || match[3] || match[4] || match[5] || match[6];
+				}
 				if(item !== undefined && (!$tw.utils.hop(names,item) || allowDuplicate)) {
 					results.push(item);
 					names[item] = true;

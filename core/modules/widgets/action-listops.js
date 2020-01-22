@@ -74,7 +74,7 @@ ActionListopsWidget.prototype.invokeAction = function(triggeringWidget,
 			.filterTiddlers(this.filter, this)));
 	}
 	if(this.subfilter) {
-		var filterString = "[enlist:text{" + this.target + type + list + "}] " + this.subfilter;
+		var filterString = "[enlist:array{" + this.target + type + list + "}] " + this.subfilter;
 		this.wiki.setText(this.target, field, index, $tw.utils.stringifyList(
 			this.wiki.filterTiddlers(filterString, this)));
 	}
