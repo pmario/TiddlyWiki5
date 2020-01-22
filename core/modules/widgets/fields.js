@@ -3,7 +3,7 @@ title: $:/core/modules/widgets/fields.js
 type: application/javascript
 module-type: widget
 
-unifields widget, derived from Fields Widget
+Fields widget
 
 \*/
 (function(){
