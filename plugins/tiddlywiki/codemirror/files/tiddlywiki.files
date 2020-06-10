@@ -29,10 +29,10 @@
 				"module-type": "codemirror"
 			}
 		},{
-			"file": "addon/selection/activeline.js",
+			"file": "addon/selection/active-line.js",
 			"fields": {
 				"type": "application/javascript",
-				"title": "$:/plugins/tiddlywiki/codemirror/addon/selection/activeline.js",
+				"title": "$:/plugins/tiddlywiki/codemirror/addon/selection/active-line.js",
 				"module-type": "codemirror"
 			}
 		},{

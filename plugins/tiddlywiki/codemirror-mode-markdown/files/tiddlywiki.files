@@ -1,10 +1,17 @@
 {
 	"tiddlers": [
-{
+		{
 			"file": "mode/markdown/markdown.js",
 			"fields": {
 				"type": "application/javascript",
 				"title": "$:/plugins/tiddlywiki/codemirror/mode/markdown/markdown.js",
+				"module-type": "codemirror"
+			}
+		},{
+			"file": "mode/meta.js",
+			"fields": {
+				"type": "application/javascript",
+				"title": "$:/plugins/tiddlywiki/codemirror/mode/meta.js",
 				"module-type": "codemirror"
 			}
 		}

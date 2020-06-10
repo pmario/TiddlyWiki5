@@ -110,6 +110,7 @@ function CodeMirrorEngine(options) {
 		config["tabindex"] = this.widget.editTabIndex;
 	}
 	// Create the CodeMirror instance
+	options = {}; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! test
 	this.cm = window.CodeMirror(function(cmDomNode) {
 		// Note that this is a synchronous callback that is called before the constructor returns
 		if(!self.widget.document.isTiddlyWikiFakeDom) {
@@ -128,6 +129,14 @@ function CodeMirrorEngine(options) {
 	this.cm.on("keydown",function(cm,event) {
 		return self.widget.handleKeydownEvent.call(self.widget,event);
 	});
+	var charWidth = this.cm.defaultCharWidth(),
+		basePadding = 4;
+	this.cm.on("renderLine", function(cm, line, elt) {
+		var off = CodeMirror.countColumn(line.text, null, cm.getOption("tabSize")) * charWidth;
+        elt.style.textIndent = "-" + off + "px";
+        elt.style.paddingLeft = (basePadding + off) + "px";
+	});
+	this.cm.refresh();
 }
 
 /*
