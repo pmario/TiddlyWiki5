@@ -288,4 +288,95 @@ exports.parseAttribute = function(source,pos) {
 	return node;
 };
 
+	/*        -------------------- REMOVE DUPLICATED CODE !!!!!!!!!!! TODO ---------------*/
+	
+/*
+Look for an HTML attribute definition. Returns null if not found, otherwise returns {type: "attribute", name:, valueType: "string|indirect|macro", value:, start:, end:,}
+*/
+exports.parseAttribute = function(source,pos) {
+	var valueState = false;
+	var node = {
+		start: pos
+	};
+	// Define our regexps
+	var reAttributeName = /([^\/\s>"'=]+)/g,
+		reUnquotedAttribute = /([^\/\s<>"']+)/g,
+		reFilteredValue = /\{\{\{(.+?)\}\}\}/g,
+		reIndirectValue = /\{\{([^\}]+)\}\}/g;
+	// Skip whitespace
+	pos = $tw.utils.skipWhiteSpace(source,pos);
+	// Get the attribute name
+	var name = $tw.utils.parseTokenRegExp(source,pos,reAttributeName);
+	if(!name) {
+		return null;
+	}
+	node.name = name.match[1];
+	pos = name.end;
+	// Skip whitespace
+	pos = $tw.utils.skipWhiteSpace(source,pos);
+	// Look for an equals sign
+	var token = $tw.utils.parseTokenString(source,pos,"=");
+	if(token) {
+		valueState = true;
+		pos = token.end;
+		// Skip whitespace
+		pos = $tw.utils.skipWhiteSpace(source,pos);
+		// Look for a string literal
+		var stringLiteral = $tw.utils.parseStringLiteral(source,pos);
+		if(stringLiteral) {
+			pos = stringLiteral.end;
+			node.type = "string";
+			node.value = stringLiteral.value;
+		} else {
+			// Look for a filtered value
+			var filteredValue = $tw.utils.parseTokenRegExp(source,pos,reFilteredValue);
+			if(filteredValue) {
+				pos = filteredValue.end;
+				node.type = "filtered";
+				node.filter = filteredValue.match[1];
+			} else {
+				// Look for an indirect value
+				var indirectValue = $tw.utils.parseTokenRegExp(source,pos,reIndirectValue);
+				if(indirectValue) {
+					pos = indirectValue.end;
+					node.type = "indirect";
+					node.textReference = indirectValue.match[1];
+				} else {
+					// Look for a unquoted value
+					var unquotedValue = $tw.utils.parseTokenRegExp(source,pos,reUnquotedAttribute);
+					if(unquotedValue) {
+						if (unquotedValue.match[1].indexOf("=") !== -1) {
+							pos = token.end;
+							node.type = "string";
+							node.value = "true";
+							
+						} else {
+							pos = unquotedValue.end;
+							node.type = "string";
+							node.value = unquotedValue.match[1];
+						}
+					} else {
+						// Look for a macro invocation value
+						var macroInvocation = $tw.utils.parseMacroInvocation(source,pos);
+						if(macroInvocation) {
+							pos = macroInvocation.end;
+							node.type = "macro";
+							node.value = macroInvocation;
+						} else {
+							node.type = "string";
+							node.value = "true";
+						}
+					}
+				}
+			}
+		}
+	} else {
+		node.type = "string";
+		node.value = "true";
+	}
+	// Update the end position
+	node.end = pos;
+	return node;
+};
+
 })();
