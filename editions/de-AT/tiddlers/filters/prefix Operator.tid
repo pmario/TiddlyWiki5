@@ -1,8 +1,10 @@
 caption: prefix
 created: 20200619204002863
 creator: FBB
-modified: 20210519165510465
+example: [tag[task]!prefix[Go]] [prefix[$:/languages/]] [prefix[$:/]] [is[system]]
+modified: 20210713204420552
 modifier: FBB
+origin: prefix Operator
 op-input: eine [[Titelselektion]]
 op-neg-output: alle Eingabe-Titel, die ''nicht'' mit ''//{{!!op-parameter-name}}//'' beginnen
 op-output: alle Eingabe-Titel, die mit ''//{{!!op-parameter-name}}//'' beginnen
@@ -14,3 +16,7 @@ title: prefix Operator
 type: text/vnd.tiddlywiki
 
 Bei der Suche nach Übereinstimmungen für ''//{{!!op-parameter-name}}//'' wird Groß- und Kleinschreibung unterschieden.
+
+{{||$:/_fbb/Filter-Test}}
+
+{{||$:/_template/wikidokulink}}

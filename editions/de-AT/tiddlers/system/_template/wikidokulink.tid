@@ -1,0 +1,13 @@
+created: 20210716214635969
+creator: FBB
+description: Verwendung für die Erzeugung einen kompletten Eintrags. Dafür muss das Feld "origin" im Tiddler mit dem originalen Titel gefüllt sein.
+modified: 20210716221922282
+modifier: FBB
+origin: ~HelloThere
+tags: template
+title: $:/_template/wikidokulink
+type: text/vnd.tiddlywiki
+
+<<.hr>>
+
+Siehe: <<wikidokulink {{!!origin}}>> (englisch)

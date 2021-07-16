@@ -1,12 +1,11 @@
 created: 20210512185726967
 creator: FBB
-modified: 20210519132101231
+modified: 20210716220358895
 modifier: FBB
+origin: The Extended Listops Filters
 title: Erweiterte Listen-Filter-Operatoren
 type: text/vnd.tiddlywiki
 
-{{$fehlt}}
+{{$:/_template/fehlt}}
 
-<<.hr>>
-
-Siehe: <<wikidokulink "The Extended Listops Filters">> (englisch)
+{{||$:/_template/wikidokulink}}

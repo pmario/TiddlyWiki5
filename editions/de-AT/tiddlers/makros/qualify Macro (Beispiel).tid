@@ -1,11 +1,12 @@
 created: 20210512194742537
 creator: FBB
-modified: 20210519132101879
+modified: 20210716220445564
 modifier: FBB
+origin: qualify Macro (Examples)
 tags: [[Macro Examples]] [[qualify Makro]]
 title: qualify Macro (Beispiel)
 type: text/vnd.tiddlywiki
 
-{{$fehlt}}
+{{$:/_template/fehlt}}
 
-Siehe: <<wikidokulink "qualify Macro (Examples)">> (englisch)
+{{||$:/_template/wikidokulink}}

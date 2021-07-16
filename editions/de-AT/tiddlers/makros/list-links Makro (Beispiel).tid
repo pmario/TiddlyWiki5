@@ -1,55 +1,27 @@
 caption: list-links Makro (Beispiel)
 created: 20140923193202449
 creator: ChrisK
-modified: 20210519132101605
+modified: 20210713214141610
 modifier: FBB
 tags: [[list-links Makro]] [[Macro Examples]]
 title: list-links Makro (Beispiel)
 type: text/vnd.tiddlywiki
 
-!! Code
+!! Beispiel 1
 
-```
-<<list-links filter:"[tag[Was kann TiddlyWiki]]">>
-```
-
-
-!! Beispiel
-
-<<list-links filter:"[tag[Was kann TiddlyWiki]]">>
-
----
-
-"""
-
-"""
-
-!! Code 2
-
-```
-<<list-links filter:"[tag[Makros]!sort[title]]" type:"ol">>
-
-```
-
+<$macrocall $name='wikitext-example-without-html'
+src='<<list-links filter:"[tag[Was kann TiddlyWiki]]">>
+'/>
 
 !! Beispiel 2
 
-<<list-links filter:"[tag[Makros]!sort[title]]" type:"ol">>
-
----
-
-"""
-
-"""
-
-!! Code 3
-
-```
-<<list-links filter:"[!is[system]modifier[UserXYZ]sort[modified]]" "ul" "li" "list" "- Nothing listed -">>
-
-```
+<$macrocall $name='wikitext-example-without-html'
+src='<<list-links filter:"[tag[Was kann TiddlyWiki]]" type:"ol">>
+'/>
 
 
 !! Beispiel 3
 
-<<list-links filter:"[!is[system]modifier[UserXYZ]sort[modified]]" "ul" "li" "list" "- Nothing listed -">>
+<$macrocall $name='wikitext-example-without-html'
+src='<<list-links filter:"[!is[system]modifier[UserXYZ]sort[modified]]" "ul" "li" "list" "- Nothing listed -">>
+'/>
