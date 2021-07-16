@@ -1,0 +1,13 @@
+created: 20210713180140966
+modified: 20210713184041305
+tags: 
+title: $:/_fbb/Filter-Test
+type: text/vnd.tiddlywiki
+
+<$button>
+<$action-setfield $tiddler="Beispielsuche für Filter-Operatoren" example={{!!example}} />
+<$action-setfield $tiddler="$:/temp/advancedsearch/input" text="" />
+<$action-setfield $tiddler="$:/temp/advancedsearch" text="" />
+<$action-navigate $to="Beispielsuche für Filter-Operatoren"/>
+Beispiel für den {{!!title}} öffnen
+</$button>

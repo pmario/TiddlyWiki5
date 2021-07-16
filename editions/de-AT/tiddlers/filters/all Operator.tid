@@ -1,8 +1,10 @@
 caption: all
 created: 20200610200353602
 creator: FBB
-modified: 20210519165208822
+example: [all[shadows]] [all[orphans+missing+current]] [all[tiddlers+shadows]]
+modified: 20210713184051313
 modifier: FBB
+origin: all Operator
 op-input: wird ignoriert, es sei denn, der Parameter ist leer
 op-output: die Titel, die zu allen angegebenen Kategorien gehören
 op-parameter: Keine oder mehrere Kategorien
@@ -30,3 +32,11 @@ Wenn der Parameter mehr als eine Kategorie angibt, werden sie von links nach rec
 Als Sonderfall, wenn der Parameter leer ist, ist die Ausgabe einfach eine Kopie der Eingabe. Dies kann nützlich sein, wenn der Parameter [[weich|Filter-Parameter]] ist.
 
 Der [[is Operator]] ist ähnlich, aber sein Anwendungsbereich ist auf den Input beschränkt.
+
+<<.hr>>
+
+!! Beispiel
+
+{{||$:/_fbb/Filter-Test}}
+
+{{||$:/_template/wikidokulink}}

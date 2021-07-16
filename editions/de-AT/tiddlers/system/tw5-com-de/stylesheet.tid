@@ -1,6 +1,6 @@
 created: 20201124210132107
 creator: FBB
-modified: 20210709174332473
+modified: 20210716211250617
 modifier: FBB
 tags: $:/tags/Stylesheet
 title: $:/editions/tw5.com/de/stylesheet
@@ -58,10 +58,9 @@ padding: 0;
 
 .doc-button svg { height: 1em; }
 
-.doc-icon svg, .doc-icon img{
-width: 1em; 
-height: 1em; 
-vertical-align: middle; 
+.doc-icon-2 svg, .doc-icon2 img{
+width: 1.1em; 
+vertical-align: top; 
 }
 
 .doc-icon-block{ 
@@ -97,6 +96,7 @@ vertical-align: text-bottom;
 
 .doc-from-version-de{
 background-color:#a8a6a6 !important;
+text-transform: none  !important;
 }
 
 .doc-deprecated-version svg, .doc-from-version-de svg{
