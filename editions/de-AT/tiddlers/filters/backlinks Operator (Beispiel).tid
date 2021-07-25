@@ -1,0 +1,10 @@
+created: 20210722194400358
+creator: FBB
+modified: 20210722201045224
+modifier: FBB
+title: backlinks Operator (Beispiel)
+type: text/vnd.tiddlywiki
+
+<<.operator-example 1 "[[HelloThere]backlinks[]]" "Backlinks aus dem [[Willkommen|HelloThere]]-Tiddler">>
+<<.operator-example 2 "[tag[InhaltsVerzeichnis]backlinks[]]" """Alle Tiddler mit dem Tag <$macrocall $name=".tag2" _="InhaltsVerzeichnis"> """>>
+<<.operator-example 3 "[all[current]backlinks[]]" "Tiddler welche auf diesen Tiddler verweisen">>

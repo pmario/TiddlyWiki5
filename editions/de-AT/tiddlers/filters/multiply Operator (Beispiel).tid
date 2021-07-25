@@ -1,0 +1,11 @@
+created: 20210722205505502
+creator: FBB
+modified: 20210722211211926
+modifier: FBB
+tags: [[Operator Beispiel]]
+title: multiply Operator (Beispiel)
+type: text/vnd.tiddlywiki
+
+<<.operator-example 1 "[[23]multiply[19]]" "Multilpikation von 23 und 19" >>
+<<.operator-example 2 "=1 =2 =3 =4 +[multiply[4]]" "Eine Multilpikation mit 4 auf jede Zahl in der Eingabeliste">>
+<<.operator-example 3 "[[23]multiply[19]] +[multiply[-2]]" "Eine Kombination mehrerer Schritte" >>

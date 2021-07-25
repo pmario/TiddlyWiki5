@@ -1,7 +1,7 @@
 caption: field
 created: 20200610205641067
 creator: FBB
-modified: 20210519165130520
+modified: 20210720214516847
 modifier: FBB
 op-input: eine [[Titelselektion]]
 op-neg-output: die Eingabe-Tiddler, in denen Feld F ''nicht'' den Wert S hat
@@ -11,6 +11,7 @@ op-parameter-name: S
 op-purpose: die Eingabe nach einem Feld filtern
 op-suffix: der Name eines Feldes
 op-suffix-name: F
+origin: field Operator
 tags: Filter-Operator Feld-Operator Negierbarer-Operator Common-Operator
 title: field Operator
 type: text/vnd.tiddlywiki
@@ -20,4 +21,11 @@ Wenn ''//S//'' leer ist, stimmt das Feld mit den beiden folgenden Angaben übere
 * der Tiddler enthält kein Feld ''//F//''
 * der Tiddler enthält ein Feld ''//F//'' aber es enthält keinen Wert
 
-Die Syntax eines [[Filter-Schrittes|Filter-Schritt]] behandelt jeden nicht erkannten [[Filter-Operator]] so, als wäre er das Suffix des Feld-Operators. Siehe die Beispiele in [[field Operator (Beispiele)|https://tiddlywiki.com/#field%20Operator%20(Examples)]].
+Die Syntax eines [[Filter-Schrittes|Filter-Schritt]] behandelt jeden nicht erkannten [[Filter-Operator]] so, als wäre er das Suffix des Feld-Operators. 
+
+!! Beispiel
+
+* [[field Operator (Beispiel)]]
+
+
+<<wikidokulink2 >>

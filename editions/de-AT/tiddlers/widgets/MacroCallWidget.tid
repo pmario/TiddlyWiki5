@@ -1,6 +1,6 @@
 created: 20201102220358782
 creator: FBB
-modified: 20210602212503342
+modified: 20210722195712786
 modifier: FBB
 tags: Widgets
 title: MacroCallWidget
@@ -38,4 +38,4 @@ Der Inhalt des <<.wid2 "MacroCall" "macrocall">>-Widgets-Tags wird ignoriert.
 
 <<.hr>>
 
-Siehe: <<wikidokulink "MacroCallWidget">> (englisch)
+Siehe: <<wikidokulink "~MacroCallWidget">> (englisch)

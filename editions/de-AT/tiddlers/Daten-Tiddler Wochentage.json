@@ -1,0 +1,19 @@
+{
+"title":"Daten-Tiddler Wochentage",
+  "Mo":"Montag",
+  "Di":"Dienstag",
+  "Di":"Zweiter Dienstag",
+  "Mi":"Mittwoch",
+  "Do":"Donnerstag",
+  "Fr":"Freitag",
+  "Sa":"Samstag",
+  "So":"Sonntag",
+  "Montag":"Mo",
+  "Dienstag":"Di",
+  "Mittwoch":"Mi",
+  "Donnerstag":"Do",
+  "Freitag":"Fr",
+  "Samstag":"Sa",
+  "Sonntag":"So",
+  "description":"Beispiel für Daten-Tiddler und Filter-Operatoren"
+}

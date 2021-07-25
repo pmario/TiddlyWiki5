@@ -1,7 +1,7 @@
 created: 20210712205150309
 creator: FBB
-example: [tag[task]!prefix[Go]] [prefix[$:/languages/]] [prefix[$:/]] [is[system]]
-modified: 20210716221835336
+example: 
+modified: 20210722210915493
 modifier: FBB
 tags: [[Operator Beispiel]]
 title: Beispielsuche für Filter-Operatoren
@@ -20,9 +20,11 @@ type: text/vnd.tiddlywiki
 
 !! Beispiel(e):
 
+<ol>
 <$list filter="[all[current]list[!!example]]" variable="varname">
- <code><$text text=<<varname>>  /></code><br/><br/>
+ <li><pre><$text text=<<varname>> type="text/plain" /></pre><br/><br/></li>
 </$list>
+</ol>
 
 Hier die obigen Beispiele eingeben:
 <div class="tc-search tc-advanced-search">

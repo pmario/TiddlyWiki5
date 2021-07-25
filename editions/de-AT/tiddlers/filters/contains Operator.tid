@@ -1,7 +1,7 @@
 caption: contains
 created: 20200629141157935
 creator: FBB
-modified: 20210519165147210
+modified: 20210722212304578
 modifier: FBB
 op-input: eine [[Titelselektion]]
 op-neg-output: die Eingabe-Tiddler, in denen Feld //''{{!!op-suffix-name}}''// ''nicht'' den Wert //''{{!!op-parameter-name}}''// beinhaltet
@@ -11,6 +11,13 @@ op-parameter-name: S
 op-purpose: die Eingabe filtern, indem Listenfelder nach einem Wert durchsucht werden
 op-suffix: der Name eines Feldes
 op-suffix-name: F
+origin: contains Operator
 tags: Filter-Operator Feld-Operator Negierbarer-Operator
 title: contains Operator
 type: text/vnd.tiddlywiki
+
+!! Beispiel
+
+* [[contains Operator (Beispiel))]]
+
+<<wikidokulink2>>

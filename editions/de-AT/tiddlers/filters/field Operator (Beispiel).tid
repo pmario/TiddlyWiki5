@@ -1,0 +1,14 @@
+author: FBB
+created: 20210720213549957
+creator: FBB
+modified: 20210720214408886
+modifier: FBB
+title: field Operator (Beispiel)
+type: text/vnd.tiddlywiki
+
+
+<<.operator-example 1 "[field:author[JeremyRuston]]" "Plugins geschrieben von JeremyRuston">>
+
+<<.operator-example 2 "[plugin-type[theme]author[JeremyRuston]]" "Themen geschrieben von JeremyRuston">>
+
+<<.operator-example 3 "[field:author[FBB]]" "Tiddler mit dem Eintrag FBB im Feld `author`">>

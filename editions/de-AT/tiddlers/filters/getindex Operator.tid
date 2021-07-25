@@ -1,16 +1,22 @@
 caption: getindex
 created: 20200629134959734
 creator: FBB
-modified: 20210519165048370
+example: [[[[Daten-Tiddler Wochentage]getindex[title]]]] [[[[Daten-Tiddler Wochentage]getindex[description]]]] [[[[Daten-Tiddler Wochentage]getindex[Di]]]]
+modified: 20210721214414467
 modifier: FBB
 op-input: eine [[Titelselektion]]
-op-output: die Werte der Eigenschaft ''//{{!!op-parameter-name}}//'' in jedem der Eingabe-Titel.
+op-output: die Werte der Eigenschaft ''//{{!!op-parameter-name}}//'' aus dem Daten-Tiddler
 op-parameter: der Name einer [[Eigenschaft|Daten-Tiddler]]
 op-parameter-name: P
-op-purpose: alle Werte einer Eigenschaft der Daten in den Eingabe-Titeln auswählen
+op-purpose: alle Werte einer Eigenschaft aus einem [[Daten-Tiddler]] auswählen
+origin: getindex Operator
 tags: Filter-Operator Feld-Operator
 title: getindex Operator
 type: text/vnd.tiddlywiki
 
 Jeder Eingabetitel wird der Reihe nach verarbeitet und wird ignoriert, wenn er nicht auf einen [[Daten-Tiddler]] verweist. Wenn der Tiddler die Eigenschaft ''//{{!!op-parameter-name}}//'' enthält, wird der Wert dieser Eigenschaft vorrangig an die Ausgabe angehängt.
 
+!! Beispiel
+{{||$:/_fbb/Filter-Test}}
+
+<<wikidokulink2 >>

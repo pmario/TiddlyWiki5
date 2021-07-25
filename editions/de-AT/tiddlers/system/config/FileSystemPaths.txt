@@ -6,6 +6,10 @@
 [tag[$:/_tags/icon]addprefix[bilder/]]
 [tag[$:/_tags/ListIcon]addprefix[bilder/]]
 
+[tag[Filter]addprefix[filters/]]
+[tag[Filter-Operator]addprefix[filters/]]
+[tag[Filter-Syntax]addprefix[filters/]]
+[tag[Operator Beispiel]addprefix[filters/]]
 [tag[WikiText]addprefix[wikitext/]]
 [tag[Makros]addprefix[makros/]]
 [tag[maintainer]addprefix[maintainer/]]
