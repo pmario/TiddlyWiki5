@@ -1,0 +1,5 @@
+title: $:/config/markdown/ViewTemplateBodyMissingFilters/missing
+tags: $:/tags/ViewTemplateBodyMissingFilter
+list-before: $:/config/ViewTemplateBodyMissingFilters/missing/hint
+
+[all[current]is[missing]then[$:/plugins/tiddlywiki/markdown/ViewTemplate/body/missing]]

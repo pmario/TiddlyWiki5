@@ -1,0 +1,9 @@
+title: $:/config/ViewTemplate/EditButtonsFilters/
+code-body: yes
+tags: $:/tags/ViewTemplate/EditButtonFilter
+
+shadow: [all[current]is[shadow]then[$:/core/ui/Buttons/edit]]
+missing: [all[current]is[missing]then[$:/plugins/tiddlywiki/markdown/ui/Buttons/edit]]
+x-markdown: [all[current]type[text/x-markdown]then[$:/plugins/tiddlywiki/markdown/ui/Buttons/edit]]
+markdown: [all[current]type[text/markdown]then[$:/plugins/tiddlywiki/markdown/ui/Buttons/edit]]
+default: [[$:/core/ui/Buttons/edit]]

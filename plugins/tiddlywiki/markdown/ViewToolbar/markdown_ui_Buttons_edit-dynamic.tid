@@ -1,0 +1,7 @@
+title: $:/plugins/tiddlywiki/markdown/ui/Buttons/edit-dynamic
+tags: $:/tags/ViewToolbar
+caption: {{$:/plugins/tiddlywiki/markdown/images/edit-markdown-button}} dynamic edit
+description: Dynamic Edit Button
+list-before: $:/core/ui/Buttons/close
+
+<$transclude tiddler={{{ [<currentTiddler>] :cascade[all[shadows+tiddlers]tag[$:/tags/ViewTemplate/EditButtonFilter]get[text]] }}} />

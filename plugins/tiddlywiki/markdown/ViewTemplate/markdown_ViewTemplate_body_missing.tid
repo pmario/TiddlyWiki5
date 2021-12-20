@@ -1,0 +1,26 @@
+title: $:/plugins/tiddlywiki/markdown/ViewTemplate/body/missing
+
+\define toggleActions()
+<$action-confirm $message="Do you wish to hide this configuration?
+
+IMPORTANT: It can be re-activated in the plugin settings">
+<$action-setfield $tiddler="$:/config/markdown/missing/showConfig"  $value="hide"/>
+</$action-confirm>
+\end
+
+Missing tiddler "<$text text=<<currentTiddler>>/>" -- click {{||$:/plugins/tiddlywiki/markdown/ui/Buttons/edit}} to create
+
+<$reveal state="$:/config/markdown/missing/showConfig" type=match text="show" default="show">
+
+---
+
+The following configuration can be hidden if you don't need it: <$button actions=<<toggleActions>> >Hide!</$button>
+
+<$tiddler tiddler="$:/plugins/tiddlywiki/markdown/ui/Buttons/edit-dynamic">
+<$checkbox tiddler="$:/config/ViewToolbarButtons/Visibility/$:/plugins/tiddlywiki/markdown/ui/Buttons/edit-dynamic" field="text" checked="show" unchecked="hide" default="show"/> <span class="tc-icon-wrapper"> <$transclude field="caption"/> <i class="tc-muted">-- <$transclude field="description"/></i></span>
+</$tiddler>
+
+<$tiddler tiddler="$:/core/ui/Buttons/edit">
+<$checkbox tiddler="$:/config/ViewToolbarButtons/Visibility/$:/core/ui/Buttons/edit" field="text" checked="show" unchecked="hide" default="show"/> <span class="tc-icon-wrapper"> <$transclude field="caption"/> <i class="tc-muted">-- <$transclude field="description"/></i></span>
+</$tiddler>
+</$reveal>

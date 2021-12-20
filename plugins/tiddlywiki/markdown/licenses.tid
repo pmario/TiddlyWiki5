@@ -1,0 +1,6 @@
+title: $:/plugins/tiddlywiki/markdown/licenses
+
+This TiddlyWiki plugin is BSD licensed: [[$:/core/copyright.txt]]
+
+''remarkable'' is MIT licensed: https://github.com/jonschlinkert/remarkable/blob/master/LICENSE <br/>
+''remarkable-katext'' is MIT licensed: https://github.com/bradhowes/remarkable-katex/blob/master/LICENSE
