@@ -9,3 +9,5 @@ To add the plugin to your own TiddlyWiki5, just drag this link to the browser wi
 [[$:/plugins/tiddlywiki/markdown]]
 
 {{$:/plugins/tiddlywiki/markdown/usage}}
+
+{{$:/plugins/tiddlywiki/markdown/config}}

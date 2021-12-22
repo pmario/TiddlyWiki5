@@ -1,21 +1,70 @@
 title: $:/plugins/tiddlywiki/markdown/ViewTemplate/body/missing
 
-\define toggleActions()
-<$action-confirm $message="Do you wish to hide this configuration?
-
-IMPORTANT: It can be re-activated in the plugin settings">
-<$action-setfield $tiddler="$:/config/markdown/missing/showConfig"  $value="hide"/>
-</$action-confirm>
+\define close-box()
+<$action-setfield $tiddler="$:/config/markdown/missing/showConfig" $field="text" $value="hide"/>
 \end
 
-Missing tiddler "<$text text=<<currentTiddler>>/>" -- click {{||$:/plugins/tiddlywiki/markdown/ui/Buttons/edit}} to create
+\define new-from-template()
+<$action-createtiddler $basetitle=<<currentTiddler>> $template=<<item>> />
+<$action-sendmessage $message="tm-edit-tiddler" $param=<<currentTiddler>> />
+\end
+
+\define edit-template()
+<$action-sendmessage $message="tm-edit-tiddler" $param=<<currentTiddler>> />
+\end
+
+\define clone-template()
+<$action-createtiddler $basetitle=<<currentTiddler>> $template=<<currentTiddler>> >
+	<$action-sendmessage $message="tm-edit-tiddler" $param=<<createTiddler-title>> />
+</$action-createtiddler>
+\end
+
+Missing tiddler "<$text text=<<currentTiddler>>/>" -- click {{||$:/plugins/tiddlywiki/markdown/ui/Buttons/edit}} to create or click {{||$:/plugins/tiddlywiki/markdown/ui/Buttons/toggle-config}} to toggle the configuration
 
 <$reveal state="$:/config/markdown/missing/showConfig" type=match text="show" default="show">
+<div class="tc-message-box">
 
----
+<$button class="tc-btn-invisible tc-float-right" actions=<<close-box>> >
+{{$:/core/images/close-button}}
+</$button>
 
-The following configuration can be hidden if you don't need it: <$button actions=<<toggleActions>> >Hide!</$button>
+''Templates''
 
+<<<
+<table>
+<tbody>
+<tr><th>Title</th><th>Use</th></tr>
+<$list filter="[all[shadows+tiddlers]prefix[$:/config/markdown/template/]]" variable="item">
+	<tr>
+	<td><$link to=<<item>> /></td>
+	<td><$button class="tc-btn-invisible" actions=<<new-from-template>> >
+		{{$:/core/images/done-button}}
+	</$button></td>
+	</tr>
+</$list>
+</tbody>
+</table>
+<<<
+
+''Default Template''
+
+<<<
+<$select tiddler="$:/config/markdown/default" default="$:/config/markdown/template/_default">
+	<$list filter='[all[shadows+tiddlers]prefix[$:/config/markdown/template/]sort[title]]'>
+		<option value=<<currentTiddler>>><$view field='caption'><$view field='title'/></$view></option>
+	</$list>
+</$select>
+<<<
+
+''Page Toolbar''
+
+<<<
+<$checkbox tiddler="$:/config/markdown/new-markdown-button/use-default" field="text" checked="yes" unchecked="no" default="no">&nbsp; "New Markdown Button" uses default template</$checkbox>
+<<<
+
+''Tiddler Toolbar''
+
+<<<
 <$tiddler tiddler="$:/plugins/tiddlywiki/markdown/ui/Buttons/edit-dynamic">
 <$checkbox tiddler="$:/config/ViewToolbarButtons/Visibility/$:/plugins/tiddlywiki/markdown/ui/Buttons/edit-dynamic" field="text" checked="show" unchecked="hide" default="show"/> <span class="tc-icon-wrapper"> <$transclude field="caption"/> <i class="tc-muted">-- <$transclude field="description"/></i></span>
 </$tiddler>
@@ -23,4 +72,6 @@ The following configuration can be hidden if you don't need it: <$button actions
 <$tiddler tiddler="$:/core/ui/Buttons/edit">
 <$checkbox tiddler="$:/config/ViewToolbarButtons/Visibility/$:/core/ui/Buttons/edit" field="text" checked="show" unchecked="hide" default="show"/> <span class="tc-icon-wrapper"> <$transclude field="caption"/> <i class="tc-muted">-- <$transclude field="description"/></i></span>
 </$tiddler>
+<<<
+</div>
 </$reveal>

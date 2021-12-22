@@ -1,0 +1,9 @@
+title: $:/plugins/tiddlywiki/markdown/ui/Buttons/toggle-config
+
+\whitespace trim
+\define toggle-actions()
+<$action-listops $tiddler="$:/config/markdown/missing/showConfig" $field="text" $subfilter="+[toggle[hide],[show]]" />
+\end
+
+<$button actions=<<toggle-actions>> tooltip="Toggle Configuration" aria-label="Toggle Configuration" class="tc-btn-invisible">{{$:/core/images/options-button}}
+</$button>
