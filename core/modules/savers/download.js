@@ -35,7 +35,7 @@ DownloadSaver.prototype.save = function(text,method,callback,options) {
 	// Set up the link
 	var link = document.createElement("a");
 	if(Blob !== undefined) {
-		var blob = new Blob([text], {type: "text/html"});
+		var blob = new Blob([text], {type: options.downloadType || "text/html"});
 		link.setAttribute("href", URL.createObjectURL(blob));
 	} else {
 		link.setAttribute("href","data:text/html," + encodeURIComponent(text));

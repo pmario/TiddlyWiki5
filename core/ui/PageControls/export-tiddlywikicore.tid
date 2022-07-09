@@ -1,4 +1,4 @@
-title: $:/core/ui/ExportTiddlyWikiCore
+title: $:/core/ui/ExportTiddlyWikiCoreXXX
 
 \define jsFileName() tiddlywikicore-$(version)$.js
 \define noExportMsg()
