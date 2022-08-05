@@ -21,7 +21,7 @@ Listing/Rename/ConfirmRename: Rename tiddler
 Listing/Rename/CancelRename: Cancel
 Listing/Rename/OverwriteWarning: A tiddler with this title already exists.
 Upgrader/Plugins/Suppressed/Incompatible: Blocked incompatible or obsolete plugin.
-Upgrader/Plugins/Suppressed/Version: Blocked plugin (due to incoming <<incoming>> not being newer than existing <<existing>>).
+Upgrader/Plugins/Suppressed/Version: Your plugin will be version <<existing>>.
 Upgrader/Plugins/Upgraded: Upgraded plugin from <<incoming>> to <<upgraded>>.
 Upgrader/State/Suppressed: Blocked temporary state tiddler.
 Upgrader/System/Disabled: Disabled system tiddler.
