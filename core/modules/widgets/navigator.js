@@ -87,17 +87,12 @@ NavigatorWidget.prototype.getStoryList = function() {
 	return this.storyTitle ? this.wiki.getTiddlerList(this.storyTitle) : null;
 };
 
+// *1 pass through, so widget interface is not changed
 NavigatorWidget.prototype.saveStoryList = function(storyList) {
-	if(this.storyTitle) {
-		var storyTiddler = this.wiki.getTiddler(this.storyTitle);
-		this.wiki.addTiddler(new $tw.Tiddler(
-			{title: this.storyTitle},
-			storyTiddler,
-			{list: storyList}
-		));
-	}
+	this.story.saveStoryList(storyList);
 };
 
+// *1 should not be needed anymore. -- can not be removed yet.
 NavigatorWidget.prototype.removeTitleFromStory = function(storyList,title) {
 	if(storyList) {
 		var p = storyList.indexOf(title);
@@ -157,14 +152,11 @@ NavigatorWidget.prototype.handleNavigateEvent = function(event) {
 	return false;
 };
 
-// Close a specified tiddler
+// *1 Close a specified tiddler
 NavigatorWidget.prototype.handleCloseTiddlerEvent = function(event) {
 	event = $tw.hooks.invokeHook("th-closing-tiddler",event);
-	var title = event.param || event.tiddlerTitle,
-		storyList = this.getStoryList();
-	// Look for tiddlers with this title to close
-	this.removeTitleFromStory(storyList,title);
-	this.saveStoryList(storyList);
+	var title = event.param || event.tiddlerTitle;
+	this.story.storyCloseTiddler(title);
 	return false;
 };
 
@@ -184,7 +176,7 @@ NavigatorWidget.prototype.handleCloseOtherTiddlersEvent = function(event) {
 // Place a tiddler in edit mode
 NavigatorWidget.prototype.handleEditTiddlerEvent = function(event) {
 	var editTiddler = $tw.hooks.invokeHook("th-editing-tiddler",event),
-	    win = event.event && event.event.view ? event.event.view : window;
+		win = event.event && event.event.view ? event.event.view : window;
 	if(!editTiddler) {
 		return false;
 	}
@@ -306,7 +298,7 @@ NavigatorWidget.prototype.handleSaveTiddlerEvent = function(event) {
 	var title = event.param || event.tiddlerTitle,
 		tiddler = this.wiki.getTiddler(title),
 		storyList = this.getStoryList(),
-	    	win = event.event && event.event.view ? event.event.view : window;
+		win = event.event && event.event.view ? event.event.view : window;
 	// Replace the original tiddler with the draft
 	if(tiddler) {
 		var draftTitle = (tiddler.fields["draft.title"] || "").trim(),

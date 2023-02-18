@@ -100,8 +100,20 @@ Story.prototype.addToHistory = function(navigateTo,navigateFromClientRect) {
 	this.wiki.setTiddlerData(this.historyTitle,historyList,{"current-tiddler": titles[titles.length-1]});
 };
 
+// Attention: storyList will be modified "in place"!
+Story.prototype.removeTitleFromStory = function(storyList,targetTitle) {
+	var p = storyList.indexOf(targetTitle);
+	while(p !== -1) {
+		storyList.splice(p,1);
+		p = storyList.indexOf(targetTitle);
+	}
+};
+
 Story.prototype.storyCloseTiddler = function(targetTitle) {
-// TBD
+	var storyList = this.getStoryList();
+	// Look for tiddlers with this title to close
+	this.removeTitleFromStory(storyList,targetTitle);
+	this.saveStoryList(storyList);
 };
 
 Story.prototype.storyCloseAllTiddlers = function() {
