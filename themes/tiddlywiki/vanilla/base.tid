@@ -82,8 +82,7 @@ $else$
 }
 */
 
-/* Keep this info for older Safari version back to 2018 */
-
+/* Keep the following 2 rules, for older IOS devices back to 2018 */
 input[type="search"] {
 	outline-offset: initial;
 }
