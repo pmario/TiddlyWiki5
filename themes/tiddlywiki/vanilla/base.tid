@@ -82,6 +82,16 @@ $else$
 }
 */
 
+/* Keep this info for older Safari version back to 2018 */
+
+input[type="search"] {
+	outline-offset: initial;
+}
+
+button, textarea, input, select {
+	outline-color: <<colour primary>>;
+}
+
 /*
 ** Focus outline styles differ, depending on input selection done with mouse or the keyboard.
 ** see: https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible
