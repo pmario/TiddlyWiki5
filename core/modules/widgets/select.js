@@ -42,6 +42,9 @@ SelectWidget.prototype.render = function(parent,nextSibling) {
 	this.execute();
 	this.renderChildren(parent,nextSibling);
 	this.setSelectValue();
+	if(this.selectFocus == "yes") {
+		this.getSelectDomNode().focus();
+	}
 	$tw.utils.addEventListeners(this.getSelectDomNode(),[
 		{name: "change", handlerObject: this, handlerMethod: "handleChangeEvent"}
 	]);
@@ -142,7 +145,9 @@ SelectWidget.prototype.execute = function() {
 	this.selectDefault = this.getAttribute("default");
 	this.selectMultiple = this.getAttribute("multiple", false);
 	this.selectSize = this.getAttribute("size");
+	this.selectTabindex = this.getAttribute("tabindex");
 	this.selectTooltip = this.getAttribute("tooltip");
+	this.selectFocus = this.getAttribute("focus");
 	// Make the child widgets
 	var selectNode = {
 		type: "element",
@@ -157,6 +162,9 @@ SelectWidget.prototype.execute = function() {
 	}
 	if(this.selectSize) {
 		$tw.utils.addAttributeToParseTreeNode(selectNode,"size",this.selectSize);
+	}
+	if(this.selectTabindex) {
+		$tw.utils.addAttributeToParseTreeNode(selectNode,"tabindex",this.selectTabindex);
 	}
 	if(this.selectTooltip) {
 		$tw.utils.addAttributeToParseTreeNode(selectNode,"title",this.selectTooltip);
