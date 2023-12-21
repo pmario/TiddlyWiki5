@@ -66,6 +66,32 @@ WikifyWidget.prototype.execute = function() {
 Return the result string
 */
 WikifyWidget.prototype.getResult = function() {
+	function listAllKeys(obj, keys, exclude, maxDepth) {
+		exclude = exclude || [];
+		keys = keys || [];
+
+		$tw.utils.each(obj, function(el, key, obj) {
+			if (exclude.indexOf(key) === -1) {
+				$tw.utils.pushTop(keys, key);
+			}
+			if (typeof obj[key] === 'object') {
+				listAllKeys(obj[key], keys, exclude, maxDepth);
+			}
+		});
+		return keys
+	}
+
+	function sortBy (list, order) {
+		var results = list;
+		if (!results || results.length < 2) {
+			return results;
+		}
+		results.sort(function (a, b) {
+			return order.indexOf(a) - order.indexOf(b);
+		});
+		return results;
+	};
+
 	var result;
 	switch(this.wikifyOutput) {
 		case "text":
@@ -78,7 +104,14 @@ WikifyWidget.prototype.getResult = function() {
 			result = this.wikifyContainer.innerHTML;
 			break;
 		case "parsetree":
-			result = JSON.stringify(this.wikifyParser.tree,0,$tw.config.preferences.jsonSpaces);
+			var keys = listAllKeys(this.wikifyParser.tree, null, [ "start", "end", "type", "attributes" ]);
+
+			var	order = ["type", "value", "tag", "start", "end", "text", "attributes", "orderedAttributes", "class", "children" ];
+
+			var replacer = sortBy(keys, order);
+
+			// result = JSON.stringify(this.wikifyParser.tree,0,$tw.config.preferences.jsonSpaces);
+			result = JSON.stringify(this.wikifyParser.tree, replacer ,$tw.config.preferences.jsonSpaces);
 			break;
 		case "widgettree":
 			result = JSON.stringify(this.getWidgetTree(),0,$tw.config.preferences.jsonSpaces);
