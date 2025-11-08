@@ -258,8 +258,31 @@ Server.prototype.requestHandler = function(request,response,options) {
 	state.wiki = options.wiki || self.wiki;
 	state.boot = options.boot || self.boot;
 	state.server = self;
-	state.urlInfo = url.parse(request.url);
-	state.queryParameters = querystring.parse(state.urlInfo.query);
+	// Manual URL and Query String Parsing
+	// The URL parsing modules in the Bare runtime are unstable. We will parse the request.url string manually.
+	var urlString = request.url || "";
+	var queryIndex = urlString.indexOf("?");
+	var pathname = (queryIndex === -1) ? urlString : urlString.substring(0, queryIndex);
+	var queryString = (queryIndex === -1) ? "" : urlString.substring(queryIndex + 1);
+	// Manually construct the urlInfo-like object that TiddlyWiki expects
+	state.urlInfo = {
+		pathname: pathname,
+		query: queryString,
+		search: (queryIndex === -1) ? "" : urlString.substring(queryIndex)
+	};
+	// Manually parse the query string into the queryParameters object
+	state.queryParameters = {};
+	if(queryString) {
+		var pairs = queryString.split('&');
+		for(var i = 0; i < pairs.length; i++) {
+			var pair = pairs[i].split('=');
+			if(pair[0]) {
+				var key = decodeURIComponent(pair[0].replace(/\+/g, ' '));
+				var value = decodeURIComponent(pair[1] || '');
+				state.queryParameters[key] = value;
+			}
+		}
+	}
 	state.pathPrefix = options.pathPrefix || this.get("path-prefix") || "";
 	state.sendResponse = sendResponse.bind(self,request,response);
 	// Get the principals authorized to access this resource
@@ -372,7 +395,7 @@ Server.prototype.listen = function(port,host,prefix) {
 		$tw.utils.log("(press ctrl-C to exit)","red");
 	});
 	// Listen
-	return server.listen(port,host);
+	return server.listen({port: parseInt(port,10), host: host});
 };
 
 exports.Server = Server;
