@@ -1,0 +1,16 @@
+{
+  "name": "bare-url-testcase",
+  "version": "1.0.0",
+  "description": "A minimal test case to demonstrate the crash in Bare's URL parsing.",
+  "main": "test.js",
+  "private": true,
+  "scripts": {
+    "test": "bare ."
+  },
+  "dependencies": {
+    "bare-url": "^2.3.2",
+    "url": "npm:bare-node-url@^1.0.0",
+    "bare-querystring": "^1.0.0",
+    "querystring": "npm:bare-node-querystring@^1.0.0"
+  }
+}
