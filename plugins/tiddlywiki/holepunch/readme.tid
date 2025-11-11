@@ -1,0 +1,6 @@
+title: $:/plugins/tiddlywiki/holepunch/readme
+type: text/vnd.tiddlywiki
+
+This plugin provides a sync adaptor to connect TiddlyWiki to a Holepunch-powered P2P network.
+
+It requires a correctly configured TiddlyWiki server with the corresponding P2P engine running.
