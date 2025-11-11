@@ -14,7 +14,7 @@ The architecture consists of three main components that separate the browser-sid
            |                                |                               |
            |---(HTTP/WebSocket)--->         |---(Internal Calls)--->        |---(P2P Network)---> Peers
            |                                |                               |
-           |<--(Real-time Push)----|         |<------------------------------|
+           |<--(Real-time Push)----|        |<------------------------------|
 ```
 
 ---
