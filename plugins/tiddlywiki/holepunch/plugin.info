@@ -1,0 +1,10 @@
+{
+    "title": "$:/plugins/tiddlywiki/holepunch",
+    "description": "A sync adaptor for synchronising changes via a P2P Holepunch network",
+    "author": "Gemini",
+    "version": "0.0.1",
+    "core-version": ">=5.3.0",
+    "source": "https://github.com/TiddlyWiki/TiddlyWiki5",
+    "plugin-type": "plugin",
+    "list": "readme"
+}
