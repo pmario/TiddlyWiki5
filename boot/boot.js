@@ -1110,6 +1110,41 @@ $tw.Tiddler.prototype.isEqual = function(tiddler,excludeFields) {
 };
 
 /*
+Return a hashmap of the names of the fields that differ between two tiddlers.
+Either argument may be null/undefined (for additions and deletions). Uses the
+same value comparison as isEqual, so a field that was re-parsed to an identical
+array (e.g. tags after a body edit) is NOT reported as changed.
+*/
+$tw.utils.getChangedTiddlerFields = function(oldTiddler,newTiddler) {
+	var changed = Object.create(null),
+		oldFields = (oldTiddler && oldTiddler.fields) || {},
+		newFields = (newTiddler && newTiddler.fields) || {},
+		equal = function(a,b) {
+			if(typeof a === "string" && typeof b === "string") {
+				return a === b;
+			}
+			if($tw.utils.isArray(a) && $tw.utils.isArray(b)) {
+				return $tw.utils.isArrayEqual(a,b);
+			}
+			if($tw.utils.isDate(a) && $tw.utils.isDate(b)) {
+				return a.getTime() === b.getTime();
+			}
+			return a === b;
+		};
+	for(var name in newFields) {
+		if(!equal(oldFields[name],newFields[name])) {
+			changed[name] = true;
+		}
+	}
+	for(name in oldFields) {
+		if(!(name in newFields)) {
+			changed[name] = true;
+		}
+	}
+	return changed;
+};
+
+/*
 Register and install the built in tiddler field modules
 */
 $tw.modules.define("$:/boot/tiddlerfields/modified","tiddlerfield",{
@@ -1214,7 +1249,7 @@ $tw.Wiki = function(options) {
 				};
 				// Update indexes
 				this.clearCache(title);
-				this.clearGlobalCache();
+				this.clearGlobalCache($tw.utils.getChangedTiddlerFields(updateDescriptor.old.tiddler,updateDescriptor["new"].tiddler));
 				$tw.utils.each(indexers,function(indexer) {
 					indexer.update(updateDescriptor);
 				});
@@ -1254,7 +1289,7 @@ $tw.Wiki = function(options) {
 			};
 			// Update indexes
 			this.clearCache(title);
-			this.clearGlobalCache();
+			this.clearGlobalCache($tw.utils.getChangedTiddlerFields(updateDescriptor.old.tiddler,updateDescriptor["new"].tiddler));
 			$tw.utils.each(indexers,function(indexer) {
 				indexer.update(updateDescriptor);
 			});

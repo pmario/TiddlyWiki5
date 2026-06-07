@@ -681,7 +681,7 @@ exports.getTiddlersWithTag = function(tag) {
 		results = this.getGlobalCache("taglist-" + tag,function() {
 			var tagmap = self.getTagMap();
 			return self.sortByList(tagmap[tag],tag);
-		});
+		},{dependsOn: ["tags","list"]});
 	}
 	return results.slice(0);
 };
@@ -716,7 +716,7 @@ exports.getTagMap = function() {
 			storeTags(tiddler.fields.tags,title);
 		});
 		return tags;
-	});
+	},{dependsOn: ["tags"]});
 };
 
 /*
@@ -741,7 +741,7 @@ exports.findListingsOfTiddler = function(targetTitle,fieldName) {
 			}
 		});
 		return listings;
-	});
+	},{dependsOn: [fieldName]});
 	return (listings[targetTitle] || []).slice(0);
 };
 
@@ -981,19 +981,44 @@ exports.getTiddlerList = function(title,field,index) {
 	return [];
 };
 
-// Return a named global cache object. Global cache objects are cleared whenever a tiddler change occurs
-exports.getGlobalCache = function(cacheName,initializer) {
+// Return a named global cache object, building it with the initializer on a miss.
+// options.dependsOn is an optional array of tiddler field names that the cached
+// value depends on: clearGlobalCache drops the entry only when one of those fields
+// changes (or on add/delete). Omitting it keeps the previous behaviour, where the
+// entry is cleared on every tiddler change.
+exports.getGlobalCache = function(cacheName,initializer,options) {
+	options = options || {};
 	this.globalCache = this.globalCache || Object.create(null);
 	if($tw.utils.hop(this.globalCache,cacheName)) {
-		return this.globalCache[cacheName];
-	} else {
-		this.globalCache[cacheName] = initializer();
-		return this.globalCache[cacheName];
+		return this.globalCache[cacheName].value;
 	}
+	this.globalCache[cacheName] = {value: initializer(),dependsOn: options.dependsOn || null};
+	return this.globalCache[cacheName].value;
 };
 
-exports.clearGlobalCache = function() {
-	this.globalCache = Object.create(null);
+// Clear global cache entries. With no argument (e.g. when shadow tiddlers are
+// reloaded) every entry is dropped. Given a hashmap of changed field names, an
+// entry is dropped only if one of its declared dependencies changed; entries
+// with no declared dependencies are always dropped.
+exports.clearGlobalCache = function(changedFields) {
+	if(!changedFields || !this.globalCache) {
+		this.globalCache = Object.create(null);
+		return;
+	}
+	var cache = this.globalCache;
+	for(var cacheName in cache) {
+		var dependsOn = cache[cacheName].dependsOn;
+		if(!dependsOn) {
+			delete cache[cacheName];
+		} else {
+			for(var i=0; i<dependsOn.length; i++) {
+				if(changedFields[dependsOn[i]]) {
+					delete cache[cacheName];
+					break;
+				}
+			}
+		}
+	}
 };
 
 // Return the named cache object for a tiddler. If the cache doesn't exist then the initializer function is invoked to create it
