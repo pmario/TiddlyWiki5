@@ -1,8 +1,8 @@
 {
   "name": "tiddlywiki-bare",
-  "version": "5.3.8",
-  "author": "Jeremy Ruston <jeremy@jermolene.com>",  "description": "TiddlyWiki running on the Bare runtime",
-  "description": "a non-linear personal web notebook",
+  "version": "5.4.1-prerelease",
+  "author": "Jeremy Ruston <jeremy@jermolene.com>",
+  "description": "TiddlyWiki running on the Bare runtime",
   "contributors": [
     {
       "name": "Jeremy Ruston",
@@ -21,7 +21,7 @@
   ],
   "license": "BSD",
   "engines": {
-    "node": ">=0.8.2"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "start": "bare . editions/tw5.com-server --listen"
