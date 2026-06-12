@@ -2456,8 +2456,9 @@ $tw.boot.initStartup = function(options) {
 		}
 		// Read package info
 		$tw.packageInfo = $tw.packageInfo || require("../package.json");
-		// Check node version number
-		if(!$tw.utils.checkVersions(process.version.substr(1),$tw.packageInfo.engines.node.substr(2))) {
+		// Check node version number (skipped on Bare: process.version reports
+		// the Bare runtime version there, which the node range check would reject)
+		if(typeof Bare === "undefined" && !$tw.utils.checkVersions(process.version.substr(1),$tw.packageInfo.engines.node.substr(2))) {
 			$tw.utils.error("TiddlyWiki5 requires node.js version " + $tw.packageInfo.engines.node);
 		}
 	}
