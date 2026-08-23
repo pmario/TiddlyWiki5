@@ -86,6 +86,7 @@ type: text/vnd.tiddlywiki
 
 .yellow-note-sidebar-wrapper {
 	overflow-y: hidden;
+	margin: 1em 0;
 	max-height: {{{ [[$:/StoryList]contains[Hire the founder of TiddlyWiki]then[0em]else[15em]] }}};
 	transition: max-height 600ms ease-in-out;
 }
