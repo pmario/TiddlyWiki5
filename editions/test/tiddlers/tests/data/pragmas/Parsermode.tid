@@ -2,6 +2,7 @@ title: Pragmas/Parsermode
 description: parsermode pragma
 type: text/vnd.tiddlywiki-multiple
 tags: [[$:/tags/wiki-test-spec]]
+todo: There should be NO DOM text-nodes text alone should be covered for CSS styling
 
 title: Output
 
@@ -32,5 +33,4 @@ title: ExpectedResult
 
 Text with <strong>bold</strong><h1 class="">Heading</h1><p>Text with <strong>bold</strong></p><p>! Not Heading
 
-Text with <strong>bold</strong><h1 class="">Heading</h1><p>Text with <strong>bold</strong></p>
-</p>
+Text with <strong>bold</strong></p><h1 class="">Heading</h1><p>Text with <strong>bold</strong></p>

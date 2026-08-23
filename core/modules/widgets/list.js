@@ -105,17 +105,25 @@ ListWidget.prototype.findExplicitTemplates = function() {
 	this.explicitEmptyTemplate = null;
 	this.explicitJoinTemplate = null;
 	this.hasTemplateInBody = false;
-	var searchChildren = function(childNodes) {
+	// Where the parser put the marker inside a paragraph it had already decided the content
+	// is a block, so keep that paragraph around the template. Taking only the marker's
+	// children would throw the decision away and leave bare text nothing can style
+	var searchChildren = function(childNodes,enclosingParagraph) {
 		var foundInlineTemplate = false;
+		var keepParagraph = function(children) {
+			return enclosingParagraph ? [$tw.utils.extend({},enclosingParagraph,{children: children})] : children;
+		};
 		$tw.utils.each(childNodes,function(node) {
 			if(node.type === "list-template") {
-				self.explicitListTemplate = node.children;
+				self.explicitListTemplate = keepParagraph(node.children);
 			} else if(node.type === "list-empty") {
-				self.explicitEmptyTemplate = node.children;
+				self.explicitEmptyTemplate = keepParagraph(node.children);
 			} else if(node.type === "list-join") {
+				// A join sits between two items, so a paragraph of its own would break the
+				// run it is joining
 				self.explicitJoinTemplate = node.children;
 			} else if(node.type === "element" && node.tag === "p") {
-				searchChildren(node.children);
+				searchChildren(node.children,node);
 				foundInlineTemplate = true;
 			} else {
 				foundInlineTemplate = true;

@@ -629,6 +629,13 @@ Widget.prototype.makeChildWidget = function(parseTreeNode,options) {
 	}
 	// Get the widget class for this node type
 	var WidgetClass = this.widgetClasses[parseTreeNode.type];
+	// A paragraph the parser produced is provisional. Whether it survives depends on what
+	// its content renders to, and a transclusion resolves nothing until it runs, so the
+	// decision belongs to a widget rather than to the parse. Recognised by the rule that
+	// made it, which keeps the parse tree exactly as it was
+	if(parseTreeNode.rule === "parseblock" && parseTreeNode.type === "element" && parseTreeNode.tag === "p") {
+		WidgetClass = this.widgetClasses.paragraph || WidgetClass;
+	}
 	if(!WidgetClass) {
 		WidgetClass = this.widgetClasses.text;
 		parseTreeNode = {type: "text", text: "Undefined widget '" + parseTreeNode.type + "'"};
