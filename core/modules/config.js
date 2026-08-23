@@ -37,9 +37,4 @@ exports.htmlBlockElements = "address,article,aside,audio,blockquote,canvas,dd,de
 // not htmlBlockElements: <audio> never closes a paragraph, while <main> does.
 exports.htmlParagraphClosingElements = "address,article,aside,blockquote,center,dd,details,dialog,dir,div,dl,dt,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,li,listing,main,menu,nav,ol,p,plaintext,pre,search,section,summary,table,ul,xmp".split(",");
 
-// Widgets whose default element is one of the above. They are invisible to a parse tree
-// scan, so they have to be named. An author written tag or $type attribute overrides
-// this, so $draggable belongs here while $reveal, which defaults to span, does not
-exports.paragraphClosingWidgets = "codeblock,diff-text,draggable,dropzone,edit-bitmap,scrollable,testcase".split(",");
-
 exports.htmlUnsafeElements = "script".split(",");

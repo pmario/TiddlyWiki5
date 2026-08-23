@@ -256,57 +256,10 @@ WikiParser.prototype.parseBlock = function(terminatorRegExpString) {
 	var start = this.pos;
 	var children = this.parseInlineRun(terminatorRegExp);
 	var end = this.pos;
-	// A browser closes an open <p> before a <div>, so wrapping one would build a
-	// DOM that differs from the markup. Leave the children unwrapped instead
-	if(this.containsParagraphClosingElement(children)) {
-		this.markParagraphClosingChildrenAsBlock(children);
-		return children;
-	}
+	// The paragraph is provisional. Whether it survives depends on what its content
+	// renders to, which a transclusion does not decide until it runs, so the answer
+	// belongs to the paragraph widget rather than to the parse
 	return [{type: "element", tag: "p", children: children, start: start, end: end, rule: "parseblock" }];
-};
-
-/*
-Flag the nodes that caused the paragraph to be dropped as block level. Without the
-paragraph they occupy a block position, and the wikitext serializer reads this flag to
-decide where a blank line belongs
-*/
-WikiParser.prototype.markParagraphClosingChildrenAsBlock = function(nodes) {
-	$tw.utils.each(nodes,function(node) {
-		// Literal elements only. Widgets read this flag to choose their own element or
-		// their transclusion mode, so setting it on them would change what they render
-		if(node.type === "element" && $tw.config.htmlParagraphClosingElements.indexOf(node.tag) !== -1) {
-			node.isBlock = true;
-		}
-	});
-};
-
-/*
-Check whether a parse tree contains an element that implicitly closes an open <p>
-*/
-WikiParser.prototype.containsParagraphClosingElement = function(nodes) {
-	for(var t=0; t<nodes.length; t++) {
-		var node = nodes[t];
-		if(node.type === "element" && $tw.config.htmlParagraphClosingElements.indexOf(node.tag) !== -1) {
-			return true;
-		}
-		// Widgets build their element at run time, so go by what the markup says: an
-		// author written tag or $type decides on its own, and only in its absence does
-		// the widget's own default apply
-		if(node.type !== "element") {
-			var declaredTag = node.attributes && (node.attributes.tag || node.attributes["$type"]);
-			if(declaredTag && declaredTag.type === "string") {
-				if($tw.config.htmlParagraphClosingElements.indexOf(declaredTag.value) !== -1) {
-					return true;
-				}
-			} else if($tw.config.paragraphClosingWidgets.indexOf(node.type) !== -1) {
-				return true;
-			}
-		}
-		if(node.children && this.containsParagraphClosingElement(node.children)) {
-			return true;
-		}
-	}
-	return false;
 };
 
 /*

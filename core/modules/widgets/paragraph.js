@@ -45,8 +45,33 @@ ParagraphWidget.prototype.render = function(parent,nextSibling) {
 	if(containsBlockElement(domNode.childNodes) || !hasContent(domNode.childNodes)) {
 		this.unwrap(parent,domNode);
 	} else {
+		this.decorate(domNode);
 		this.domNodes.push(domNode);
 		this.wrappedInParagraph = true;
+	}
+};
+
+/*
+Carry the author's class and style onto a node that stands in for this block run.
+
+A styleblock decorates whatever parseBlock returned, so @@.myClass wrapped around a
+<div> reaches this widget as a class on the paragraph. Once the paragraph is gone the
+class has to travel to what replaced it, or the author's styling silently disappears.
+
+Merged rather than assigned, because a node lifted out of the paragraph carries its own
+class and style already and must keep them
+*/
+ParagraphWidget.prototype.decorate = function(domNode) {
+	var className = this.getAttribute("class"),
+		style = this.getAttribute("style");
+	if(className) {
+		var existingClass = domNode.getAttribute("class");
+		domNode.setAttribute("class",existingClass ? existingClass + " " + className : className);
+	}
+	if(style) {
+		// A later declaration wins in CSS, so the node's own style is appended after ours
+		var existingStyle = domNode.getAttribute("style");
+		domNode.setAttribute("style",existingStyle ? style + ";" + existingStyle : style);
 	}
 };
 
@@ -87,11 +112,13 @@ ParagraphWidget.prototype.unwrap = function(parent,domNode) {
 		if(isBlockNode(node)) {
 			flush();
 			parent.insertBefore(node,domNode);
+			self.decorate(node);
 			self.domNodes.push(node);
 		} else {
 			if(!currentParagraph) {
 				currentParagraph = self.document.createElement("p");
 				parent.insertBefore(currentParagraph,domNode);
+				self.decorate(currentParagraph);
 				self.domNodes.push(currentParagraph);
 			}
 			currentParagraph.appendChild(node);

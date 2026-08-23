@@ -944,11 +944,6 @@ button.tc-btn-invisible.tc-remove-tag-button {
 	font-weight: normal;
 }
 
-/*
-** The p half of this selector no longer matches anything in the core sidebar. It was
-** written for paragraphs the parser used to wrap sidebar segments in, which is fixed.
-** Kept because third party sidebar content may still rely on it
-*/
 .tc-sidebar-header .tc-sidebar-lists p,
 .tc-sidebar-tools-item {
 	margin-top: 3px;
@@ -1136,10 +1131,6 @@ button.tc-btn-invisible.tc-remove-tag-button {
 	border-bottom: 1px solid <<colour tiddler-info-border>>;
 }
 
-/*
-** As with the sidebar rule above, this no longer matches anything in the core info
-** panel: those paragraphs were parser artefacts. Kept for third party info panel content
-*/
 .tc-tiddler-info p {
 	margin-top: 3px;
 	margin-bottom: 3px;
@@ -2292,15 +2283,6 @@ html body.tc-body.tc-single-tiddler-window {
 	-webkit-flex: 1 0 70%;
 	flex: 1 0 70%;
 	overflow: auto;
-}
-
-/*
-** The search segment used to be separated from the tabs below it by a paragraph the
-** parser wrapped it in. That paragraph's 1em margins collapsed with its neighbours
-** down to 3px of surviving separation, which is what this reproduces
-*/
-.tc-sidebar-search {
-	margin: 3px 0;
 }
 
 .tc-sidebar-lists .tc-tab-buttons {

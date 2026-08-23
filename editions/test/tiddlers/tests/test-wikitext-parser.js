@@ -33,36 +33,36 @@ describe("WikiText parser tests", function() {
 		);
 		expect(parse("<div>")).toEqual(
 
-			[ { type : "element", tag : "div", start : 0, end : 5, openTagStart: 0, openTagEnd: 5, closeTagStart: 5, closeTagEnd: 5, rule: "html", isBlock : true, attributes : {  }, orderedAttributes: [ ], children : [  ] } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start : 0, end : 5, children : [ { type : "element", tag : "div", start : 0, end : 5, openTagStart: 0, openTagEnd: 5, closeTagStart: 5, closeTagEnd: 5, rule: "html", isBlock : false, attributes : {  }, orderedAttributes: [ ], children : [  ] } ] } ]
 
 		);
 		expect(parse("<div/>")).toEqual(
 
-			[ { type : "element", tag : "div", isSelfClosing : true, isBlock : true, attributes : {  }, orderedAttributes: [ ], start : 0, end : 6, rule: "html" } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start : 0, end : 6, children : [ { type : "element", tag : "div", isSelfClosing : true, isBlock : false, attributes : {  }, orderedAttributes: [ ], start : 0, end : 6, rule: "html" } ] } ]
 
 		);
 		expect(parse("<div></div>")).toEqual(
 
-			[ { type : "element", tag : "div", isBlock : true, attributes : {  }, orderedAttributes: [ ], children : [ ], start : 0, end : 11, openTagStart: 0, openTagEnd: 5, closeTagStart: 5, closeTagEnd: 11, rule: "html" } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start : 0, end : 11, children : [ { type : "element", tag : "div", isBlock : false, attributes : {  }, orderedAttributes: [ ], children : [ ], start : 0, end : 11, openTagStart: 0, openTagEnd: 5, closeTagStart: 5, closeTagEnd: 11, rule: "html" } ] } ]
 
 		);
 		expect(parse("<div>some text</div>")).toEqual(
 
-			[ { type : "element", tag : "div", openTagStart: 0, openTagEnd: 5, closeTagStart: 14, closeTagEnd: 20, rule: "html", isBlock : true, attributes : {  }, orderedAttributes: [ ], children : [ { type : "text", text : "some text", start : 5, end : 14 } ], start : 0, end : 20 } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start : 0, end : 20, children : [ { type : "element", tag : "div", openTagStart: 0, openTagEnd: 5, closeTagStart: 14, closeTagEnd: 20, rule: "html", isBlock : false, attributes : {  }, orderedAttributes: [ ], children : [ { type : "text", text : "some text", start : 5, end : 14 } ], start : 0, end : 20 } ] } ]
 
 		);
 		expect(parse("<div attribute>some text</div>")).toEqual(
 
-			[ { type : "element", tag : "div", isBlock : true, attributes : { attribute : { type : "string", value : "true", start : 4, end : 14, name: "attribute" } }, orderedAttributes: [ { type : "string", value : "true", start : 4, end : 14, name: "attribute" } ], children : [ { type : "text", text : "some text", start : 15, end : 24 } ], start : 0, end : 30, openTagStart: 0, openTagEnd: 15, closeTagStart: 24, closeTagEnd: 30, rule: "html" } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start : 0, end : 30, children : [ { type : "element", tag : "div", isBlock : false, attributes : { attribute : { type : "string", value : "true", start : 4, end : 14, name: "attribute" } }, orderedAttributes: [ { type : "string", value : "true", start : 4, end : 14, name: "attribute" } ], children : [ { type : "text", text : "some text", start : 15, end : 24 } ], start : 0, end : 30, openTagStart: 0, openTagEnd: 15, closeTagStart: 24, closeTagEnd: 30, rule: "html" } ] } ]
 
 		);
 		expect(parse("<div attribute='value'>some text</div>")).toEqual(
-			[ { type : "element", tag : "div", openTagStart: 0, openTagEnd: 23, closeTagStart: 32, closeTagEnd: 38, rule: "html", isBlock : true, attributes : { attribute : { type : "string", name: "attribute", value : "value", start: 4, end: 22 } }, orderedAttributes: [ { type: "string", name: "attribute", value : "value", start: 4, end: 22 } ], children : [ { type : "text", text : "some text", start : 23, end : 32 } ], start : 0, end : 38 } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start : 0, end : 38, children : [ { type : "element", tag : "div", openTagStart: 0, openTagEnd: 23, closeTagStart: 32, closeTagEnd: 38, rule: "html", isBlock : false, attributes : { attribute : { type : "string", name: "attribute", value : "value", start: 4, end: 22 } }, orderedAttributes: [ { type: "string", name: "attribute", value : "value", start: 4, end: 22 } ], children : [ { type : "text", text : "some text", start : 23, end : 32 } ], start : 0, end : 38 } ] } ]
 
 		);
 		expect(parse("<div attribute={{TiddlerTitle}}>some text</div>")).toEqual(
 
-			[ { type : "element", tag : "div", isBlock : true, attributes : { attribute : { type : "indirect", name: "attribute", textReference : "TiddlerTitle", start : 4, end : 31 } }, orderedAttributes: [ { type : "indirect", name: "attribute", textReference : "TiddlerTitle", start : 4, end : 31 } ], children : [ { type : "text", text : "some text", start : 32, end : 41 } ], start : 0, end : 47, openTagStart: 0, openTagEnd: 32, closeTagStart: 41, closeTagEnd: 47, rule: "html" } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start: 0, end: 47, children : [ { type : "element", tag : "div", isBlock : false, attributes : { attribute : { type : "indirect", name: "attribute", textReference : "TiddlerTitle", start : 4, end : 31 } }, orderedAttributes: [ { type : "indirect", name: "attribute", textReference : "TiddlerTitle", start : 4, end : 31 } ], children : [ { type : "text", text : "some text", start : 32, end : 41 } ], start : 0, end : 47, openTagStart: 0, openTagEnd: 32, closeTagStart: 41, closeTagEnd: 47, rule: "html" } ] } ]
 
 		);
 		expect(parse("<$reveal state='$:/temp/search' type='nomatch' text=''>")).toEqual(
@@ -72,12 +72,12 @@ describe("WikiText parser tests", function() {
 		);
 		expect(parse("<div attribute={{TiddlerTitle!!field}}>some text</div>")).toEqual(
 
-			[ { type : "element", tag : "div", rule: "html", isBlock : true, attributes : { attribute : { type : "indirect", name : "attribute", textReference : "TiddlerTitle!!field", start : 4, end : 38 } }, orderedAttributes: [ { type : "indirect", name : "attribute", textReference : "TiddlerTitle!!field", start : 4, end : 38 } ], children : [ { type : "text", text : "some text", start : 39, end : 48 } ], start : 0, end : 54, openTagStart: 0, openTagEnd: 39, closeTagStart: 48, closeTagEnd: 54 } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start: 0, end: 54, children : [ { type : "element", tag : "div", rule: "html", isBlock : false, attributes : { attribute : { type : "indirect", name : "attribute", textReference : "TiddlerTitle!!field", start : 4, end : 38 } }, orderedAttributes: [ { type : "indirect", name : "attribute", textReference : "TiddlerTitle!!field", start : 4, end : 38 } ], children : [ { type : "text", text : "some text", start : 39, end : 48 } ], start : 0, end : 54, openTagStart: 0, openTagEnd: 39, closeTagStart: 48, closeTagEnd: 54 } ] } ]
 
 		);
 		expect(parse("<div attribute={{Tiddler Title!!field}}>some text</div>")).toEqual(
 
-			[ { type : "element", tag : "div", rule: "html", isBlock : true, attributes : { attribute : { type : "indirect", name : "attribute", textReference : "Tiddler Title!!field", start : 4, end : 39 } }, orderedAttributes: [ { type : "indirect", name : "attribute", textReference : "Tiddler Title!!field", start : 4, end : 39 } ], children : [ { type : "text", text : "some text", start : 40, end : 49 } ], start : 0, end : 55, openTagStart: 0, openTagEnd: 40, closeTagStart: 49, closeTagEnd: 55 } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start: 0, end: 55, children : [ { type : "element", tag : "div", rule: "html", isBlock : false, attributes : { attribute : { type : "indirect", name : "attribute", textReference : "Tiddler Title!!field", start : 4, end : 39 } }, orderedAttributes: [ { type : "indirect", name : "attribute", textReference : "Tiddler Title!!field", start : 4, end : 39 } ], children : [ { type : "text", text : "some text", start : 40, end : 49 } ], start : 0, end : 55, openTagStart: 0, openTagEnd: 40, closeTagStart: 49, closeTagEnd: 55 } ] } ]
 
 		);
 		expect(parse("<div attribute={{TiddlerTitle!!field}}>\n\nsome text</div>")).toEqual(
@@ -87,23 +87,23 @@ describe("WikiText parser tests", function() {
 		);
 		expect(parse("<div><div attribute={{TiddlerTitle!!field}}>\n\nsome text</div></div>")).toEqual(
 
-			[ { type : "element", start : 0, end: 67, openTagStart: 0, openTagEnd: 5, closeTagStart: 61, closeTagEnd: 67, attributes : {  }, orderedAttributes: [ ], tag : "div", rule: "html", isBlock : true, children : [ { type : "element", start : 5, attributes : { attribute : { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } }, orderedAttributes: [ { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } ], tag : "div", end : 61, openTagStart: 5, openTagEnd: 44, closeTagStart: 55, closeTagEnd: 61, rule: "html", isBlock : true, children : [ { type : "element", tag : "p", rule: "parseblock", start : 46, end : 55, children : [ { type : "text", text : "some text", start : 46, end : 55 } ] } ] } ] } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start: 0, end: 67, children : [ { type : "element", start : 0, end: 67, openTagStart: 0, openTagEnd: 5, closeTagStart: 61, closeTagEnd: 67, attributes : {  }, orderedAttributes: [ ], tag : "div", rule: "html", isBlock : false, children : [ { type : "element", start : 5, attributes : { attribute : { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } }, orderedAttributes: [ { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } ], tag : "div", end : 61, openTagStart: 5, openTagEnd: 44, closeTagStart: 55, closeTagEnd: 61, rule: "html", isBlock : true, children : [ { type : "element", tag : "p", rule: "parseblock", start : 46, end : 55, children : [ { type : "text", text : "some text", start : 46, end : 55 } ] } ] } ] } ] } ]
 
 		);
 		expect(parse("<div><div attribute={{TiddlerTitle!!field}}>\n\n!some heading</div></div>")).toEqual(
 
-			[ { type : "element", start : 0, end: 71, openTagStart: 0, openTagEnd: 5, closeTagStart: 71, closeTagEnd: 71, attributes : {  }, orderedAttributes: [ ], tag : "div", rule: "html", isBlock : true, children : [ { type : "element", start : 5, attributes : { attribute : { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } }, orderedAttributes: [ { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } ], tag : "div", end : 71, openTagStart: 5, openTagEnd: 44, closeTagStart: 71, closeTagEnd: 71, rule: "html", isBlock : true, children : [ { type : "element", tag : "h1", start: 46, end: 71, rule: "heading", attributes : { class : { type : "string", value : "", start: 47, end: 47 } }, children : [ { type : "text", text : "some heading</div></div>", start : 47, end : 71 } ] } ] } ] } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start: 0, end: 71, children : [ { type : "element", start : 0, end: 71, openTagStart: 0, openTagEnd: 5, closeTagStart: 71, closeTagEnd: 71, attributes : {  }, orderedAttributes: [ ], tag : "div", rule: "html", isBlock : false, children : [ { type : "element", start : 5, attributes : { attribute : { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } }, orderedAttributes: [ { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } ], tag : "div", end : 71, openTagStart: 5, openTagEnd: 44, closeTagStart: 71, closeTagEnd: 71, rule: "html", isBlock : true, children : [ { type : "element", tag : "h1", start: 46, end: 71, rule: "heading", attributes : { class : { type : "string", value : "", start: 47, end: 47 } }, children : [ { type : "text", text : "some heading</div></div>", start : 47, end : 71 } ] } ] } ] } ] } ]
 
 		);
 		expect(parse("<div><div attribute={{TiddlerTitle!!field}}>\n!some heading</div></div>")).toEqual(
 
-			[ { type : "element", start : 0, end: 70, openTagStart: 0, openTagEnd: 5, closeTagStart: 64, closeTagEnd: 70, attributes : {  }, orderedAttributes: [ ], tag : "div", rule: "html", isBlock : true, children : [ { type : "element", start : 5, attributes : { attribute : { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } }, orderedAttributes: [ { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } ], tag : "div", end : 64, openTagStart: 5, openTagEnd: 44, closeTagStart: 58, closeTagEnd: 64, rule: "html", isBlock : false, children : [ { type : "text", text : "\n!some heading", start : 44, end : 58 } ] } ] } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start: 0, end: 70, children : [ { type : "element", start : 0, end: 70, openTagStart: 0, openTagEnd: 5, closeTagStart: 64, closeTagEnd: 70, attributes : {  }, orderedAttributes: [ ], tag : "div", rule: "html", isBlock : false, children : [ { type : "element", start : 5, attributes : { attribute : { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } }, orderedAttributes: [ { start : 9, name : "attribute", type : "indirect", textReference : "TiddlerTitle!!field", end : 43 } ], tag : "div", end : 64, openTagStart: 5, openTagEnd: 44, closeTagStart: 58, closeTagEnd: 64, rule: "html", isBlock : false, children : [ { type : "text", text : "\n!some heading", start : 44, end : 58 } ] } ] } ] } ]
 
 		);
 		// Regression test for issue (#3306)
 		expect(parse("<div><span><span>\n\nSome text</span></span></div>")).toEqual(
 
-			[ { type : "element", start : 0, end: 48, openTagStart: 0, openTagEnd: 5, closeTagStart: 42, closeTagEnd: 48, attributes : {  }, orderedAttributes: [ ], tag : "div", rule: "html", isBlock : true, children : [ { type : "element", start : 5, attributes : {  }, orderedAttributes: [ ], tag : "span", end : 42, openTagStart: 5, openTagEnd: 11, closeTagStart: 35, closeTagEnd: 42, rule: "html", isBlock : false, children : [ { type : "element", start : 11, attributes : {  }, orderedAttributes: [ ], tag : "span", end : 35, openTagStart: 11, openTagEnd: 17, closeTagStart: 28, closeTagEnd: 35, rule: "html", isBlock : true, children : [ { type : "element", tag : "p", rule: "parseblock", start : 19, end : 28, children : [ { type : "text", text : "Some text", start : 19, end : 28 } ] } ] } ] } ] } ]
+			[ { type : "element", tag : "p", rule: "parseblock", start: 0, end: 48, children : [ { type : "element", start : 0, end: 48, openTagStart: 0, openTagEnd: 5, closeTagStart: 42, closeTagEnd: 48, attributes : {  }, orderedAttributes: [ ], tag : "div", rule: "html", isBlock : false, children : [ { type : "element", start : 5, attributes : {  }, orderedAttributes: [ ], tag : "span", end : 42, openTagStart: 5, openTagEnd: 11, closeTagStart: 35, closeTagEnd: 42, rule: "html", isBlock : false, children : [ { type : "element", start : 11, attributes : {  }, orderedAttributes: [ ], tag : "span", end : 35, openTagStart: 11, openTagEnd: 17, closeTagStart: 28, closeTagEnd: 35, rule: "html", isBlock : true, children : [ { type : "element", tag : "p", rule: "parseblock", start : 19, end : 28, children : [ { type : "text", text : "Some text", start : 19, end : 28 } ] } ] } ] } ] } ] } ]
 
 		);
 	});
