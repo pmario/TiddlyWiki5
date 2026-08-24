@@ -141,6 +141,25 @@ describe("Paragraph widget", function() {
 		expect(overBlock.wrapper.innerHTML).toContain("class=\"myClass\"");
 	});
 
+	it("should keep the styleblock class when the lifted node refreshes its own", function() {
+		// A node lifted out of the paragraph belongs to the child that rendered it, and
+		// ElementWidget.refresh re-assigns its class wholesale with setAttributeNS, which
+		// replaces rather than merges. Without putting ours back the author's class is
+		// silently dropped the first time the div's own class changes
+		var wiki = $tw.test.wiki();
+		wiki.addTiddler({title: "Dyn", text: "first"});
+		var rendered = render("@@.myClass\n<div class={{Dyn}}>x</div>\n@@\n",wiki);
+		expect(rendered.wrapper.innerHTML).toContain("myClass");
+		for(var pass=0; pass<3; pass++) {
+			wiki.addTiddler({title: "Dyn", text: "round" + pass});
+			refresh(rendered,["Dyn"]);
+			expect(rendered.wrapper.innerHTML).toContain("round" + pass);
+			expect(rendered.wrapper.innerHTML).toContain("myClass");
+			// Decoration is idempotent, so repeated refreshes must not stack the class up
+			expect(rendered.wrapper.innerHTML.match(/myClass/g).length).toBe(1);
+		}
+	});
+
 	it("should not wrap a run whose only content is metadata", function() {
 		// A <style> element draws nothing wherever it sits, so a run holding only metadata
 		// has not earned a paragraph. Anything else counts even when it looks empty,

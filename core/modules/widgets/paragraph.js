@@ -55,13 +55,25 @@ ParagraphWidget.prototype.decorate = function(domNode) {
 	var className = this.getAttribute("class"),
 		style = this.getAttribute("style");
 	if(className) {
-		var existingClass = domNode.getAttribute("class");
-		domNode.setAttribute("class",existingClass ? existingClass + " " + className : className);
+		// Idempotent, because a lifted node is decorated again whenever its own widget
+		// re-assigns its attributes and drops ours
+		var present = ($tw.utils.trim(domNode.getAttribute("class") || "")).split(/\s+/),
+			adding = [];
+		$tw.utils.each(className.split(/\s+/),function(name) {
+			if(name && !present.includes(name)) {
+				adding.push(name);
+			}
+		});
+		if(adding.length) {
+			domNode.setAttribute("class",present.concat(adding).join(" ").replace(/^\s+/,""));
+		}
 	}
 	if(style) {
 		// A later declaration wins in CSS, so the node's own style is appended after ours
-		var existingStyle = domNode.getAttribute("style");
-		domNode.setAttribute("style",existingStyle ? style + ";" + existingStyle : style);
+		var existingStyle = domNode.getAttribute("style") || "";
+		if(!existingStyle.includes(style)) {
+			domNode.setAttribute("style",existingStyle ? style + ";" + existingStyle : style);
+		}
 	}
 };
 
@@ -197,6 +209,16 @@ ParagraphWidget.prototype.refresh = function(changedTiddlers) {
 			shouldWrap = !containsBlockElement(nodes) && hasContent(nodes);
 		if(shouldWrap !== this.wrappedInParagraph) {
 			this.refreshSelf();
+		} else if(!this.wrappedInParagraph) {
+			// A node lifted out of the paragraph belongs to the child that rendered it, and
+			// that child replaces its own class and style wholesale when its attributes
+			// change, taking the styleblock's with them. So put ours back
+			var self = this;
+			$tw.utils.each(nodes,function(node) {
+				if(node.nodeType === 1 && node.parentNode === self.parentDomNode) {
+					self.decorate(node);
+				}
+			});
 		}
 		return true;
 	}
