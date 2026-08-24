@@ -170,7 +170,7 @@ holds no text and is a visible colour swatch
 function hasContent(nodes) {
 	for(var t=0; t<nodes.length; t++) {
 		var node = nodes[t];
-		if(node.nodeType === 1 && $tw.config.htmlMetadataElements.indexOf((node.tagName || "").toLowerCase()) === -1) {
+		if(node.nodeType === 1 && !$tw.config.htmlMetadataElements.includes((node.tagName || "").toLowerCase())) {
 			return true;
 		}
 		if(node.nodeType === 3 && /\S/.test(node.textContent || "")) {
@@ -186,7 +186,7 @@ one or because it holds an element that would
 */
 function isBlockNode(node) {
 	var tag = (node.tagName || "").toLowerCase();
-	if(tag && $tw.config.htmlParagraphClosingElements.indexOf(tag) !== -1) {
+	if(tag && $tw.config.htmlParagraphClosingElements.includes(tag)) {
 		return true;
 	}
 	return !!(node.childNodes && node.childNodes.length && containsBlockElement(node.childNodes));
@@ -234,7 +234,7 @@ function containsBlockElement(nodes) {
 	for(var t=0; t<nodes.length; t++) {
 		var node = nodes[t],
 			tag = (node.tagName || "").toLowerCase();
-		if(tag && $tw.config.htmlParagraphClosingElements.indexOf(tag) !== -1) {
+		if(tag && $tw.config.htmlParagraphClosingElements.includes(tag)) {
 			return true;
 		}
 		if(node.childNodes && node.childNodes.length && containsBlockElement(node.childNodes)) {
