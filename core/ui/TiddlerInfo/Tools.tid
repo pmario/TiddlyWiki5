@@ -6,9 +6,20 @@ caption: {{$:/language/TiddlerInfo/Tools/Caption}}
 \define config-title()
 $:/config/ViewToolbarButtons/Visibility/$(listItem)$
 \end
+<$set name="tv-config-toolbar-icons" value="yes">
 
-<$let tv-config-toolbar-icons="yes" tv-config-toolbar-text="yes" tv-config-toolbar-class="">
+<$set name="tv-config-toolbar-text" value="yes">
+
+<$set name="tv-config-toolbar-class" value="">
+
 <$list filter="[all[shadows+tiddlers]tag[$:/tags/ViewToolbar]!has[draft.of]]" variable="listItem">
-<div class="tc-tiny-v-gap-bottom"><$checkbox tiddler=<<config-title>> field="text" checked="show" unchecked="hide" default="show"/> <$transclude tiddler=<<listItem>>/> <i class="tc-muted"><$transclude tiddler=<<listItem>> field="description"/></i></div>
+
+<$checkbox tiddler=<<config-title>> field="text" checked="show" unchecked="hide" default="show"/> <$transclude tiddler=<<listItem>>/> <i class="tc-muted"><$transclude tiddler=<<listItem>> field="description"/></i>
+
 </$list>
-</$let>
+
+</$set>
+
+</$set>
+
+</$set>
