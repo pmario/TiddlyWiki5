@@ -37,4 +37,8 @@ exports.htmlBlockElements = "address,article,aside,audio,blockquote,canvas,dd,de
 // not htmlBlockElements: <audio> never closes a paragraph, while <main> does.
 exports.htmlParagraphClosingElements = "address,article,aside,blockquote,center,dd,details,dialog,dir,div,dl,dt,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,li,listing,main,menu,nav,ol,p,plaintext,pre,search,section,summary,table,ul,xmp".split(",");
 
+// Metadata content. These never generate a box, whatever attributes they carry, so a run
+// holding nothing else has nothing to show and has not earned a paragraph
+exports.htmlMetadataElements = "base,link,meta,noscript,script,style,template,title".split(",");
+
 exports.htmlUnsafeElements = "script".split(",");

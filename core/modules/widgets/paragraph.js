@@ -30,11 +30,6 @@ Inherit from the base widget class
 */
 ParagraphWidget.prototype = new Widget();
 
-/*
-A paragraph holds phrasing content, so anything inside it renders inline
-*/
-ParagraphWidget.prototype.renderContext = "inline";
-
 ParagraphWidget.prototype.render = function(parent,nextSibling) {
 	this.parentDomNode = parent;
 	this.computeAttributes();
@@ -171,11 +166,16 @@ element. Only a run that produced nothing at all, or nothing but whitespace, goe
 Note this deliberately keeps the paragraph around inline elements. A blank line between
 two <$radio> widgets is the author saying they are separate blocks, and the paragraph is
 what carries that. Dropping it lays them side by side, which is not what was written
+
+The one exception is metadata content such as <style>, which draws nothing wherever it
+sits. Everything else counts even when it looks empty, because an attribute alone can give
+an element a box: <span style="display:inline-block;width:1em;background-color:LightPink">
+holds no text and is a visible colour swatch
 */
 function hasContent(nodes) {
 	for(var t=0; t<nodes.length; t++) {
 		var node = nodes[t];
-		if(node.nodeType === 1) {
+		if(node.nodeType === 1 && $tw.config.htmlMetadataElements.indexOf((node.tagName || "").toLowerCase()) === -1) {
 			return true;
 		}
 		if(node.nodeType === 3 && /\S/.test(node.textContent || "")) {
