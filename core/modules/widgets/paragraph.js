@@ -47,14 +47,9 @@ ParagraphWidget.prototype.render = function(parent,nextSibling) {
 };
 
 /*
-Carry the author's class and style onto a node that stands in for this block run.
-
-A styleblock decorates whatever parseBlock returned, so @@.myClass wrapped around a
-<div> reaches this widget as a class on the paragraph. Once the paragraph is gone the
-class has to travel to what replaced it, or the author's styling silently disappears.
-
-Merged rather than assigned, because a node lifted out of the paragraph carries its own
-class and style already and must keep them
+A styleblock decorates whatever parseBlock returned, so @@.myClass around a <div> arrives
+here as a class on the paragraph and has to travel to whatever replaces it. Merged rather
+than assigned, because a node lifted out of the paragraph keeps its own class and style
 */
 ParagraphWidget.prototype.decorate = function(domNode) {
 	var className = this.getAttribute("class"),
@@ -71,14 +66,9 @@ ParagraphWidget.prototype.decorate = function(domNode) {
 };
 
 /*
-Lift the children out of the paragraph and discard it, keeping their order.
-
 A run can mix inline content with a block element, as a typed transclusion does when it
-renders text either side of a <pre>. Dropping the paragraph outright would leave that
-text bare, so the run is split the way a browser splits it: each stretch of inline
-content gets a paragraph of its own and every block element sits between them.
-
-The children hold a reference to the node they rendered into, so it has to be corrected
+renders text either side of a <pre>. Dropping the paragraph outright would leave that text
+bare, so the run is split the way a browser splits it instead
 */
 ParagraphWidget.prototype.unwrap = function(parent,domNode) {
 	var self = this,
@@ -160,16 +150,9 @@ function collectDomNodes(widget) {
 }
 
 /*
-Whether a paragraph earns its place. Anything that rendered something does: text, or an
-element. Only a run that produced nothing at all, or nothing but whitespace, goes without.
-
-Note this deliberately keeps the paragraph around inline elements. A blank line between
-two <$radio> widgets is the author saying they are separate blocks, and the paragraph is
-what carries that. Dropping it lays them side by side, which is not what was written
-
-The one exception is metadata content such as <style>, which draws nothing wherever it
-sits. Everything else counts even when it looks empty, because an attribute alone can give
-an element a box: <span style="display:inline-block;width:1em;background-color:LightPink">
+Whether a paragraph earns its place. Metadata such as <style> draws nothing wherever it
+sits, so it does not count. Everything else does, even when it looks empty, because an
+attribute alone can give an element a box: <span style="width:1em;background:LightPink">
 holds no text and is a visible colour swatch
 */
 function hasContent(nodes) {
@@ -208,11 +191,8 @@ retaken. Re-rendering is the only way to move the nodes into or out of the parag
 */
 ParagraphWidget.prototype.refresh = function(changedTiddlers) {
 	if(this.refreshChildren(changedTiddlers)) {
-		// Re-render only when the answer actually changes. Doing it whenever a child
-		// refreshes would rebuild the run on every unrelated state change
-		// Without a paragraph of our own there is no container to read, and the cached
-		// node list goes stale as soon as a child re-renders, so ask the children what
-		// they hold now
+		// Ask the children what they hold now: the cached list goes stale as soon as one
+		// of them re-renders
 		var nodes = this.wrappedInParagraph ? this.domNodes[0].childNodes : collectDomNodes(this),
 			shouldWrap = !containsBlockElement(nodes) && hasContent(nodes);
 		if(shouldWrap !== this.wrappedInParagraph) {

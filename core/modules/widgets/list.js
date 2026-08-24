@@ -105,9 +105,8 @@ ListWidget.prototype.findExplicitTemplates = function() {
 	this.explicitEmptyTemplate = null;
 	this.explicitJoinTemplate = null;
 	this.hasTemplateInBody = false;
-	// Where the parser put the marker inside a paragraph it had already decided the content
-	// is a block, so keep that paragraph around the template. Taking only the marker's
-	// children would throw the decision away and leave bare text nothing can style
+	// A marker inside a paragraph means the parser already decided this run is a block, so
+	// keep that paragraph rather than taking the marker's children and losing the decision
 	var searchChildren = function(childNodes,enclosingParagraph) {
 		var foundInlineTemplate = false;
 		var keepParagraph = function(children) {

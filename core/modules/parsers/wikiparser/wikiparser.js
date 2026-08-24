@@ -256,9 +256,8 @@ WikiParser.prototype.parseBlock = function(terminatorRegExpString) {
 	var start = this.pos;
 	var children = this.parseInlineRun(terminatorRegExp);
 	var end = this.pos;
-	// The paragraph is provisional. Whether it survives depends on what its content
-	// renders to, which a transclusion does not decide until it runs, so the answer
-	// belongs to the paragraph widget rather than to the parse
+	// Provisional: the paragraph widget decides at render time whether this survives,
+	// which is the first point at which a transclusion's content is known
 	return [{type: "element", tag: "p", children: children, start: start, end: end, rule: "parseblock" }];
 };
 
