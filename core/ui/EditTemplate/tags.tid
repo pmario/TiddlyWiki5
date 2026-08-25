@@ -40,7 +40,16 @@ tags: $:/tags/EditTemplate
 
 \procedure edit-tags-template(tagField:"tags")
 <div class="tc-edit-tags">
-	<$list filter="[<currentTiddler>get<tagField>enlist-input[]sort[title]]" storyview="pop">
+	<!-- Editing must never hide a tag, or a filter such as [!prefix[.]] would leave a tag on the tiddler that cannot be seen or removed here. So the setting is applied only when it returns the same number of tags, which means it reorders rather than filters -->
+	<$let
+		source="[<currentTiddler>get<tagField>enlist-input[]]"
+		filteredExpr="[(filtered)]"
+		total={{{ [subfilter<source>count[]] }}}
+		filtered={{{ [subfilter<source>] +[subfilter{$:/config/Tags/SortFilter}] }}}
+		useFiltered={{{ [(filtered)count[]match<total>then[yes]] }}}
+		listFilter={{{ [<useFiltered>match[yes]then<filteredExpr>] :else[<source>] }}}
+	>
+	<$list filter=<<listFilter>> storyview="pop">
 		<$macrocall $name="tag-body"
 			colour={{{ [<currentTiddler>] :cascade[all[shadows+tiddlers]tag[$:/tags/TiddlerColourFilter]!is[draft]get[text]] }}}
 			palette={{$:/palette}}
@@ -48,6 +57,7 @@ tags: $:/tags/EditTemplate
 			tagField=<<tagField>>
 		/>
 	</$list>
+	</$let>
 	<$let tabIndex={{$:/config/EditTabIndex}} cancelPopups="yes">
 		<$macrocall $name="tag-picker" tagField=<<tagField>>/>
 	</$let>

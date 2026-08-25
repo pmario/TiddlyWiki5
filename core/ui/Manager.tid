@@ -40,7 +40,7 @@ color: #bbb
 		<div class="tc-manager-control">
 			<<lingo Controls/FilterByTag/Prompt>>&#32;<$select tiddler="$:/config/Manager/Tag" default="">
 				<option value=""><<lingo Controls/FilterByTag/None>></option>
-				<$list filter="[!is{$:/config/Manager/System}tags[]!is[system]sort[title]]" variable="tag">
+				<$list filter="[!is{$:/config/Manager/System}tags[]!is[system]] +[subfilter{$:/config/Tags/GlobalSortFilter}] :else[!is{$:/config/Manager/System}tags[]!is[system]sort[]]" variable="tag">
 					<option value=<<tag>>><$text text=<<tag>>/></option>
 				</$list>
 			</$select>
