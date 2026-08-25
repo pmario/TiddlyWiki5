@@ -33,9 +33,16 @@ If you find a contradiction (between these rules, the code, an issue, or the req
 - CSS targets the same era (roughly 2018). You SHOULD NOT use newer features such as `:has()`, container queries, `@layer`, `@scope`, or subgrid. If one would be far simpler than the alternative, you MAY propose it with trade-offs for the maintainer to decide; you SHOULD NOT adopt it silently
 - You MUST NOT use CSS `!important`. Use specificity instead
 
+## Trim pass
+
+This applies to everything you write: code comments, commit and pull request text, documentation, issue bodies, review replies
+
+- You MUST cut your first draft before anyone sees it. Expect to remove more than half: a percentage target can be met while the text is still twice as long as it should be
+- Present your optimum; the author can still shorten it further. A draft presented for review counts as final, because authors often approve unread and reviewers inherit the bloat
+
 ## Code Comments
 
-- A comment SHOULD state the **why** of a non-obvious decision, never the **how**. One sentence is usually enough
+- A comment MUST state the **why** of a non-obvious decision, never the **how**, in ONE sentence. A second sentence needs a reason to exist
 - Use a concrete example, not abstract placeholders. Comments SHOULD NOT contain conversational filler or explanations of standard APIs or basic language constructs
 - Bad: a five line paragraph restating what the code already says
 - Good: `// 'instant' avoids re-animation by CSS scroll-behavior: smooth`
@@ -77,7 +84,7 @@ This repository squash merges pull requests, so the PR title and description bec
 - You SHOULD  base documentation changes that can be published "out of order" on `upstream tiddlywiki-com` branch. Change TW version specific documentation based on `master`
 - **PR title:** it becomes the permanent commit subject, so it MUST be in the imperative mood, capitalised (first word and proper nouns only), 50 characters or fewer, with no trailing period. Check the mood by completing the sentence "If applied, this pull request will ...". A subsystem prefix MAY be added, for example `Menu plugin: ...`
 - PR description: the body SHOULD be a one-sentence executive summary, then concise, imperative bullets of what changed and why. The imperative mood applies to the whole commit message, not just the title. The description MUST NOT contain AI marketing or polite filler text
-- You MUST cut your first draft of any comment or commit text before showing it to anyone. Expect to remove more than half: a percentage target can be met while the text is still twice as long as it should be. Present your optimum; the author can still shorten it further. A draft presented for review counts as final: authors often approve unread, and reviewers inherit the bloat
+- The title and description get the trim pass like everything else
 - The message MUST NOT repeat what the reader already has. Of each sentence ask where else it is available: the linked issue or advisory, the diff, the code comments, the review thread. If it is there, cut it. The diff already lists changed files, so name a file only when it is the subject of the change, and say what it does
 - A PR description SHOULD NOT use section headings. Needing them means it is too long. You SHOULD NOT pre-empt review objections by defending decisions nobody has questioned; answer when asked
 - You SHOULD NOT use hyphens, en-dashes, or em-dashes as stylistic punctuation in prose and code comments; prefer short sentences
