@@ -9,23 +9,33 @@ caption: {{$:/language/ControlPanel/Settings/TagSorting/Caption}}
 
 <!-- The effective mode: what is stored, or failing that what the filter itself implies, so editing the filter by hand still selects the right radio -->
 \function tf.tagSortMode(mode, filter)
-[<mode>get[text]]
-:else[<filter>get[text]match<sorted-preset>then[alphabetical]]
+[<filter>get[text]match<sorted-preset>then[alphabetical]]
 :else[<filter>get[text]!match[]then[custom]]
+:else[<mode>get[text]match[custom]then[custom]]
 :else[[unsorted]]
 \end
 
 <!-- "custom" cannot be a value of the filter tiddler itself, or choosing it would overwrite the filter being written, so the radios have a mode tiddler of their own. The templates read only the filter tiddlers, never the mode -->
-\procedure tag-sort-radios(mode, filter)
-<$let effective={{{ [function[tf.tagSortMode],<mode>,<filter>] }}}>
+<!-- Choosing a preset overwrites the filter tiddler, so a custom filter is put aside first and read back when custom is chosen again. The $list runs no action when the current value is a preset, which stops a good backup being overwritten by an empty one -->
+\procedure keep-custom-filter()
+<$list filter="[<filter>get[text]!match[]!match<sorted-preset>]" variable="customValue">
+<$action-setfield $tiddler=<<backup>> text=<<customValue>>/>
+</$list>
+\end
 
-<$radio tiddler=<<mode>> value="unsorted" default=<<effective>> actions="""<$action-setfield $tiddler=<<filter>> text=""/>""">
+\procedure tag-sort-radios(mode, filter)
+<$let effective={{{ [function[tf.tagSortMode],<mode>,<filter>] }}}
+	backup={{{ [<filter>addsuffix[/backup]] }}}
+>
+
+<!-- The presets delete the mode tiddler again, so only "custom" ever stores one. That keeps the filter the single source of truth: editing or deleting it moves the radio, which a stored mode would otherwise override -->
+<$radio tiddler=<<mode>> value="unsorted" default=<<effective>> actions="""<<keep-custom-filter>><$action-deletetiddler $tiddler=<<filter>>/><$action-deletetiddler $tiddler=<<mode>>/>""">
 <span class="tc-tiny-gap-left"><<lingo Unsorted>></span>
 </$radio><br>
-<$radio tiddler=<<mode>> value="alphabetical" default=<<effective>> actions="""<$action-setfield $tiddler=<<filter>> text="[sort[]]"/>""">
+<$radio tiddler=<<mode>> value="alphabetical" default=<<effective>> actions="""<<keep-custom-filter>><$action-setfield $tiddler=<<filter>> text="[sort[]]"/><$action-deletetiddler $tiddler=<<mode>>/>""">
 <span class="tc-tiny-gap-left"><<lingo Alphabetical>></span>
 </$radio><br>
-<$radio tiddler=<<mode>> value="custom" default=<<effective>>>
+<$radio tiddler=<<mode>> value="custom" default=<<effective>> actions="""<$action-setfield $tiddler=<<filter>> text={{{ [<backup>get[text]] }}}/>""">
 <span class="tc-tiny-gap-left"><<lingo Custom/Radio>></span>
 </$radio>
 </$let>
