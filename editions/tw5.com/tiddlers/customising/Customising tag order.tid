@@ -1,5 +1,5 @@
 created: 20260825030000000
-modified: 20260825034500000
+modified: 20260825175306103
 tags: [[Customise TiddlyWiki]]
 title: Customising tag order
 type: text/vnd.tiddlywiki
@@ -7,6 +7,8 @@ type: text/vnd.tiddlywiki
 <<.from-version "5.5.0">> The tags shown on a tiddler keep the order you added them in, rather than being sorted alphabetically. With only a few tags the position carries meaning: the first tag reads as the most important, and tags placed next to each other read as belonging together.
 
 The order is controlled by [[$:/config/Tags/SortFilter]], under ''Control Panel'' > ''Settings'' > ''Tag Sorting''. It holds a [[filter run|Filter Run]] that is applied to the tiddler's tags, and offers three choices: do not sort, sort alphabetically, or supply your own filter.
+
+[[TagOrderExample]] is tagged out of alphabetical order on purpose, so each choice is visible as you make it.
 
 Lists that show every tag in the wiki, such as the tag manager and the sidebar ''Tags'' tab, are always alphabetical and are not affected by this setting.
 
