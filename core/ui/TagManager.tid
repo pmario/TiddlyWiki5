@@ -71,7 +71,7 @@ color: #bbb
 		<th><<lingo Icon/Heading>></th>
 		<th><<lingo Info/Heading>></th>
 	</tr>
-	<$list filter="[tags[]!is[system]] +[subfilter{$:/config/Tags/GlobalSortFilter}] :else[tags[]!is[system]]">
+	<$list filter="[tags[]!is[system]sort[title]]">
 		<tr>
 			<td><$transclude $variable="color-picker-button"/></td>
 			<td>{{||$:/core/ui/TagTemplate}}</td>

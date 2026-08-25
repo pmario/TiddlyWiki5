@@ -43,17 +43,11 @@ caption: {{$:/language/ControlPanel/Settings/TagSorting/Caption}}
 
 ><<tag-sort-radios "$:/config/Tags/SortMode" "$:/config/Tags/SortFilter">>
 
-<$link to="$:/config/Tags/GlobalSortFilter" class="tc-control-panel-item">
-<<lingo GlobalTags/Hint>>
-</$link>
-
-><<tag-sort-radios "$:/config/Tags/GlobalSortMode" "$:/config/Tags/GlobalSortFilter">>
-
 !! <<lingo Custom/Heading>>
 
 <<<
 
-<%if [function[tf.tagSortMode],[$:/config/Tags/SortMode],[$:/config/Tags/SortFilter]match[custom]] :else[function[tf.tagSortMode],[$:/config/Tags/GlobalSortMode],[$:/config/Tags/GlobalSortFilter]match[custom]] %>
+<%if [function[tf.tagSortMode],[$:/config/Tags/SortMode],[$:/config/Tags/SortFilter]match[custom]] %>
 <div class="tc-message-box">
 
 <<lingo Custom/Warning>></div>
@@ -63,6 +57,5 @@ caption: {{$:/language/ControlPanel/Settings/TagSorting/Caption}}
 <<lingo Custom/Hint>>
 
 |<<lingo TiddlerTags/Caption>> |<<tag-sort-input "$:/config/Tags/SortMode" "$:/config/Tags/SortFilter">> |
-|<<lingo GlobalTags/Caption>> |<<tag-sort-input "$:/config/Tags/GlobalSortMode" "$:/config/Tags/GlobalSortFilter">> |
 
 <<<

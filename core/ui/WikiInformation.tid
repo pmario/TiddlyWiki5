@@ -52,9 +52,7 @@ Click to generate wiki information report
 
 \function get.tag.sort.custom()
 [[$:/config/Tags/SortMode]get[text]match[custom]then[yes]]
-:else[[$:/config/Tags/GlobalSortMode]get[text]match[custom]then[yes]]
 :else[[$:/config/Tags/SortFilter]get[text]!match[]!match<sorted-preset>then[yes]]
-:else[[$:/config/Tags/GlobalSortFilter]get[text]!match[]!match<sorted-preset>then[yes]]
 :else[[no]]
 \end
 
