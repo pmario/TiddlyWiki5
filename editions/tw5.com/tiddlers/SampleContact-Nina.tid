@@ -1,0 +1,35 @@
+created: 20260830203902063
+inherit-compound: ContactTemplate
+modified: 20260830205509481
+relation-company: Company
+tags: ContactCard
+title: SampleContact-Nina
+type: text/vnd.tiddlywiki-multiple+fields
+
+title: body
+
+Backend engineer on the sync adaptors. Joined to help wire compound fields into the store.
++
+title: first-name
+
+Nina
++
+title: last-name
+
+Torres
++
+title: role
+
+Developer
++
+title: email
+
+nina.torres@example.com
++
+title: phone
+
++01-555-123-456
++
+title: website
+
+https://example.com
