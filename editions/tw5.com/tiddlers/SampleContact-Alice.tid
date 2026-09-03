@@ -1,5 +1,5 @@
 created: 20260612152408817
-inherit-compound: ContactTemplate
+inherit-schema: ContactTemplate
 modified: 20260612201309634
 relation-company: Company
 tags: ContactCard
@@ -12,53 +12,79 @@ type: multiline
 UX designer with a focus on wiki interfaces. Contributed design ideas for the new field editor panes.
 +
 title: first-name
+label: First name
+placeholder: Given name
 
 Alice
 +
 title: last-name
+label: Last name
+placeholder: Family name
 
 Chen
 +
 title: list
 type: relation-Company
+label: Company
+tooltip: Records tagged Company; typing a new name creates one
 
 [[DesignBridge]]
 +
 title: role
+type: select-roles
+roles: [[Developer]] [[UX Designer]] [[Designer]] [[Manager]] [[Team Lead]] [[Founder]] [[CEO]]
+label: Role
+tooltip: Locked while the category is personal
+readonly-filter: [{!!category}match[personal]]
 
 UX Designer
 +
 title: email-work
 type: email
+label: Work email
+placeholder: name@company.example
 
 alice.chen@designbridge.io
 +
 title: email-personal
 type: email
+label: Personal email
+placeholder: name@example.com
 
 alice@chen.me
 +
 title: phone-mobile
 type: phone
+label: Mobile
+placeholder: +43 660 1234567
 
 +44-7700-900123
 +
 title: website
 type: url
+label: Website
+placeholder: https://
 
 https://alicechen.design
 +
 title: birthday
 type: date
+label: Birthday
+tooltip: Private, hidden while the category is business
+hide-filter: [{!!category}match[business]]
 
 1988-11-22
 +
 title: category
 type: option-personal-business
+label: Category
+tooltip: Switch it to see the birthday hide and the role lock
 
 business
 +
 title: accent-color
 type: color
+label: Accent colour
+tooltip: Border and heading colour of the card
 
 #e74c3c

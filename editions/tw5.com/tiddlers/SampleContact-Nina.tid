@@ -1,5 +1,5 @@
 created: 20260830203902063
-inherit-compound: ContactTemplate
+inherit-schema: ContactTemplate
 modified: 20260830205509481
 relation-company: Company
 tags: ContactCard
@@ -7,29 +7,48 @@ title: SampleContact-Nina
 type: text/vnd.tiddlywiki-multiple+fields
 
 title: body
+type: multiline
 
 Backend engineer on the sync adaptors. Joined to help wire compound fields into the store.
 +
 title: first-name
+label: First name
+placeholder: Given name
 
 Nina
 +
 title: last-name
+label: Last name
+placeholder: Family name
 
 Torres
 +
 title: role
+type: select-roles
+roles: [[Developer]] [[UX Designer]] [[Designer]] [[Manager]] [[Team Lead]] [[Founder]] [[CEO]]
+label: Role
+tooltip: Locked while the category is personal
+readonly-filter: [{!!category}match[personal]]
 
 Developer
 +
 title: email-work
+type: email
+label: Work email
+placeholder: name@company.example
 
 nina.torres@example.com
 +
 title: phone-mobile
+type: phone
+label: Mobile
+placeholder: +43 660 1234567
 
 +01-555-123-456
 +
 title: website
+type: url
+label: Website
+placeholder: https://
 
 https://example.com

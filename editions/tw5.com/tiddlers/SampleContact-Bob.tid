@@ -24,6 +24,7 @@ Founder
 +
 title: list
 type: relation-Company
+label: Startup
 
 [[NoteGraph]]
 +
@@ -39,6 +40,7 @@ type: phone
 +
 title: birthday
 type: date
+label: Born
 
 1991-03-08
 +

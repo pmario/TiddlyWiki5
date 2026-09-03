@@ -1,0 +1,27 @@
+created: 20260903000000000
+modified: 20260903000000000
+tags: Concepts
+title: CompoundSchema
+type: text/vnd.tiddlywiki
+
+A schema is a `text/vnd.tiddlywiki-multiple+fields` tiddler that holds structure for other records: sub-entry names in form order, `type:` headers and the [[presentation headers|CompoundFieldHeaders]]. Its values are ignored, so a schema can carry example values as documentation. [[ContactTemplate]] is one.
+
+! Following a schema
+
+A record names its schema in one of two fields:
+
+|!Field |!Who owns the headers |
+|`inherit-schema: X` |X owns every entry it defines. The record's own headers for those entries are ignored and are rewritten to X's on every save, so the record stays self-describing wherever it travels. Entries only the record has keep their headers |
+|`inherit-compound: X` |the record. X only fills in headers the record lacks, and the record's text is never rewritten |
+
+`inherit-schema` wins if both are present. A pointer to a missing tiddler is ignored and the record is self-contained.
+
+`[<record>compound-schema[]]` returns the schema; `compound-schema:strict[]` and `compound-schema:loose[]` return only the respective kind. `compound-field-names[]` lists schema entries first, in schema order, then local extras; `compound-field-type`, `compound-field-meta` and `compound-field-types` follow the ownership above.
+
+! In the editor
+
+The edit template shows a locked type for entries a strict schema owns and the type dropdown for the rest. The raw text mode can change anything, but the strict headers are written back on save.
+
+! Travelling
+
+An `inherit-schema` record carries its schema's headers, so it renders the same in a wiki without the schema. The import dialog warns when the named schema is neither in the wiki nor in the import.

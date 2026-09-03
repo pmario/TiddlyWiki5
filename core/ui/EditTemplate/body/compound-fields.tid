@@ -98,30 +98,38 @@ $:/config/EditorToolbarButtons/Visibility/$(currentTiddler)$
 <$let
 	typeStateTiddler={{{ [<qualify "$:/temp/compound-type-select/">addsuffix<fieldName>] }}}
 	fieldType={{{ [<currentTiddler>compound-field-type<fieldName>] }}}
+	_schema={{{ [<currentTiddler>compound-schema:strict[]] }}}
+	_schemaOwns={{{ [<_schema>compound-field-names[]match<fieldName>] }}}
+	_schemaType={{{ [<_schema>compound-field-type<fieldName>] ~[[single-line]] }}}
 >
-	<$select tiddler=<<typeStateTiddler>> field="text" default=<<fieldType>>
-		actions="""<$action-setfield $tiddler=<<currentTiddler>> $index=<<fieldName>>
-			$indexProperty="type" $value={{{ [<typeStateTiddler>get[text]] }}}/>""">
-		<option value="">single-line</option>
-		<option value="multiline">multiline</option>
-		<option value="date">date</option>
-		<option value="date-time">date-time</option>
-		<option value="email">email</option>
-		<option value="phone">phone</option>
-		<option value="url">url</option>
-		<option value="color">color</option>
-		<option value="template-prefix">template-prefix</option>
-		<$list filter="[<currentTiddler>compound-field-types[]prefix[option-]] option-yes-no +[unique[]]" variable="optionType">
-			<option value=<<optionType>>><$text text=<<optionType>>/></option>
-		</$list>
-		<$list filter="[<currentTiddler>compound-field-types[]prefix[select-]] +[unique[]]" variable="selectType">
-			<option value=<<selectType>>><$text text=<<selectType>>/></option>
-		</$list>
-		<!-- Relation types: the configurable target list plus any already used here, so a relation can be applied to several fields. -->
-		<$list filter="[{$:/config/CompoundFields/RelationTargets}enlist-input[]addprefix[relation-]] [<currentTiddler>compound-field-types[]prefix[relation-]] +[unique[]]" variable="relationType">
-			<option value=<<relationType>>><$text text=<<relationType>>/></option>
-		</$list>
-	</$select>
+	<%if [<_schemaOwns>!is[blank]] %>
+		<!-- A strict schema owns this entry, so a local choice would be ignored -->
+		<span class="tc-compound-field-type-locked" title={{{ [<_schema>addprefix[Type set by ]] }}}><$text text=<<_schemaType>>/></span>
+	<%else%>
+		<$select tiddler=<<typeStateTiddler>> field="text" default=<<fieldType>>
+			actions="""<$action-setfield $tiddler=<<currentTiddler>> $index=<<fieldName>>
+				$indexProperty="type" $value={{{ [<typeStateTiddler>get[text]] }}}/>""">
+			<option value="">single-line</option>
+			<option value="multiline">multiline</option>
+			<option value="date">date</option>
+			<option value="date-time">date-time</option>
+			<option value="email">email</option>
+			<option value="phone">phone</option>
+			<option value="url">url</option>
+			<option value="color">color</option>
+			<option value="template-prefix">template-prefix</option>
+			<$list filter="[<currentTiddler>compound-field-types[]prefix[option-]] option-yes-no +[unique[]]" variable="optionType">
+				<option value=<<optionType>>><$text text=<<optionType>>/></option>
+			</$list>
+			<$list filter="[<currentTiddler>compound-field-types[]prefix[select-]] +[unique[]]" variable="selectType">
+				<option value=<<selectType>>><$text text=<<selectType>>/></option>
+			</$list>
+			<!-- Relation types: the configurable target list plus any already used here, so a relation can be applied to several fields. -->
+			<$list filter="[{$:/config/CompoundFields/RelationTargets}enlist-input[]addprefix[relation-]] [<currentTiddler>compound-field-types[]prefix[relation-]] +[unique[]]" variable="relationType">
+				<option value=<<relationType>>><$text text=<<relationType>>/></option>
+			</$list>
+		</$select>
+	<%endif%>
 </$let>
 \end
 

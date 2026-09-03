@@ -37,7 +37,7 @@ Anything after `option-` is treated as data; no separate definition is needed. T
 
 ! Extending: `select-…` (dropdown sourced from a metadata header)
 
-The `select-KEY` form looks for a metadata header named `KEY` on the //same sub-entry// (or, via [[inherit-compound|InheritCompoundField]], on the template). The header's value is split as a [[title list|Title List]] to produce the dropdown options.
+The `select-KEY` form looks for a metadata header named `KEY` on the //same sub-entry// (or on the [[schema|CompoundSchema]] that applies to the tiddler). The header's value is split as a [[title list|Title List]] to produce the dropdown options.
 
 ```
 title: role
@@ -47,7 +47,7 @@ roles: [[Developer]] [[Designer]] [[Team Lead]] CEO
 Designer
 ```
 
-The lookup goes through the `compound-field-meta` [[filter operator|Filter Operators]], so the option list can live on a shared template:
+The lookup goes through the `compound-field-meta` [[filter operator|Filter Operators]], so the option list can live on a shared schema:
 
 ```
 title: ContactTemplate
@@ -62,14 +62,14 @@ roles: [[Developer]] [[Designer]] [[Team Lead]] CEO
 ```
 title: Alice
 type: text/vnd.tiddlywiki-multiple+fields
-inherit-compound: ContactTemplate
+inherit-schema: ContactTemplate
 
 title: role
 
 Designer
 ```
 
-`Alice` does not redefine `roles`. The editor reads the option list from `ContactTemplate` via the inheritance fallback.
+`Alice` does not define `roles`. `inherit-schema` makes `ContactTemplate` her [[schema|CompoundSchema]], and the editor reads the option list from it.
 
 ! Adding a brand-new editor type
 

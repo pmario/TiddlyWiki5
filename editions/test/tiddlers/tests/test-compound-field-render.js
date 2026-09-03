@@ -16,7 +16,7 @@ describe("compound-field procedure and presentation headers", function() {
 
 	var COMPOUND_TYPE = "text/vnd.tiddlywiki-multiple+fields";
 
-	// The template carries the presentation headers; the record inherits them.
+	// The schema carries the presentation headers; Record follows it strictly, Loose loosely, Loner not at all.
 	var templateText = [
 		"title: email",
 		"type: email",
@@ -37,8 +37,11 @@ describe("compound-field procedure and presentation headers", function() {
 		""
 	].join("\n");
 
+	// The record's own headers on email are overruled by the schema; category is local only
 	var recordText = [
 		"title: email",
+		"type: date",
+		"label: Ignored",
 		"",
 		"jane@example.com",
 		"+",
@@ -51,6 +54,7 @@ describe("compound-field procedure and presentation headers", function() {
 		"1990-06-15",
 		"+",
 		"title: category",
+		"label: Kind",
 		"",
 		"business"
 	].join("\n");
@@ -60,7 +64,10 @@ describe("compound-field procedure and presentation headers", function() {
 		wiki.addTiddlers([
 			$tw.wiki.getTiddler("$:/core/macros/compound-field"),
 			{title: "Template", type: COMPOUND_TYPE, text: templateText},
-			{title: "Record", type: COMPOUND_TYPE, "inherit-compound": "Template", text: recordText},
+			{title: "Record", type: COMPOUND_TYPE, "inherit-schema": "Template", text: recordText},
+			{title: "Loose", type: COMPOUND_TYPE, "inherit-compound": "Template", text: recordText},
+			{title: "Loner", type: COMPOUND_TYPE, text: recordText},
+			{title: "Draft of 'Record'", "draft.of": "Record", "draft.title": "Record", type: COMPOUND_TYPE, "inherit-schema": "Template", text: recordText},
 			{title: "Plain", text: "plain tiddler", email: "plain@example.com"}
 		]);
 		wiki.addIndexersToWiki();
@@ -92,11 +99,42 @@ describe("compound-field procedure and presentation headers", function() {
 		return null;
 	}
 
-	it("compound-field-meta:prop<name> reads a header by suffix, template fallback included", function() {
+	it("compound-field-meta:prop<name> reads a header by suffix, from the schema", function() {
 		var wiki = setupWiki();
 		expect(wiki.filterTiddlers("[[Record]compound-field-meta:label[email]]")).toEqual(["E-Mail"]);
 		expect(wiki.filterTiddlers("[[Record]compound-field-meta[email::label]]")).toEqual(["E-Mail"]);
 		expect(wiki.filterTiddlers("[[Record]compound-field-meta:label[birthday]]")).toEqual([]);
+	});
+
+	it("compound-schema[] resolves inherit-schema and inherit-compound, with strict and loose suffixes", function() {
+		var wiki = setupWiki();
+		expect(wiki.filterTiddlers("[[Record]compound-schema[]]")).toEqual(["Template"]);
+		expect(wiki.filterTiddlers("[[Loose]compound-schema[]]")).toEqual(["Template"]);
+		expect(wiki.filterTiddlers("[[Record]compound-schema:strict[]]")).toEqual(["Template"]);
+		expect(wiki.filterTiddlers("[[Loose]compound-schema:strict[]]")).toEqual([]);
+		expect(wiki.filterTiddlers("[[Loose]compound-schema:loose[]]")).toEqual(["Template"]);
+		expect(wiki.filterTiddlers("[[Loner]compound-schema[]]")).toEqual([]);
+	});
+
+	it("a strict schema owns the entries it defines; a loose one only fills gaps; a lone record keeps its own", function() {
+		var wiki = setupWiki();
+		// The draft is not materialized, so its own headers on email still exist and must be ignored
+		expect(wiki.filterTiddlers("[[Draft of 'Record']compound-field-type[email]]")).toEqual(["email"]);
+		expect(wiki.filterTiddlers("[[Draft of 'Record']compound-field-meta:label[email]]")).toEqual(["E-Mail"]);
+		expect(wiki.filterTiddlers("[[Record]compound-field-meta:label[category]]")).toEqual(["Kind"]);
+		expect(wiki.filterTiddlers("[[Loose]compound-field-type[email]]")).toEqual(["date"]);
+		expect(wiki.filterTiddlers("[[Loose]compound-field-meta:label[email]]")).toEqual(["Ignored"]);
+		expect(wiki.filterTiddlers("[[Loose]compound-field-meta:placeholder[email]]")).toEqual(["name@example.com"]);
+		expect(wiki.filterTiddlers("[[Loner]compound-field-type[email]]")).toEqual(["date"]);
+	});
+
+	it("a strict schema's headers are written into the record on save; loose records and drafts are left alone", function() {
+		var wiki = setupWiki();
+		// Browser equivalent: give a record inherit-schema, save it, and read its text in the Fields tab
+		expect(wiki.getTiddlerData("Record").email).toEqual({value: "jane@example.com", type: "email", label: "E-Mail", placeholder: "name@example.com"});
+		expect(wiki.getTiddlerData("Record").category).toEqual({value: "business", label: "Kind"});
+		expect(wiki.getTiddlerData("Loose").email).toEqual({value: "jane@example.com", type: "date", label: "Ignored"});
+		expect(wiki.getTiddler("Draft of 'Record'").fields.text).toBe(recordText);
 	});
 
 	it("compound-field-names:visible drops an entry whose hide-filter matches the record", function() {
@@ -115,7 +153,9 @@ describe("compound-field procedure and presentation headers", function() {
 		out = render(wiki,"Record",'<$transclude $variable="compound-field-label" fieldName="email"/>');
 		expect(out.html).toBe("E-Mail");
 		out = render(wiki,"Record",'<$transclude $variable="compound-field-label" fieldName="category"/>');
-		expect(out.html).toBe("category");
+		expect(out.html).toBe("Kind");
+		out = render(wiki,"Record",'<$transclude $variable="compound-field-label" fieldName="secret"/>');
+		expect(out.html).toBe("secret");
 	});
 
 	it("edit mode writes a +fields entry by index, passes the placeholder, and readonly-filter forces view", function() {

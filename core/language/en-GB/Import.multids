@@ -23,6 +23,7 @@ Listing/Rename/ConfirmRename: Rename tiddler
 Listing/Rename/CancelRename: Cancel
 Listing/Rename/OverwriteWarning: A tiddler with this title already exists.
 Upgrader/CompoundFields/FieldsWin: Fields update the unchanged compound text: <<fields>>
+Upgrader/CompoundFields/SchemaMissing: Schema <<schema>> is not in this wiki
 Upgrader/CompoundFields/TextWins: Compound text wins over differing fields: <<fields>>
 Upgrader/Plugins/Suppressed/Incompatible: Blocked incompatible or obsolete plugin.
 Upgrader/Plugins/Suppressed/Version: Blocked plugin (due to incoming <<incoming>> not being newer than existing <<existing>>).

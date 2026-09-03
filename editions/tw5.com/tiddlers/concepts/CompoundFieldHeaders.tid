@@ -4,7 +4,7 @@ tags: Concepts
 title: CompoundFieldHeaders
 type: text/vnd.tiddlywiki
 
-A sub-entry of a `text/vnd.tiddlywiki-multiple+fields` tiddler can carry presentation headers next to its `type:`. They are read through the `compound-field-meta` operator, so a template named in [[inherit-compound|InheritCompoundField]] sets them once for every record.
+A sub-entry of a `text/vnd.tiddlywiki-multiple+fields` tiddler can carry presentation headers next to its `type:`. They are read through the `compound-field-meta` operator, so a [[schema|CompoundSchema]] sets them once for every record.
 
 |!Header |!Effect |
 |`label` |caption shown instead of the field name |

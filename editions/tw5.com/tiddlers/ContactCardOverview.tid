@@ -58,7 +58,18 @@ Each tiddler's view template renders the full card automatically (click a name a
 
 !! Presentation headers
 
-Every contact above inherits [[ContactTemplate]], which carries the labels, tooltips and placeholders, plus two rules: `birthday` has `hide-filter: [{!!category}match[business]]` and `role` has `readonly-filter: [{!!category}match[personal]]`. Press Edit on a card and switch the category to watch the birthday appear and the role lock. See [[CompoundFieldHeaders]].
+[[ContactTemplate]] carries the labels, tooltips and placeholders, plus two rules: `birthday` has `hide-filter: [{!!category}match[business]]` and `role` has `readonly-filter: [{!!category}match[personal]]`. Press Edit on a card and switch the category to watch the birthday appear and the role lock. See [[CompoundFieldHeaders]].
+
+!! Strict or loose
+
+Each contact follows the template in one of two ways, see [[CompoundSchema]]. Jane, Alice and Nina use `inherit-schema`: the template owns their entries, its headers are copied into their text, and the edit template locks their types. Mario and Bob use `inherit-compound`: their own headers win, so Mario's website is labelled ''Homepage'' and Bob's company ''Startup'' and his birthday ''Born'', and their types stay editable.
+
+<table>
+<tr><th>Contact</th><th>Field</th><th>Schema</th><th>Own headers</th></tr>
+<$list filter="[tag[ContactCard]sort[title]]">
+<tr><td><$link/></td><td><$text text={{{ [<currentTiddler>has[inherit-schema]then[inherit-schema]else[inherit-compound]] }}}/></td><td><$text text={{{ [<currentTiddler>compound-schema[]] }}}/></td><td><$text text={{{ [<currentTiddler>compound-schema:strict[]then[ignored, rewritten on save]else[win over the schema]] }}}/></td></tr>
+</$list>
+</table>
 
 !! Your own form
 

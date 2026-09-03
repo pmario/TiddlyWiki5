@@ -4,7 +4,7 @@ type: application/javascript
 module-type: filteroperator
 
 Returns all unique sub-entry types from a compound tiddler.
-Includes types from the inherit-compound template.
+Includes types from the schema named by inherit-schema or inherit-compound.
 
 \*/
 
@@ -30,12 +30,10 @@ exports["compound-field-types"] = function(source,operator,options) {
 		if(tiddler && (tiddler.fields.type === "text/vnd.tiddlywiki-multiple" ||
 			tiddler.fields.type === "text/vnd.tiddlywiki-multiple+fields"))
 		{
-			// Collect from template first
-			if(tiddler.fields["inherit-compound"]) {
-				var templateTiddler = options.wiki.getTiddler(tiddler.fields["inherit-compound"]);
-				if(templateTiddler) {
-					collectTypes(options.wiki,templateTiddler,results);
-				}
+			// Collect from the schema first
+			var schema = $tw.utils.getCompoundSchema(options.wiki,tiddler);
+			if(schema) {
+				collectTypes(options.wiki,schema.title,results);
 			}
 			// Then from the tiddler itself
 			collectTypes(options.wiki,tiddler,results);

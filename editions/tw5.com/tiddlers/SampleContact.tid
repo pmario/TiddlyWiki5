@@ -1,5 +1,5 @@
 created: 20260406140000000
-inherit-compound: ContactTemplate
+inherit-schema: ContactTemplate
 modified: 20260612201323794
 tags: ContactCard
 title: SampleContact
@@ -17,6 +17,8 @@ Senior Developer at ~ExampleCorp. Specialist in reactive systems and data pipeli
 
 +
 title: first-name
+label: First name
+placeholder: Given name
 
 Jane
 +
@@ -25,30 +27,45 @@ title: middle-name
 test
 +
 title: last-name
+label: Last name
+placeholder: Family name
 
 Doe
 +
 title: list
 type: relation-Company
+label: Company
+tooltip: Records tagged Company; typing a new name creates one
 
 [[ExampleCorp]]
 +
 title: role
+type: select-roles
+roles: [[Developer]] [[UX Designer]] [[Designer]] [[Manager]] [[Team Lead]] [[Founder]] [[CEO]]
+label: Role
+tooltip: Locked while the category is personal
+readonly-filter: [{!!category}match[personal]]
 
 
 +
 title: email-work
 type: email
+label: Work email
+placeholder: name@company.example
 
 jane.doe@examplecorp.com
 +
 title: email-personal
 type: email
+label: Personal email
+placeholder: name@example.com
 
 jane@example.net
 +
 title: phone-mobile
 type: phone
+label: Mobile
+placeholder: +43 660 1234567
 
 +1-555-0123
 +
@@ -59,26 +76,36 @@ type: phone
 +
 title: website
 type: url
+label: Website
+placeholder: https://
 
 https://janedoe.dev
 +
 title: birthday
 type: date
+label: Birthday
+tooltip: Private, hidden while the category is business
+hide-filter: [{!!category}match[business]]
 
 1990-06-15
 +
 title: category
 type: option-personal-business
+label: Category
+tooltip: Switch it to see the birthday hide and the role lock
 
 business
 +
 title: favorite
 type: option-yes-no
+label: Favourite
 
 yes
 +
 title: address
 type: multiline
+label: Address
+placeholder: Street, postcode and city
 
 Hauptstrasse 42
 1010 Wien, Austria
@@ -87,5 +114,7 @@ Hauptstrasse 42
 +
 title: accent-color
 type: color
+label: Accent colour
+tooltip: Border and heading colour of the card
 
 #4a90d9

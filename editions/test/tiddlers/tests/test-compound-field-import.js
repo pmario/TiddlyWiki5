@@ -49,4 +49,13 @@ describe("Compound +fields import upgrader", function() {
 		expect(wiki.invokeUpgraders(["Target"],{Target: incoming("old@example.com")}).Target).toBeUndefined();
 	});
 
+	it("warns when the named schema is neither in the wiki nor in the import", function() {
+		var wiki = new $tw.Wiki();
+		var tiddlers = {Target: {title: "Target", type: COMPOUND_TYPE, "inherit-schema": "Missing", text: text, email: "old@example.com"}};
+		expect(wiki.invokeUpgraders(["Target"],tiddlers).Target)
+			.toBe($tw.language.getString("Import/Upgrader/CompoundFields/SchemaMissing",{variables: {schema: "Missing"}}));
+		tiddlers.Missing = {title: "Missing", type: COMPOUND_TYPE, text: "title: email\ntype: email\n\n"};
+		expect(wiki.invokeUpgraders(["Target","Missing"],tiddlers).Target).toBeUndefined();
+	});
+
 });

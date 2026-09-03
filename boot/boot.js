@@ -1260,6 +1260,11 @@ $tw.Wiki = function(options) {
 					tiddler = new $tw.Tiddler(tiddler,{text: $tw.utils.makeMultilineFieldsDictionary(sourceData,tiddler.fields.text)});
 				}
 			}
+			// A strict schema's headers go into the source so the record travels self-describing; drafts
+			// are skipped so the raw editor is not rewritten under the cursor
+			if($tw.utils.materializeCompoundSchema) {
+				tiddler = $tw.utils.materializeCompoundSchema(this,tiddler);
+			}
 			var parsedFields = $tw.utils.parseMultilineFields(tiddler.fields.text);
 			var extraFields = Object.create(null);
 			var newDerivedNames = Object.create(null);
