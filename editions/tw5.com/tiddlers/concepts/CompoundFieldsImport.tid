@@ -1,0 +1,12 @@
+created: 20260903000000000
+modified: 20260903000000000
+tags: Concepts
+title: CompoundFieldsImport
+type: text/vnd.tiddlywiki
+
+A `text/vnd.tiddlywiki-multiple+fields` tiddler exports with its compound `text` and every derived field, so a wiki without this feature still sees ordinary fields. Editing a field there and importing the tiddler back leaves that field and the text in disagreement. The rule on import:
+
+* Into a wiki that does not hold the tiddler, or holds it with a different compound text: the text wins and the differing fields take its values
+* Over a local copy whose compound text is unchanged: the field values win and are written into the text, exactly as a field write inside this wiki is
+
+The import dialog lists the differing fields beside the tiddler and names the side that is kept, so the import can be cancelled and reconciled by hand.
