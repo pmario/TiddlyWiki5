@@ -4,7 +4,8 @@ type: application/javascript
 module-type: filteroperator
 
 Returns a metadata property of a sub-entry in a compound tiddler.
-Operand format: fieldName::propertyName (e.g. "role::roles")
+Operand format: fieldName::propertyName (e.g. "role::roles"), or the property as
+suffix with the field name as operand: compound-field-meta:roles<fieldName>
 Falls back to the inherit-compound template if the tiddler doesn't define it.
 
 \*/
@@ -24,9 +25,16 @@ function getEntryMeta(wiki,tiddler,fieldName,propertyName) {
 
 exports["compound-field-meta"] = function(source,operator,options) {
 	var results = [];
-	var parts = (operator.operand || "").split("::");
-	var fieldName = parts[0];
-	var propertyName = parts[1];
+	var fieldName, propertyName;
+	// The suffix form keeps the property literal so the field name can come from a variable
+	if(operator.suffix) {
+		fieldName = operator.operand;
+		propertyName = operator.suffix;
+	} else {
+		var parts = (operator.operand || "").split("::");
+		fieldName = parts[0];
+		propertyName = parts[1];
+	}
 	if(!fieldName || !propertyName) {
 		return results;
 	}

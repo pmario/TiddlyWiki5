@@ -4,7 +4,7 @@ tags: Concepts
 title: CompoundFieldEditorTypes
 type: text/vnd.tiddlywiki
 
-When a tiddler has `type: text/vnd.tiddlywiki-multiple+fields`, the edit template renders one editor pane per sub-entry. The editor used for a given sub-entry is selected by the value of its `type:` header.
+When a tiddler has `type: text/vnd.tiddlywiki-multiple+fields`, the edit template renders one editor pane per sub-entry. The editor used for a given sub-entry is selected by the value of its `type:` header. The same selection drives the view and edit renderers of the `compound-field` procedure, see [[CompoundFieldHeaders]].
 
 ! Built-in editor types
 
@@ -19,6 +19,8 @@ When a tiddler has `type: text/vnd.tiddlywiki-multiple+fields`, the edit templat
 |`color` |HTML `<input type="color">` |
 |`option-A-B[-C…]` |radio buttons, one per dash-separated label, plus a `none` |
 |`select-KEY` |dropdown sourced from the `KEY` metadata header (see below) |
+|`relation-TAG` |picker over the tiddlers tagged `TAG`, stored as a [[title list|Title List]] |
+|`template-prefix` |the value names a template prefix; `<prefix>-ViewTemplate` and `<prefix>-EditTemplate` render the field |
 
 ! Extending: `option-…` (N radio buttons)
 
@@ -71,11 +73,9 @@ Designer
 
 ! Adding a brand-new editor type
 
-To define a wholly new editor (e.g. a slider, a tag picker, a map field):
+Both renderers live in the `compound-field` procedure in `$:/core/macros/compound-field`. To define a wholly new editor (e.g. a slider, a map field):
 
-# Add a new `<%elseif [<fieldType>match[…]] %>` branch (or `prefix[…]` branch, for parameterised types) to:
-#* `$:/core/ui/EditTemplate/body/compound-fields.tid` — the edit-mode renderer
-#* `$:/core/ui/ViewTemplate/body/contact-card.tid` (or a custom view template) — the view-mode renderer, if you want a custom display
-# If the new type takes parameters in the same metadata-driven style as `select-`, follow the same pattern: read a metadata header via `compound-field-meta` so the template can carry the configuration.
+# Add a new `<%elseif [<_type>match[…]] %>` branch (or `prefix[…]` branch, for parameterised types) to its edit block and, if the type needs a custom display, to its view block.
+# If the new type takes parameters in the same metadata-driven style as `select-`, read a metadata header via `compound-field-meta` so the template can carry the configuration.
 
 The edit-template's type-selector dropdown is also extensible: any `prefix[option-]` or `prefix[select-]` values the wiki already contains are added to the dropdown automatically (via `compound-field-types[]`). To surface a new prefix in the dropdown the same way, add an analogous `<$list>` clause to the `compound-type-selector` procedure.

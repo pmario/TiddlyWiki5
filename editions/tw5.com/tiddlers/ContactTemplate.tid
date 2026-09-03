@@ -1,5 +1,5 @@
 created: 20260406190741556
-modified: 20260612201326691
+modified: 20260903000000000
 title: ContactTemplate
 type: text/vnd.tiddlywiki-multiple+fields
 
@@ -9,59 +9,97 @@ type: multiline
 
 +
 title: first-name
+label: First name
+placeholder: Given name
 
 
 +
 title: last-name
+label: Last name
+placeholder: Family name
 
 
 +
 title: list
 type: relation-Company
+label: Company
+tooltip: Records tagged Company; typing a new name creates one
 
 
 +
 title: role
 type: select-roles
-roles: [[Developer]] [[Designer]] [[Manager]] [[Team Lead]] [[CEO]]
+roles: [[Developer]] [[UX Designer]] [[Designer]] [[Manager]] [[Team Lead]] [[Founder]] [[CEO]]
+label: Role
+tooltip: Locked while the category is personal
+readonly-filter: [{!!category}match[personal]]
 
 
 +
-title: email
+title: email-work
 type: email
+label: Work email
+placeholder: name@company.example
 
 
 +
-title: phone
+title: email-personal
+type: email
+label: Personal email
+placeholder: name@example.com
+
+
++
+title: phone-mobile
 type: phone
+label: Mobile
+placeholder: +43 660 1234567
 
 
 +
 title: website
 type: url
+label: Website
+placeholder: https://
 
 
 +
 title: address
 type: multiline
+label: Address
+placeholder: Street, postcode and city
 
 
 +
 title: birthday
 type: date
+label: Birthday
+tooltip: Private, hidden while the category is business
+hide-filter: [{!!category}match[business]]
 
 
 +
 title: category
 type: option-personal-business
+label: Category
+tooltip: Switch it to see the birthday hide and the role lock
 
 
 +
 title: favorite
 type: option-yes-no
+label: Favourite
+
+
++
+title: accent-color
+type: color
+label: Accent colour
+tooltip: Border and heading colour of the card
 
 
 +
 title: code-body
+hide-filter: [<currentTiddler>!match[ContactTemplate]]
 
 yes

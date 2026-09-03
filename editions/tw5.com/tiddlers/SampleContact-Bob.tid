@@ -1,4 +1,5 @@
 created: 20260406143200000
+inherit-compound: ContactTemplate
 modified: 20260612201316531
 tags: ContactCard
 title: SampleContact-Bob

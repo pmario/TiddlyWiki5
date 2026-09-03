@@ -1,0 +1,17 @@
+birthday: 1992-04-01
+category: business
+created: 20260903000000000
+email: sam@example.com
+modified: 20260903111806280
+title: SampleContact-Plain
+type: text/vnd.tiddlywiki
+
+A standard tiddler without compound text. The `compound-field` procedure edits its ordinary fields; the type is given in the call because there is no `type:` header to read.
+
+<table>
+<tr><th>Email</th><td><<compound-field fieldName="email" mode="edit" type="email">></td></tr>
+<tr><th>Birthday</th><td><<compound-field fieldName="birthday" mode="edit" type="date">></td></tr>
+<tr><th>Category</th><td><<compound-field fieldName="category" mode="edit" type="option-personal-business">></td></tr>
+</table>
+
+In view mode the email is plain text without a type, <<compound-field fieldName="email">>, and a link with one: <<compound-field fieldName="email" mode="view" type="email">>

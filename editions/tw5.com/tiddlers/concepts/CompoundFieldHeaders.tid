@@ -1,0 +1,57 @@
+created: 20260903000000000
+modified: 20260903000000000
+tags: Concepts
+title: CompoundFieldHeaders
+type: text/vnd.tiddlywiki
+
+A sub-entry of a `text/vnd.tiddlywiki-multiple+fields` tiddler can carry presentation headers next to its `type:`. They are read through the `compound-field-meta` operator, so a template named in [[inherit-compound|InheritCompoundField]] sets them once for every record.
+
+|!Header |!Effect |
+|`label` |caption shown instead of the field name |
+|`tooltip` |`title` attribute on the caption |
+|`placeholder` |placeholder of the text input or textarea |
+|`hide-filter` |a filter; when it returns anything the field is left out of `compound-field-names:visible[]` |
+|`readonly-filter` |a filter; when it returns anything the field renders in view mode even where edit mode was requested |
+
+Both filters run with `currentTiddler` set to the record, so start them from `<currentTiddler>` or a `{!!field}` reference.
+
+```
+title: list
+type: relation-Company
+label: Company
++
+title: email
+type: email
+placeholder: name@example.com
++
+title: notes
+type: multiline
+hide-filter: [{!!category}match[personal]]
++
+title: birthday
+type: date
+readonly-filter: [{!!category}match[business]]
+```
+
+! The compound-field procedure
+
+`$:/core/macros/compound-field` defines two procedures for view and edit templates:
+
+* `<<compound-field fieldName="…" mode="…" type="…">>` renders one field. `mode` is `view` (default) or `edit`. `type` overrides the sub-entry's `type:` header. On a tiddler that is not a compound tiddler it is the only source of the type; without it the field renders as single-line text
+* `<<compound-field-label fieldName>>` renders the caption, honouring `label` and `tooltip`
+
+On a `+fields` tiddler the control writes the sub-entry. On any other tiddler it writes the named field, so the same call works in a template for standard tiddlers:
+
+```
+<table>
+<tr><td><<compound-field-label "email">></td><td><<compound-field fieldName="email" mode="edit" type="email">></td></tr>
+<tr><td>Born</td><td><<compound-field fieldName="birthday" mode="edit" type="date">></td></tr>
+</table>
+```
+
+A custom template lists the fields a record shows with `[<currentTiddler>compound-field-names:visible[]]`. The core edit template lists every field on purpose, so a hidden field stays reachable there, and its raw text mode is not affected by `readonly-filter`.
+
+! Operator forms
+
+* `[<T>compound-field-meta:KEY<name>]` reads header `KEY` of sub-entry `name`. The operand form `compound-field-meta[name::KEY]` still works and is needed when `KEY` itself comes from a variable, as the `select-` editor does
+* `[<T>compound-field-names:visible[]]` is `compound-field-names[]` minus the entries whose `hide-filter` matches

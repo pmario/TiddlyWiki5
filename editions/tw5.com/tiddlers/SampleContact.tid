@@ -1,4 +1,5 @@
 created: 20260406140000000
+inherit-compound: ContactTemplate
 modified: 20260612201323794
 tags: ContactCard
 title: SampleContact
@@ -33,8 +34,6 @@ type: relation-Company
 [[ExampleCorp]]
 +
 title: role
-type: select-role
-role: [[Seniour Developer]] [[Team Member]] [[Designer]]
 
 
 +

@@ -1,4 +1,5 @@
 created: 20260612152408817
+inherit-compound: ContactTemplate
 modified: 20260612201309634
 relation-company: Company
 tags: ContactCard

@@ -6,6 +6,7 @@ module-type: filteroperator
 Returns the sub-entry titles of a compound tiddler in their original order.
 If the tiddler has an inherit-compound field, template fields come first,
 then any additional fields from the tiddler itself.
+The :visible suffix drops entries whose hide-filter header yields anything.
 
 \*/
 
@@ -27,28 +28,38 @@ function extractFieldNames(text) {
 	return names;
 }
 
+// The header is read through compound-field-meta so the inherit-compound fallback applies, and the
+// filter runs with currentTiddler set to the record
+function isVisible(wiki,widget,title,fieldName) {
+	var fakeWidget = widget.makeFakeWidgetWithVariables({currentTiddler: title, fieldName: fieldName});
+	var hideFilter = wiki.filterTiddlers("[<currentTiddler>compound-field-meta:hide-filter<fieldName>]",fakeWidget)[0];
+	return !hideFilter || wiki.filterTiddlers(hideFilter,fakeWidget).length === 0;
+}
+
 exports["compound-field-names"] = function(source,operator,options) {
-	var results = [];
+	var results = [],
+		widget = options.widget || $tw.rootWidget;
 	source(function(tiddler,title) {
 		if(tiddler && (tiddler.fields.type === "text/vnd.tiddlywiki-multiple" ||
 			tiddler.fields.type === "text/vnd.tiddlywiki-multiple+fields")) {
+			var names = [];
 			// Get template field names first if inherit-compound is set
 			if(tiddler.fields["inherit-compound"]) {
 				var templateTiddler = options.wiki.getTiddler(tiddler.fields["inherit-compound"]);
 				if(templateTiddler && templateTiddler.fields.text) {
-					var templateNames = extractFieldNames(templateTiddler.fields.text);
-					for(var i = 0; i < templateNames.length; i++) {
-						if(results.indexOf(templateNames[i]) === -1) {
-							results.push(templateNames[i]);
-						}
-					}
+					names = extractFieldNames(templateTiddler.fields.text);
 				}
 			}
 			// Then add any additional fields from the tiddler itself
 			var tiddlerNames = extractFieldNames(tiddler.fields.text);
 			for(var j = 0; j < tiddlerNames.length; j++) {
-				if(results.indexOf(tiddlerNames[j]) === -1) {
-					results.push(tiddlerNames[j]);
+				if(!names.includes(tiddlerNames[j])) {
+					names.push(tiddlerNames[j]);
+				}
+			}
+			for(var n = 0; n < names.length; n++) {
+				if(!results.includes(names[n]) && (operator.suffix !== "visible" || isVisible(options.wiki,widget,title,names[n]))) {
+					results.push(names[n]);
 				}
 			}
 		}

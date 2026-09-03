@@ -1,0 +1,94 @@
+title: $:/core/macros/compound-field
+tags: $:/tags/Macro
+
+\whitespace trim
+
+<!-- compound-field renders one field of <<currentTiddler>> as a typed control. The type comes from the
+	type parameter, else from the sub-entry's type: header (template fallback included); a tiddler with
+	neither gets a single-line text input. mode is "view" or "edit"; a readonly-filter header that
+	yields anything forces view. -->
+\procedure compound-field(fieldName, mode:"view", type)
+<$let
+	_type={{{ [<type>!is[blank]] ~[<currentTiddler>compound-field-type<fieldName>] }}}
+	_value={{{ [<currentTiddler>get<fieldName>] }}}
+	_placeholder={{{ [<currentTiddler>compound-field-meta:placeholder<fieldName>] }}}
+	_readonlyFilter={{{ [<currentTiddler>compound-field-meta:readonly-filter<fieldName>] }}}
+	_readonly={{{ [subfilter<_readonlyFilter>] }}}
+	_mode={{{ [<_readonly>!is[blank]then[view]] ~[<mode>match[edit]] ~[[view]] }}}
+	_index={{{ [<currentTiddler>get[type]match[text/vnd.tiddlywiki-multiple+fields]then<fieldName>] }}}
+	_inputType={{{ [<_type>match[date]] [<_type>match[email]] [<_type>match[url]] [<_type>match[color]] [<_type>match[date-time]then[datetime-local]] [<_type>match[phone]then[tel]] ~[[text]] }}}
+>
+	<!-- On a +fields tiddler the index keeps a write to an inherited field that has no local sub-entry yet
+		inside the compound source; elsewhere the empty index makes the widgets write the field. -->
+	<%if [<_mode>match[edit]] %>
+		<%if [<_type>match[multiline]] %>
+			<$edit-text tiddler=<<currentTiddler>> field=<<fieldName>> index=<<_index>> class="tc-edit-texteditor" tag="textarea" placeholder=<<_placeholder>>/>
+		<%elseif [<_type>prefix[select-]] %>
+			<$let
+				_selectKey={{{ [<_type>removeprefix[select-]] }}}
+				_selectOperand={{{ [<fieldName>addsuffix[::]addsuffix<_selectKey>] }}}
+				_selectOptions={{{ [<currentTiddler>compound-field-meta<_selectOperand>] }}}
+			>
+				<$select tiddler=<<currentTiddler>> field=<<fieldName>> index=<<_index>> default="">
+					<option value="">-- select --</option>
+					<$list filter="[enlist<_selectOptions>]" variable="optionValue">
+						<option value=<<optionValue>>><$text text=<<optionValue>>/></option>
+					</$list>
+				</$select>
+			</$let>
+		<%elseif [<_type>prefix[relation-]] %>
+			<$let _relationTag={{{ [<_type>removeprefix[relation-]] }}}>
+				<$transclude $variable="relation-picker" fieldName=<<fieldName>> relationTag=<<_relationTag>> tiddler=<<currentTiddler>>/>
+			</$let>
+		<%elseif [<_type>prefix[option-]] %>
+			<$let _optionLabels={{{ [<_type>removeprefix[option-]] }}}>
+				<$list filter="[<_optionLabels>split[-]]" variable="optionValue">
+					<$radio tiddler=<<currentTiddler>> field=<<fieldName>> index=<<_index>> value=<<optionValue>>><$text text=<<optionValue>>/></$radio>
+					&nbsp;
+				</$list>
+				<$radio tiddler=<<currentTiddler>> field=<<fieldName>> index=<<_index>> value="">none</$radio>
+			</$let>
+		<%elseif [<_type>match[template-prefix]] %>
+			<$transclude $variable="compound-template-prefix" fieldName=<<fieldName>> suffix="-EditTemplate"/>
+		<%else%>
+			<$edit-text tiddler=<<currentTiddler>> field=<<fieldName>> index=<<_index>> class="tc-edit-texteditor" tag="input" type=<<_inputType>> placeholder=<<_placeholder>>/>
+		<%endif%>
+	<%else%>
+		<%if [<_type>match[multiline]] %>
+			<$transclude $tiddler=<<currentTiddler>> $field=<<fieldName>> $mode="block"/>
+		<%elseif [<_type>match[email]] %>
+			<a href={{{ [[mailto:]addsuffix<_value>] }}} class="tc-contact-card-link"><$text text=<<_value>>/></a>
+		<%elseif [<_type>match[phone]] %>
+			<a href={{{ [[tel:]addsuffix<_value>] }}} class="tc-contact-card-link"><$text text=<<_value>>/></a>
+		<%elseif [<_type>match[url]] %>
+			<a href=<<_value>> class="tc-contact-card-link tc-tiddlylink-external" target="_blank" rel="noopener noreferrer"><$text text=<<_value>>/></a>
+		<%elseif [<_type>match[color]] %>
+			<span class="tc-contact-card-color" style={{{ [[background-color:]addsuffix<_value>] }}}>&nbsp;&nbsp;&nbsp;</span>
+			&nbsp;<$text text=<<_value>>/>
+		<%elseif [<_type>prefix[relation-]] %>
+			<$list filter="[<_value>enlist-input[]]" variable="relatedTitle">
+				<$link to=<<relatedTitle>>/><$text text=" "/>
+			</$list>
+		<%elseif [<_type>match[template-prefix]] %>
+			<$transclude $variable="compound-template-prefix" fieldName=<<fieldName>> suffix="-ViewTemplate"/>
+		<%else%>
+			<$text text=<<_value>>/>
+		<%endif%>
+	<%endif%>
+</$let>
+\end
+
+<!-- compound-field-label renders the caption of a field: its label header, else the field name; a tooltip
+	header becomes the title attribute. -->
+\procedure compound-field-label(fieldName)
+<$let
+	_label={{{ [<currentTiddler>compound-field-meta:label<fieldName>] ~[<fieldName>] }}}
+	_tooltip={{{ [<currentTiddler>compound-field-meta:tooltip<fieldName>] }}}
+>
+	<%if [<_tooltip>!is[blank]] %>
+		<span title=<<_tooltip>>><$text text=<<_label>>/></span>
+	<%else%>
+		<$text text=<<_label>>/>
+	<%endif%>
+</$let>
+\end

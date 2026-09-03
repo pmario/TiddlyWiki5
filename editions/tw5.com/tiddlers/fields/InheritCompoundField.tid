@@ -14,6 +14,8 @@ It is consulted by the four `compound-field-*` [[filter operators|Filter Operato
 |`[<X>compound-field-type[name]]` |the `type:` header of one sub-entry |falls back to the template if missing locally |
 |`[<X>compound-field-types[]]` |union of all `type:` header values |merges template + local |
 |`[<X>compound-field-meta[name::prop]]` |an arbitrary metadata header (e.g. `roles` on a `select-roles` entry) |falls back to the template if missing locally |
+|`[<X>compound-field-meta:prop<name>]` |the same, with the header name as suffix |falls back to the template if missing locally |
+|`[<X>compound-field-names:visible[]]` |sub-entry titles minus those whose `hide-filter` header matches, see [[CompoundFieldHeaders]] |as `compound-field-names[]`, the header itself may come from the template |
 
 The compound `text` field of the inheriting tiddler is //not// touched: only the lookups fall back. Sub-entry values are still stored on the local tiddler.
 

@@ -53,3 +53,23 @@ Each tiddler's view template renders the full card automatically (click a name a
 
 ;All email addresses across contacts
 :<$list filter="[tag[ContactCard]]" variable="contact"><$list filter="[<contact>compound-field-names[]] :filter[<contact>compound-field-type<currentTiddler>match[email]]" variable="fn"><$text text={{{ [<contact>get<fn>] }}}/>, </$list></$list>
+
+---
+
+!! Presentation headers
+
+Every contact above inherits [[ContactTemplate]], which carries the labels, tooltips and placeholders, plus two rules: `birthday` has `hide-filter: [{!!category}match[business]]` and `role` has `readonly-filter: [{!!category}match[personal]]`. Press Edit on a card and switch the category to watch the birthday appear and the role lock. See [[CompoundFieldHeaders]].
+
+!! Your own form
+
+The `compound-field` procedure builds a form anywhere. This table edits [[SampleContact-Nina]] in place, listing `compound-field-names:visible[]`:
+
+<$let currentTiddler="SampleContact-Nina">
+<table>
+<$list filter="[<currentTiddler>compound-field-names:visible[]!match[body]]" variable="fieldName">
+<tr><th><$transclude $variable="compound-field-label" fieldName=<<fieldName>>/></th><td><$transclude $variable="compound-field" fieldName=<<fieldName>> mode="edit"/></td></tr>
+</$list>
+</table>
+</$let>
+
+The same procedure works on a standard tiddler when the type is given in the call, see [[SampleContact-Plain]].
