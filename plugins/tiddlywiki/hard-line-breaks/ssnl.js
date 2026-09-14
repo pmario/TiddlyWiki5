@@ -36,6 +36,8 @@ exports.parse = function() {
 		type: "element",
 		tag: "br",
 		start: this.match.index,
-		end: this.parser.pos
+		end: this.parser.pos,
+		// The form written, two spaces with or without the backslash, so a serializer can reproduce it
+		marker: this.match[0].replace(/\r?\n$/,"")
 	}];
 };
