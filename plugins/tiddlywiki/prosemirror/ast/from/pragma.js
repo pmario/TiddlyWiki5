@@ -38,7 +38,8 @@ function pragmaBlock(builders, node) {
 
 function opaqueBlock(builders, node) {
 	const rawText = node.attrs && node.attrs.rawText || "";
-	return { type: "text", text: rawText };
+	// isBlock makes the serializer separate the source block from its siblings
+	return { type: "void", isBlock: true, children: [{ type: "text", text: rawText }] };
 }
 
 function typedBlock(builders, node) {

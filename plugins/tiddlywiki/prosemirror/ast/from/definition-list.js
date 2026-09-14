@@ -9,9 +9,11 @@ module-type: library
 const convertNodes = require("$:/plugins/tiddlywiki/prosemirror/ast/from/shared.js").convertNodes;
 
 function definitionList(builders, node) {
+	// The list rule serializes dl/dt/dd with the ; and : markers
 	return {
 		type: "element",
 		tag: "dl",
+		rule: "list",
 		children: convertNodes(builders, node.content)
 	};
 }

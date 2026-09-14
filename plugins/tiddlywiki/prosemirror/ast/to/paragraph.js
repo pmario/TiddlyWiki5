@@ -43,21 +43,14 @@ module.exports = function buildParagraph(context, node) {
 	const result = [];
 	let currentP = [];
 	for(let i = 0; i < children.length; i++) {
-		if(children[i].rule === "hardlinebreaks") {
+		if(isHardLineBreaksRegion(children[i])) {
 			if(currentP.length > 0) {
 				pushParagraphOrLiftedBlocks(result, context, currentP);
 				currentP = [];
 			}
-			const hardBlock = [];
-			while(i < children.length && children[i].rule === "hardlinebreaks") {
-				hardBlock.push(children[i]);
-				i++;
-			}
-			i--;
-			const contentBlock = hardBlock.filter((child) => !child.isRuleEnd);
 			result.push({
 				type: "hard_line_breaks_block",
-				content: convertNodes(context, contentBlock)
+				content: convertNodes(context, regionContent(children[i]))
 			});
 		} else {
 			currentP.push(children[i]);
@@ -76,6 +69,21 @@ module.exports = function buildParagraph(context, node) {
 		type: "paragraph"
 	};
 };
+
+// The parser wraps a """ region in a void node that carries the rule name
+function isHardLineBreaksRegion(node) {
+	return !!node && node.type === "void" && node.rule === "hardlinebreaks";
+}
+
+// The trailing br is the line end before the closing fence, not content
+function regionContent(node) {
+	const content = (node.children || []).slice();
+	const last = content[content.length - 1];
+	if(last && last.type === "element" && last.tag === "br") {
+		content.pop();
+	}
+	return content;
+}
 
 function hasAttributeLikeTextElement(nodes, context) {
 	if(!nodes) return false;

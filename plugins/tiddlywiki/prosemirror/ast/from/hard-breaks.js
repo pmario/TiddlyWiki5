@@ -25,32 +25,19 @@ function hardBreak() {
 
 function hardLineBreaksBlock(builders, node) {
 	const children = convertNodes(builders, node.content || []);
-	if(children.length === 0) {
-		return {
-			type: "element",
-			tag: "p",
-			rule: "parseblock",
-			children: [
-				{ type: "text", text: "", rule: "hardlinebreaks", isRuleStart: true },
-				{ type: "element", tag: "br", rule: "hardlinebreaks", isRuleEnd: true }
-			]
-		};
-	}
-	for(let i = 0; i < children.length; i++) {
-		children[i].rule = "hardlinebreaks";
-	}
-	children[0].isRuleStart = true;
-	children.push({
-		type: "element",
-		tag: "br",
-		rule: "hardlinebreaks",
-		isRuleEnd: true
+	// The parser shape: a void wrapper carrying the rule name, where only the
+	// br nodes of the region share it so the serializer writes their line ends
+	children.forEach((child) => {
+		if(child.type === "element" && child.tag === "br") {
+			child.rule = "hardlinebreaks";
+		}
 	});
+	children.push({ type: "element", tag: "br", rule: "hardlinebreaks" });
 	return {
 		type: "element",
 		tag: "p",
 		rule: "parseblock",
-		children: children
+		children: [{ type: "void", rule: "hardlinebreaks", children: children }]
 	};
 }
 

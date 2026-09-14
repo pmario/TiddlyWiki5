@@ -30,7 +30,8 @@ function wrapTextNodesInParagraphs(nodes) {
 		}
 	};
 	nodes.forEach((node) => {
-		if(node.type === "text") {
+		// A hard break is inline content, not a block boundary
+		if(node.type === "text" || node.type === "hard_break") {
 			currentTextNodes.push(node);
 		} else {
 			flushTextNodes();
