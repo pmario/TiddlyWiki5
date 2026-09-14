@@ -17,9 +17,11 @@ function horizontalRule() {
 }
 
 function hardBreak() {
+	// Two spaces and a backslash before the line end, the ssnl rule of the hard-line-breaks plugin, see #10025
 	return {
 		type: "element",
-		tag: "br"
+		tag: "br",
+		rule: "ssnl"
 	};
 }
 

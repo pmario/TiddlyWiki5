@@ -71,11 +71,26 @@ function tableCellOrHeader(builders, node) {
 			}
 		}
 	}
+	keepBreakElements(inlineContent);
 	return {
 		type: "element",
 		tag: isHeader ? "th" : "td",
 		children: inlineContent
 	};
+}
+
+// A table row is one line, so a break inside a cell stays the html element
+function keepBreakElements(nodes) {
+	nodes.forEach((node) => {
+		if(node.type === "element" && node.tag === "br" && node.rule === "ssnl") {
+			node.rule = "html";
+			node.attributes = {};
+			node.orderedAttributes = [];
+		}
+		if(node.children) {
+			keepBreakElements(node.children);
+		}
+	});
 }
 
 exports.tableNode = tableNode;
