@@ -437,6 +437,34 @@ api.emphasisKind = function(node) {
 	return api.kindOf(node) === "emphasis" ? emphasisKinds[node.tag] : null;
 };
 
+// 1 to 6 for a heading, or null
+api.headingLevel = function(node) {
+	return api.kindOf(node) === "heading" ? parseInt(node.tag.substr(1),10) : null;
+};
+
+// "ul", "ol" or "dl" for a list, or null
+api.listKind = function(node) {
+	var kind = api.kindOf(node);
+	return kind === "list" || kind === "definitionList" ? node.tag : null;
+};
+
+// The options tableCell() takes, read back from a cell: header, align, valign, colspan, rowspan
+api.tableCellOptions = function(node) {
+	var options = {header: node.tag === "th"},
+		attributes = node.attributes || {};
+	$tw.utils.each(["align","valign"],function(name) {
+		if(attributes[name]) {
+			options[name] = attributes[name].value;
+		}
+	});
+	$tw.utils.each(["colspan","rowspan"],function(name) {
+		if(attributes[name]) {
+			options[name] = parseInt(attributes[name].value,10) || 1;
+		}
+	});
+	return options;
+};
+
 // The inline children of a """ region as one array per line
 api.regionLines = function(node) {
 	var lines = [[]];

@@ -169,12 +169,19 @@ describe("wikitextParseTree factory and classification", function() {
 		expect(parts.openingCite.map(function(node) { return node.text; })).toEqual(["opener"]);
 		expect(parts.closingCite.map(function(node) { return node.text; })).toEqual(["closer"]);
 		expect(parts.body.map(f.kindOf)).toEqual(["paragraph"]);
-		var items = f.listItems(parse("*.c one\n** sub\n* two")[0]);
+		var list = parse("*.c one\n** sub\n* two")[0],
+			items = f.listItems(list);
+		expect(f.listKind(list)).toBe("ul");
 		expect(items.length).toBe(2);
 		expect(items[0].classes).toEqual(["c"]);
 		expect(items[0].children.map(f.kindOf)).toEqual(["text"]);
 		expect(items[0].nested.map(f.kindOf)).toEqual(["list"]);
 		expect(items[1].nested).toEqual([]);
+		expect(f.headingLevel(parse("!!! h")[0])).toBe(3);
+		expect(f.headingLevel(list)).toBeNull();
+		var cells = parse("|!h|^ c |<|")[0].children[0].children[0].children;
+		expect(f.tableCellOptions(cells[0])).toEqual({header: true});
+		expect(f.tableCellOptions(cells[1])).toEqual({header: false, align: "center", valign: "top", colspan: 2});
 	});
 
 	it("should slice the source of a parsed node and nothing for an editor node", function() {

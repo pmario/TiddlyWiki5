@@ -9,6 +9,7 @@ module-type: library
 const shared = require("$:/plugins/tiddlywiki/prosemirror/ast/to/shared.js");
 const convertNodes = shared.convertNodes;
 const extractSourceText = shared.extractSourceText;
+const factory = $tw.utils.wikitextParseTree;
 
 function isLiftedBlockNode(node) {
 	return !!node && (
@@ -43,14 +44,14 @@ module.exports = function buildParagraph(context, node) {
 	const result = [];
 	let currentP = [];
 	for(let i = 0; i < children.length; i++) {
-		if(isHardLineBreaksRegion(children[i])) {
+		if(factory.kindOf(children[i]) === "hardLineBreaksRegion") {
 			if(currentP.length > 0) {
 				pushParagraphOrLiftedBlocks(result, context, currentP);
 				currentP = [];
 			}
 			result.push({
 				type: "hard_line_breaks_block",
-				content: convertNodes(context, regionContent(children[i]))
+				content: regionContent(context, children[i])
 			});
 		} else {
 			currentP.push(children[i]);
@@ -70,18 +71,15 @@ module.exports = function buildParagraph(context, node) {
 	};
 };
 
-// The parser wraps a """ region in a void node that carries the rule name
-function isHardLineBreaksRegion(node) {
-	return !!node && node.type === "void" && node.rule === "hardlinebreaks";
-}
-
-// The trailing br is the line end before the closing fence, not content
-function regionContent(node) {
-	const content = (node.children || []).slice();
-	const last = content[content.length - 1];
-	if(last && last.type === "element" && last.tag === "br") {
-		content.pop();
-	}
+// The region's lines, joined by the editor's break
+function regionContent(context, node) {
+	const content = [];
+	factory.regionLines(node).forEach((line, index) => {
+		if(index > 0) {
+			content.push({ type: "hard_break" });
+		}
+		content.push.apply(content, convertNodes(context, line));
+	});
 	return content;
 }
 
