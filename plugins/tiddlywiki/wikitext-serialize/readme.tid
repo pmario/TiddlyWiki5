@@ -1,0 +1,52 @@
+title: $:/plugins/tiddlywiki/wikitext-serialize/readme
+
+This plugin turns a WikiText parse tree back into WikiText: `$tw.utils.serializeWikitextParseTree(tree, options)`. With `options.source`, the text the tree was parsed from, node positions reproduce the original formatting byte for byte; without it every rule rebuilds its syntax from the tree alone.
+
+!! Building trees: `$tw.utils.wikitextParseTree`
+
+An editor that writes WikiText builds its parse tree with the factory instead of spelling rule names and tags. Every node carries exactly what the serializer needs and no positions. The test `test-wikitext-parsetree-factory.js` shows every function with the text it produces.
+
+```
+var f = $tw.utils.wikitextParseTree;
+$tw.utils.serializeWikitextParseTree([
+	f.heading(1, [f.text("Title")]),
+	f.paragraph([f.text("Some "), f.emphasis("bold", [f.text("text")]), f.hardBreak(), f.text("next line")]),
+	f.list("ul", [f.listItem([f.text("one")]), f.listItem([f.text("two")])])
+]);
+// "! Title\n\nSome ''text''  \\\nnext line\n\n* one\n* two"
+```
+
+|!Function |!Node |
+|`text(value)` |a text node |
+|`paragraph(children)`, `blankLine()` |a paragraph; an extra empty line |
+|`heading(level, children, {classes})` |`!` to `!!!!!!` |
+|`list(kind, items)`, `listItem(children, {classes})` |`*` or `#` lists; a nested list goes into an item's children |
+|`definitionList(children)`, `definitionTerm(children)`, `definitionDescription(children)` |`;` and `:` |
+|`codeBlock(code, language)` |a fenced code block |
+|`quoteBlock(children, {cite, classes})` |`<<<` with an optional closing citation |
+|`table(rows, {caption, classes})`, `tableRow(cells)`, `tableCell(children, {header, align, valign, colspan, rowspan})` |a table |
+|`horizontalRule()` |`---` |
+|`hardBreak()` |two spaces and a backslash before the line end; needs the hard-line-breaks plugin |
+|`htmlBreak()` |`<br>`, the only break a table cell can hold |
+|`hardLineBreaksRegion(lines)` |a `"""` region; lines are arrays of inline nodes |
+|`emphasis(kind, children)` |bold, italic, underscore, strikethrough, superscript, subscript or code |
+|`link(target, children)`, `externalLink(url, children)` |`[[...]]` and `[ext[...]]`; formatted text gives `<$link>` or `<a>` |
+|`image(source, {tooltip, width, height, classes})` |`[img[...]]` |
+|`macroCall(name, params, {block})` |`<<name ...>>`; params are strings or `{name, value, quoted}` |
+|`widget(tag, attributes, children, {block, selfClosing, blockContent})` |a widget or HTML element; `blockContent` writes the blank line after the open tag |
+|`opaque(sourceText, {block})` |text written verbatim |
+|`pragma(sourceText)` |the pragma nodes parsed from the text |
+
+!! Reading trees
+
+|!Function |!Result |
+|`kindOf(node)` |text, paragraph, blankLine, heading, list, listItem, definitionList, definitionTerm, definitionDescription, codeBlock, quoteBlock, quoteCite, table, tableSection, tableRow, tableCell, tableCaption, horizontalRule, hardBreak, hardLineBreaksRegion, emphasis, link, externalLink, image, macroCall, transclusion, widget, element, pragma, comment, conditional, typedBlock, opaque or unknown |
+|`emphasisKind(node)`, `headingLevel(node)`, `listKind(node)` |the kind, level or list tag, else null |
+|`regionLines(node)` |the lines of a `"""` region as arrays of inline nodes |
+|`quoteParts(node)` |`{body, openingCite, closingCite}` |
+|`listItems(node)` |`{node, children, nested, classes}` per item |
+|`tableCellOptions(node)` |the options `tableCell` takes, read back from a cell |
+|`isBlock(node)` |whether the walker writes a blank line after the node |
+|`sourceSlice(node, source)` |the exact text of a parsed node, or null |
+
+The plugin is experimental: names may still change.
