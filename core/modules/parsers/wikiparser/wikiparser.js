@@ -295,19 +295,24 @@ WikiParser.prototype.makeBlankLineBlocks = function(start,whitespace,options) {
 };
 
 /*
-Consume whitespace between blocks and return parse tree nodes for extra blank lines.
+Consume the whitespace run at the parse position and return parse tree nodes for its extra blank lines.
+	options.leading: the run opens the block list, where a single newline is not a blank line
 */
 WikiParser.prototype.parseBlankLineBlocks = function(options) {
-	var whitespaceRegExp = /(\s+)/mg;
-	whitespaceRegExp.lastIndex = this.pos;
-	var whitespaceMatch = whitespaceRegExp.exec(this.source);
-	if(whitespaceMatch && whitespaceMatch.index === this.pos) {
-		var start = this.pos,
-			whitespace = whitespaceMatch[0];
-		this.pos = whitespaceRegExp.lastIndex;
-		return this.makeBlankLineBlocks(start,whitespace,options);
+	options = options || {};
+	var start = this.pos;
+	// A block rule consumes its own line end, so the run starts after the block's last visible character
+	while(!options.leading && start > 0 && /\s/.test(this.source.charAt(start - 1))) {
+		start--;
 	}
-	return [];
+	var whitespaceRegExp = /\s+/y;
+	whitespaceRegExp.lastIndex = start;
+	var whitespaceMatch = whitespaceRegExp.exec(this.source);
+	if(!whitespaceMatch) {
+		return [];
+	}
+	this.pos = whitespaceRegExp.lastIndex;
+	return this.makeBlankLineBlocks(start,whitespaceMatch[0],options);
 };
 
 /*
@@ -319,22 +324,6 @@ WikiParser.prototype.skipLineEnd = function() {
 	if(lineEndRegExp.test(this.source)) {
 		this.pos = lineEndRegExp.lastIndex;
 	}
-};
-
-/*
-Some block rules consume trailing whitespace internally. Recover extra blank lines
-from the gap between the parse tree node end and the parser position.
-*/
-WikiParser.prototype.getTrailingBlankLineBlocks = function(blocks) {
-	if(blocks.length === 0) {
-		return [];
-	}
-	var lastBlock = blocks[blocks.length - 1];
-	if(lastBlock.end === undefined || lastBlock.end >= this.pos) {
-		return [];
-	}
-	var whitespace = this.source.substring(lastBlock.end,this.pos);
-	return /^\s+$/.test(whitespace) ? this.makeBlankLineBlocks(lastBlock.end,whitespace) : [];
 };
 
 /*
@@ -360,18 +349,10 @@ WikiParser.prototype.parseBlocksUnterminated = function() {
 		}
 		return defaultTree;
 	}
-	var tree = [],
-		isLeading = true;
+	var tree = this.parseBlankLineBlocks({leading: true});
 	while(this.pos < this.sourceLength) {
-		tree.push.apply(tree,this.parseBlankLineBlocks({leading: isLeading}));
-		if(this.pos >= this.sourceLength) {
-			break;
-		}
-		var blocks = this.parseBlock();
-		tree.push.apply(tree,blocks);
-		tree.push.apply(tree,this.getTrailingBlankLineBlocks(blocks));
+		tree.push.apply(tree,this.parseBlock());
 		tree.push.apply(tree,this.parseBlankLineBlocks());
-		isLeading = false;
 	}
 	return tree;
 };
@@ -405,7 +386,6 @@ WikiParser.prototype.parseBlocksTerminatedExtended = function(terminatorRegExpSt
 	while(this.pos < this.sourceLength && !(match && match.index === this.pos)) {
 		var blocks = this.parseBlock(terminatorRegExpString);
 		result.tree.push.apply(result.tree,blocks);
-		result.tree.push.apply(result.tree,this.getTrailingBlankLineBlocks(blocks));
 		// Skip any whitespace
 		if(this.preserveBlankLines) {
 			result.tree.push.apply(result.tree,this.parseBlankLineBlocks());

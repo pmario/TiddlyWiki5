@@ -71,6 +71,18 @@ describe("Wikitext blank line preservation", function() {
 		expect(listThenMacro.map(function(node) { return node.rule; })).toEqual(["list", "blankline", "blankline", "macrocallblock"]);
 	});
 
+	it("should preserve extra blank lines after blocks that consume their line end", function() {
+		// The table, rule and transclusion rules eat their line end, so the blank run starts inside the consumed part
+		$tw.utils.each([
+			["|a|\n\n\nB", ["table", "blankline", "parseblock"]],
+			["---\n\n\nB", ["horizrule", "blankline", "parseblock"]],
+			["{{X}}\n\n\nB", ["transcludeblock", "blankline", "parseblock"]]
+		], function(testCase) {
+			expect(parse(testCase[0]).map(function(node) { return node.rule; })).toEqual(testCase[1]);
+			expect(serialize(testCase[0])).toBe(testCase[0] + "\n\n");
+		});
+	});
+
 	it("should not count the blank line that opens a block body", function() {
 		function bodyRules(text, getBody) {
 			return getBody(parse(text)[0]).map(function(node) { return node.rule; });
