@@ -396,6 +396,9 @@ api.kindOf = function(node) {
 	if(rule === "conditional" || node.isConditional) {
 		return "conditional";
 	}
+	if(tag === "$link") {
+		return "link";
+	}
 	if(typeof tag === "string" && tag.charAt(0) === "$") {
 		return "widget";
 	}
@@ -423,7 +426,8 @@ api.kindOf = function(node) {
 	if(tag === "cite" && isQuoteCite(node)) {
 		return "quoteCite";
 	}
-	if(tag === "a" && (rule === "prettyextlink" || rule === "extlink")) {
+	// An external pretty link and a hand-written anchor with the class are external links too
+	if(tag === "a" && (rule === "prettyextlink" || rule === "extlink" || rule === "prettylink" || hasClass(node,"tc-tiddlylink-external"))) {
 		return "externalLink";
 	}
 	if(emphasisKinds[tag] && rule !== "html") {
