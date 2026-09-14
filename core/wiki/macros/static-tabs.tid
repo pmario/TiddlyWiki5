@@ -73,7 +73,7 @@ code-body: yes
 <$let
 	_headingLevel={{{ [<headingLevel>!is[blank]else[h2]] }}}
 	_levelNum={{{ [<_headingLevel>removeprefix[h]] }}}
-	_ownShift={{{ [<_levelNum>subtract[1]] }}}
+	_ownShift={{{ [<_levelNum>] }}}
 	_parentShift={{{ [<tv-adjust-heading-level>!is[blank]else[0]] }}}
 	_shift={{{ [<_parentShift>add<_ownShift>] }}}
 	_mode={{{ [<mode>!is[blank]] ~[<tv-static-tabs-mode>!is[blank]] ~[[details]] }}}
