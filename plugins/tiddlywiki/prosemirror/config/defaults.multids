@@ -8,3 +8,4 @@ prosemirror/def-term-triggers: ; ；
 prosemirror/markdown-shortcuts/auto-for-markdown: yes
 prosemirror/enable-widget-blocks: yes
 prosemirror/widget-block/auto-focus: yes
+Parser/PreserveBlankLines: yes
