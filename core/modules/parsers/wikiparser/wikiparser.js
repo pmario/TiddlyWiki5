@@ -299,6 +299,7 @@ Return parse tree nodes for extra blank lines in a whitespace run.
 The first blank line separates blocks; each additional blank line represents an
 empty paragraph block. At the start of a block list, two leading newlines are
 needed to represent the first empty paragraph.
+	options.root: the run opens the whole text, so a serializer must write the first blank line as two newlines
 */
 WikiParser.prototype.makeBlankLineBlocks = function(start,whitespace,options) {
 	options = options || {};
@@ -320,7 +321,7 @@ WikiParser.prototype.makeBlankLineBlocks = function(start,whitespace,options) {
 			start: start,
 			end: start,
 			rule: "blankline",
-			isLeadingBlankLine: !!options.leading && index === 0
+			isLeadingBlankLine: !!options.root && index === 0
 		});
 	}
 	return blankLineBlocks;
@@ -381,7 +382,7 @@ WikiParser.prototype.parseBlocksUnterminated = function() {
 		}
 		return defaultTree;
 	}
-	const tree = this.parseBlankLineBlocks({leading: true});
+	const tree = this.parseBlankLineBlocks({leading: true, root: true});
 	while(this.pos < this.sourceLength) {
 		tree.push.apply(tree,this.parseBlock());
 		tree.push.apply(tree,this.parseBlankLineBlocks());
