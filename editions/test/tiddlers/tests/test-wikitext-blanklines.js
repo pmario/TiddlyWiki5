@@ -97,6 +97,13 @@ describe("Wikitext blank line preservation", function() {
 		expect(bodyRules("<<<\n\nfoo\n<<<", htmlBody)).toEqual(["blankline", "parseblock"]);
 	});
 
+	it("should mark only the first blank line of the whole text as leading", function() {
+		// A serializer doubles the newline of a leading blank line; inside a container the marker line already ended
+		expect(parse("\n\nA")[0].isLeadingBlankLine).toBe(true);
+		expect(parse("<<<\n\n\nfoo\n<<<")[0].children[0].isLeadingBlankLine).toBe(false);
+		expect(parse("<div>\n\n\nfoo\n</div>")[0].children[0].isLeadingBlankLine).toBe(false);
+	});
+
 	it("should preserve trailing empty paragraphs", function() {
 		expect(paragraphCount("A\n\n\n")).toBe(2);
 		expect(serialize("A\n\n\n")).toBe("A\n\n\n");
