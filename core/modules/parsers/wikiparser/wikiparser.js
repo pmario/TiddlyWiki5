@@ -311,6 +311,17 @@ WikiParser.prototype.parseBlankLineBlocks = function(options) {
 };
 
 /*
+Skip the line end at the parse position, e.g. the one closing an open tag line whose blank line switches the content to block mode
+*/
+WikiParser.prototype.skipLineEnd = function() {
+	var lineEndRegExp = /[^\S\n\r]*\r?\n/y;
+	lineEndRegExp.lastIndex = this.pos;
+	if(lineEndRegExp.test(this.source)) {
+		this.pos = lineEndRegExp.lastIndex;
+	}
+};
+
+/*
 Some block rules consume trailing whitespace internally. Recover extra blank lines
 from the gap between the parse tree node end and the parser position.
 */

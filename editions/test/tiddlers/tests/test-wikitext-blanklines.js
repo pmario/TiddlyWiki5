@@ -71,6 +71,20 @@ describe("Wikitext blank line preservation", function() {
 		expect(listThenMacro.map(function(node) { return node.rule; })).toEqual(["list", "blankline", "blankline", "macrocallblock"]);
 	});
 
+	it("should not count the blank line that opens a block body", function() {
+		function bodyRules(text, getBody) {
+			return getBody(parse(text)[0]).map(function(node) { return node.rule; });
+		}
+		var htmlBody = function(node) { return node.children; },
+			ifBody = function(node) { return node.children[0].children; };
+		expect(bodyRules("<div>\n\nfoo\n</div>", htmlBody)).toEqual(["parseblock"]);
+		expect(bodyRules("<div>\n\n\nfoo\n</div>", htmlBody)).toEqual(["blankline", "parseblock"]);
+		expect(bodyRules("<%if [[x]]%>\n\nfoo\n<%endif%>", ifBody)).toEqual(["parseblock"]);
+		expect(bodyRules("<%if [[x]]%>\n\n\nfoo\n<%endif%>", ifBody)).toEqual(["blankline", "parseblock"]);
+		// The quote block's cite run leaves the marker's line end in place, so the count is right without a skip
+		expect(bodyRules("<<<\n\nfoo\n<<<", htmlBody)).toEqual(["blankline", "parseblock"]);
+	});
+
 	it("should preserve trailing empty paragraphs", function() {
 		expect(paragraphCount("A\n\n\n")).toBe(2);
 		expect(serialize("A\n\n\n")).toBe("A\n\n\n");
