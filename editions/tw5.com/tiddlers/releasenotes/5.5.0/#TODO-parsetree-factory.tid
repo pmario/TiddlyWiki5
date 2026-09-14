@@ -1,0 +1,12 @@
+change-category: plugin
+change-type: feature
+created: 20260914150000000
+description: Added a node factory and classification helpers for WikiText parse trees to the WikiText Serialize plugin
+github-contributors: pmario
+github-links: https://github.com/TiddlyWiki/TiddlyWiki5/pull/#TODO
+modified: 20260914150000000
+release: 5.5.0
+tags: $:/tags/ChangeNote
+title: $:/changenotes/5.5.0/#TODO-parsetree-factory
+
+Added `$tw.utils.wikitextParseTree` to the [[WikiText Serialize Plugin]]: a node factory for editors that write WikiText and classification helpers for editors that read it, so an editor never spells a rule name or tag itself. A link around formatted text now serializes as `<$link>` or `<a>` instead of `[[undefined|...]]`.

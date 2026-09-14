@@ -1,0 +1,52 @@
+title: $:/plugins/tiddlywiki/wikitext-serialize/readme
+
+This plugin turns a WikiText parse tree back into WikiText: `$tw.utils.serializeWikitextParseTree(tree, options)`. With `options.source`, the text the tree was parsed from, node positions reproduce the original formatting byte for byte; without it every rule rebuilds its syntax from the tree alone.
+
+!! Building trees: `$tw.utils.wikitextParseTree`
+
+An editor that writes WikiText builds its parse tree with the factory instead of spelling rule names and tags. Every node carries exactly what the serializer needs and no positions. The "Used in" column opens the ProseMirror plugin's converter that calls the function, when that plugin is installed; the test `test-wikitext-parsetree-factory.js` shows every function with the text it produces.
+
+```
+var f = $tw.utils.wikitextParseTree;
+$tw.utils.serializeWikitextParseTree([
+	f.heading(1, [f.text("Title")]),
+	f.paragraph([f.text("Some "), f.emphasis("bold", [f.text("text")]), f.hardBreak(), f.text("next line")]),
+	f.list("ul", [f.listItem([f.text("one")]), f.listItem([f.text("two")])])
+]);
+// "! Title\n\nSome ''text''  \\\nnext line\n\n* one\n* two"
+```
+
+|!Function |!Node |!Used in |
+|`text(value)` |a text node |[[from/text.js|$:/plugins/tiddlywiki/prosemirror/ast/from/text.js]] |
+|`paragraph(children)`, `blankLine()` |a paragraph; an extra empty line |[[from/paragraph.js|$:/plugins/tiddlywiki/prosemirror/ast/from/paragraph.js]] |
+|`heading(level, children, {classes})` |`!` to `!!!!!!` |[[from/heading.js|$:/plugins/tiddlywiki/prosemirror/ast/from/heading.js]] |
+|`list(kind, items)`, `listItem(children, {classes})` |`*` or `#` lists; a nested list goes into an item's children |[[from/list.js|$:/plugins/tiddlywiki/prosemirror/ast/from/list.js]] |
+|`definitionList(children)`, `definitionTerm(children)`, `definitionDescription(children)` |`;` and `:` |[[from/definition-list.js|$:/plugins/tiddlywiki/prosemirror/ast/from/definition-list.js]] |
+|`codeBlock(code, language)` |a fenced code block |[[from/code-block.js|$:/plugins/tiddlywiki/prosemirror/ast/from/code-block.js]] |
+|`quoteBlock(children, {cite, classes})` |`<<<` with an optional closing citation |[[from/blockquote.js|$:/plugins/tiddlywiki/prosemirror/ast/from/blockquote.js]] |
+|`table(rows, {caption, classes})`, `tableRow(cells)`, `tableCell(children, {header, align, valign, colspan, rowspan})` |a table |[[from/table.js|$:/plugins/tiddlywiki/prosemirror/ast/from/table.js]] |
+|`horizontalRule()` |`---` |[[from/hard-breaks.js|$:/plugins/tiddlywiki/prosemirror/ast/from/hard-breaks.js]] |
+|`hardBreak()` |two spaces and a backslash before the line end; needs the hard-line-breaks plugin |[[from/hard-breaks.js|$:/plugins/tiddlywiki/prosemirror/ast/from/hard-breaks.js]] |
+|`htmlBreak()` |`<br>`, the only break a table cell can hold |[[from/table.js|$:/plugins/tiddlywiki/prosemirror/ast/from/table.js]] |
+|`hardLineBreaksRegion(lines)` |a `"""` region; lines are arrays of inline nodes |[[from/hard-breaks.js|$:/plugins/tiddlywiki/prosemirror/ast/from/hard-breaks.js]] |
+|`emphasis(kind, children)` |bold, italic, underscore, strikethrough, superscript, subscript or code |[[from/text.js|$:/plugins/tiddlywiki/prosemirror/ast/from/text.js]] |
+|`link(target, children)`, `externalLink(url, children)` |`[[...]]` and `[ext[...]]`; formatted text gives `<$link>` or `<a>` |[[from/text.js|$:/plugins/tiddlywiki/prosemirror/ast/from/text.js]] |
+|`image(source, {tooltip, width, height, classes})` |`[img[...]]` |[[from/image.js|$:/plugins/tiddlywiki/prosemirror/ast/from/image.js]] |
+|`macroCall(name, params, {block})` |`<<name ...>>`; params are strings or `{name, value, quoted}` |[[from/paragraph.js|$:/plugins/tiddlywiki/prosemirror/ast/from/paragraph.js]] |
+|`widget(tag, attributes, children, {block, selfClosing, blockContent})` |a widget or HTML element; `blockContent` writes the blank line after the open tag |[[from/image.js|$:/plugins/tiddlywiki/prosemirror/ast/from/image.js]] |
+|`opaque(sourceText, {block})` |text written verbatim |[[from/pragma.js|$:/plugins/tiddlywiki/prosemirror/ast/from/pragma.js]] |
+|`pragma(sourceText)` |the pragma nodes parsed from the text |[[from/pragma.js|$:/plugins/tiddlywiki/prosemirror/ast/from/pragma.js]] |
+
+!! Reading trees
+
+|!Function |!Result |!Used in |
+|`kindOf(node)` |text, paragraph, blankLine, heading, list, listItem, definitionList, definitionTerm, definitionDescription, codeBlock, quoteBlock, quoteCite, table, tableSection, tableRow, tableCell, tableCaption, horizontalRule, hardBreak, hardLineBreaksRegion, emphasis, link, externalLink, image, macroCall, transclusion, widget, element, pragma, comment, conditional, typedBlock, opaque or unknown |[[to/element.js|$:/plugins/tiddlywiki/prosemirror/ast/to/element.js]] |
+|`emphasisKind(node)`, `headingLevel(node)`, `listKind(node)` |the kind, level or list tag, else null |[[to/marks.js|$:/plugins/tiddlywiki/prosemirror/ast/to/marks.js]] |
+|`regionLines(node)` |the lines of a `"""` region as arrays of inline nodes |[[to/paragraph.js|$:/plugins/tiddlywiki/prosemirror/ast/to/paragraph.js]] |
+|`quoteParts(node)` |`{body, openingCite, closingCite}` |[[to/blockquote.js|$:/plugins/tiddlywiki/prosemirror/ast/to/blockquote.js]] |
+|`listItems(node)` |`{node, children, nested, classes}` per item |[[to/list.js|$:/plugins/tiddlywiki/prosemirror/ast/to/list.js]] |
+|`tableCellOptions(node)` |the options `tableCell` takes, read back from a cell |[[to/table.js|$:/plugins/tiddlywiki/prosemirror/ast/to/table.js]] |
+|`isBlock(node)` |whether the walker writes a blank line after the node |[[to/transclude.js|$:/plugins/tiddlywiki/prosemirror/ast/to/transclude.js]] |
+|`sourceSlice(node, source)` |the exact text of a parsed node, or null |[[to/shared.js|$:/plugins/tiddlywiki/prosemirror/ast/to/shared.js]] |
+
+The plugin is experimental: names may still change.
