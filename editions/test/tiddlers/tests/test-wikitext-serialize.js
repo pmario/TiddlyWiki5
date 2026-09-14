@@ -187,3 +187,56 @@ describe("WikiAST serialization AST-only semantic tests", function () {
 		});
 	});
 });
+
+/*
+Editor-built trees: an editor turns its own document into a parse tree, so
+the nodes carry no positions, no blockPosition and no source. The walker
+must tell blocks by their rule name or isBlock flag, write blankline nodes
+itself and add no line end after a closed block element.
+
+Reproduce in the browser F12 console (any wiki with the wikitext-serialize
+plugin installed, e.g. the test edition):
+
+	$tw.utils.serializeWikitextParseTree([
+		{type: "element", tag: "h1", rule: "heading", attributes: {}, children: [{type: "text", text: "Heading"}]},
+		{type: "element", tag: "p", rule: "parseblock", children: [{type: "text", text: "text"}]}
+	]); // "! Heading\n\ntext"
+*/
+describe("WikiAST serialization of editor-built trees", function () {
+	var serialize = $tw.utils.serializeWikitextParseTree;
+	function text(value) {
+		return {type: "text", text: value};
+	}
+	function paragraph(value) {
+		return {type: "element", tag: "p", rule: "parseblock", children: [text(value)]};
+	}
+	function blankLine() {
+		return {type: "element", tag: "p", rule: "blankline", attributes: {class: {name: "class", type: "string", value: "tc-blankline"}}, children: []};
+	}
+
+	it("should separate blocks told by a block-only rule name or the isBlock flag", function () {
+		expect(serialize([
+			{type: "element", tag: "h1", rule: "heading", attributes: {}, children: [text("Heading")]},
+			{type: "element", tag: "ul", rule: "list", children: [{type: "element", tag: "li", children: [text("one")]}]},
+			{type: "void", isBlock: true, children: [text("<$list filter='x'/>")]},
+			paragraph("text")
+		])).toBe("! Heading\n\n* one\n\n<$list filter='x'/>\n\ntext");
+	});
+
+	it("should write a blankline node as one newline, two at the start of the text", function () {
+		expect(serialize([paragraph("A"), blankLine(), paragraph("B")])).toBe("A\n\n\nB");
+		expect(serialize([blankLine(), paragraph("A")])).toBe("\n\nA");
+		// Inside a container the open tag's line already ended, so no doubling
+		expect(serialize([
+			{type: "element", tag: "div", rule: "html", isBlock: true, blockContent: true, attributes: {}, orderedAttributes: [], children: [blankLine(), paragraph("foo")]}
+		])).toBe("<div>\n\n\nfoo\n</div>");
+	});
+
+	it("should add a trailing line end only after a self-closing block widget", function () {
+		function astOnly(input) {
+			return serialize($tw.wiki.parseText("text/vnd.tiddlywiki",input).tree);
+		}
+		expect(astOnly("<div>\n\nfoo\n</div>")).toBe("<div>\n\nfoo\n</div>");
+		expect(astOnly("<$foo/>\n")).toBe("<$foo/>\n");
+	});
+});
