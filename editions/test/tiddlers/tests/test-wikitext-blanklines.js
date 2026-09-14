@@ -29,7 +29,7 @@ describe("Wikitext blank line preservation", function() {
 
 	it("should keep a single blank line as a paragraph separator", function() {
 		expect(paragraphCount("A\n\nB")).toBe(2);
-		expect(serialize("A\n\nB")).toBe("A\n\nB\n\n");
+		expect(serialize("A\n\nB")).toBe("A\n\nB");
 	});
 
 	it("should leave extra blank lines ignored when disabled", function() {
@@ -57,15 +57,15 @@ describe("Wikitext blank line preservation", function() {
 	it("should preserve extra blank lines as empty paragraphs", function() {
 		expect(paragraphCount("A\n\n\nB")).toBe(3);
 		expect(parse("A\n\n\nB")[1].attributes.class.value).toBe("tc-blankline");
-		expect(serialize("A\n\n\nB")).toBe("A\n\n\nB\n\n");
+		expect(serialize("A\n\n\nB")).toBe("A\n\n\nB");
 		expect(paragraphCount("A\n\n\n\nB")).toBe(4);
-		expect(serialize("A\n\n\n\nB")).toBe("A\n\n\n\nB\n\n");
+		expect(serialize("A\n\n\n\nB")).toBe("A\n\n\n\nB");
 	});
 
 	it("should preserve extra blank lines after non-paragraph blocks", function() {
 		var listThenParagraph = parse("* one\n* two\n\n\n\nB");
 		expect(listThenParagraph.map(function(node) { return node.rule; })).toEqual(["list", "blankline", "blankline", "parseblock"]);
-		expect(serialize("* one\n* two\n\n\n\nB")).toBe("* one\n* two\n\n\n\nB\n\n");
+		expect(serialize("* one\n* two\n\n\n\nB")).toBe("* one\n* two\n\n\n\nB");
 
 		var listThenMacro = parse("* one\n* two\n\n\n\n<<now YYYY>>");
 		expect(listThenMacro.map(function(node) { return node.rule; })).toEqual(["list", "blankline", "blankline", "macrocallblock"]);
@@ -78,13 +78,13 @@ describe("Wikitext blank line preservation", function() {
 
 	it("should not turn a single leading newline into an empty paragraph", function() {
 		expect(paragraphCount("\nA")).toBe(1);
-		expect(serialize("\nA")).toBe("A\n\n");
+		expect(serialize("\nA")).toBe("A");
 	});
 
 	it("should preserve leading empty paragraphs when there are two or more leading newlines", function() {
 		expect(paragraphCount("\n\nA")).toBe(2);
-		expect(serialize("\n\nA")).toBe("\n\nA\n\n");
+		expect(serialize("\n\nA")).toBe("\n\nA");
 		expect(paragraphCount("\n\n\nA")).toBe(3);
-		expect(serialize("\n\n\nA")).toBe("\n\n\nA\n\n");
+		expect(serialize("\n\n\nA")).toBe("\n\n\nA");
 	});
 });

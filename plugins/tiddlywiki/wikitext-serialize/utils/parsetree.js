@@ -27,9 +27,27 @@ options.source: the wikitext the tree was parsed from; when present, node
 positions are used to reproduce the original formatting, e.g. quoting styles.
 */
 /*
+Names of the wiki rules that only ever parse at block level, e.g. heading
+or list; a synthesized node with such a rule name is a block by construction
+*/
+var blockOnlyRules = null;
+function getBlockOnlyRules() {
+	if(!blockOnlyRules) {
+		blockOnlyRules = Object.create(null);
+		$tw.modules.forEachModuleOfType("wikirule",function(title,module) {
+			if(module.name && module.types && module.types.block && !module.types.inline && !module.types.pragma) {
+				blockOnlyRules[module.name] = true;
+			}
+		});
+	}
+	return blockOnlyRules;
+}
+
+/*
 A block node needs a separator towards a following sibling. Annotated trees
 carry blockPosition; paragraphs signal it through their rule name; trees
-from an unannotated parser fall back to isBlock plus the rule name suffix.
+from an unannotated parser or another editor fall back to isBlock, then to
+the rule name.
 */
 function isBlockNode(node) {
 	if(!node || typeof node !== "object") {
@@ -41,7 +59,13 @@ function isBlockNode(node) {
 	if(node.rule === "parseblock") {
 		return true;
 	}
-	return node.isBlock === true || (typeof node.rule === "string" && node.rule !== "commentblock" && node.rule.slice(-5) === "block");
+	if(node.isBlock === true) {
+		return true;
+	}
+	if(typeof node.rule !== "string") {
+		return false;
+	}
+	return getBlockOnlyRules()[node.rule] === true || (node.rule !== "commentblock" && node.rule.slice(-5) === "block");
 }
 
 exports.serializeWikitextParseTree = function(tree,options) {
@@ -50,19 +74,28 @@ exports.serializeWikitextParseTree = function(tree,options) {
 	initSerializers(Parser);
 	var serializers = Parser.prototype.serializers;
 	// A single closure keeps options bound across rules that only know the (tree,serialize) signature
-	function serialize(tree) {
+	var depth = 0;
+	function serialize(tree,index) {
 		var output = [];
 		if($tw.utils.isArray(tree)) {
+			depth++;
 			$tw.utils.each(tree,function(node,index) {
-				output.push(serialize(node));
+				output.push(serialize(node,index));
 				// The walker owns the separator between block siblings; rule
 				// serializers emit their own syntax only
 				if(index < tree.length - 1 && isBlockNode(node)) {
 					output.push("\n\n");
 				}
 			});
+			depth--;
 		} else if(tree) {
-			if(tree.type === "text" && !tree.rule) {
+			if(tree.rule === "blankline") {
+				// An empty paragraph from the preserveBlankLines parser option is
+				// one extra line, or two when it opens the text, since a single
+				// leading newline is no blank line; fidelity mode has it in the gaps
+				var leading = index === 0 && depth === 1;
+				output.push(options.source ? "" : (leading ? "\n\n" : "\n"));
+			} else if(tree.type === "text" && !tree.rule) {
 				var text = tree.text;
 				if(options.source && typeof tree.start === "number" && typeof tree.end === "number") {
 					// \whitespace trim eats the edges of text runs but keeps
@@ -98,10 +131,11 @@ exports.serializeWikitextParseTree = function(tree,options) {
 	}
 	if(result === null) {
 		result = serialize(tree);
-		// A trailing block macro call or block widget needs its line end to
-		// stay a block on reparse
-		var last = $tw.utils.isArray(tree) ? tree[tree.length - 1] : tree;
-		if(last && (last.rule === "macrocallblock" || (last.rule === "html" && isBlockNode(last)))) {
+		// A trailing block macro call, or a block widget without a close tag,
+		// needs its line end to stay a block on reparse
+		var last = $tw.utils.isArray(tree) ? tree[tree.length - 1] : tree,
+			needsLineEnd = last && (last.rule === "macrocallblock" || (last.rule === "html" && isBlockNode(last) && (last.isSelfClosing || $tw.config.htmlVoidElements.includes(last.tag))));
+		if(needsLineEnd && result.slice(-1) !== "\n") {
 			result += "\n";
 		}
 	}
