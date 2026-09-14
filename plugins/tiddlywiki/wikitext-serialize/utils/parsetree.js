@@ -26,46 +26,9 @@ the `node.rule` metadata added in `wikiparser.js`.
 options.source: the wikitext the tree was parsed from; when present, node
 positions are used to reproduce the original formatting, e.g. quoting styles.
 */
-/*
-Names of the wiki rules that only ever parse at block level, e.g. heading
-or list; a synthesized node with such a rule name is a block by construction
-*/
-var blockOnlyRules = null;
-function getBlockOnlyRules() {
-	if(!blockOnlyRules) {
-		blockOnlyRules = Object.create(null);
-		$tw.modules.forEachModuleOfType("wikirule",function(title,module) {
-			if(module.name && module.types && module.types.block && !module.types.inline && !module.types.pragma) {
-				blockOnlyRules[module.name] = true;
-			}
-		});
-	}
-	return blockOnlyRules;
-}
-
-/*
-A block node needs a separator towards a following sibling. Annotated trees
-carry blockPosition; paragraphs signal it through their rule name; trees
-from an unannotated parser or another editor fall back to isBlock, then to
-the rule name.
-*/
+// A block node needs a separator towards a following sibling; the test lives with the factory so editors can share it
 function isBlockNode(node) {
-	if(!node || typeof node !== "object") {
-		return false;
-	}
-	if(node.blockPosition !== undefined) {
-		return node.blockPosition;
-	}
-	if(node.rule === "parseblock") {
-		return true;
-	}
-	if(node.isBlock === true) {
-		return true;
-	}
-	if(typeof node.rule !== "string") {
-		return false;
-	}
-	return getBlockOnlyRules()[node.rule] === true || (node.rule !== "commentblock" && node.rule.slice(-5) === "block");
+	return require("$:/plugins/tiddlywiki/wikitext-serialize/utils/parsetree-factory.js").wikitextParseTree.isBlock(node);
 }
 
 exports.serializeWikitextParseTree = function(tree,options) {
