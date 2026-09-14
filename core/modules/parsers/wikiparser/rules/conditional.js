@@ -84,6 +84,8 @@ exports.parseIfClause = function(filterCondition) {
 		// A serializer cannot see the blank line that switches this body to
 		// block mode, so record it
 		listWidget.children[0].blockContent = true;
+		// The marker's own line end is syntax, not a blank line of the body
+		this.parser.skipLineEnd();
 		// Let the terminator claim the newline before the marker, or it is
 		// swallowed into the preceding paragraph text node
 		ex = this.parser.parseBlocksTerminatedExtended("(?:\\r?\\n)?(?:" + reEndString + ")");
@@ -105,6 +107,7 @@ exports.parseIfClause = function(filterCondition) {
 				ex;
 			if(hasLineBreak) {
 				listWidget.children[1].blockContent = true;
+				this.parser.skipLineEnd();
 				ex = this.parser.parseBlocksTerminatedExtended("(?:\\r?\\n)?(?:" + reEndString + ")");
 			} else {
 				var reEnd = new RegExp(reEndString,"mg");

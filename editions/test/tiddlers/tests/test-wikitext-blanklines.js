@@ -71,6 +71,33 @@ describe("Wikitext blank line preservation", function() {
 		expect(listThenMacro.map(function(node) { return node.rule; })).toEqual(["list", "blankline", "blankline", "macrocallblock"]);
 	});
 
+	it("should preserve extra blank lines after blocks that consume their line end", function() {
+		// The block span ends before the line end these rules consume, so the blank run starts inside the consumed part
+		$tw.utils.each([
+			["|a|\n\n\nB", ["table", "blankline", "parseblock"]],
+			["---\n\n\nB", ["horizrule", "blankline", "parseblock"]],
+			["{{X}}\n\n\nB", ["transcludeblock", "blankline", "parseblock"]]
+		], function(testCase) {
+			expect(parse(testCase[0]).map(function(node) { return node.rule; })).toEqual(testCase[1]);
+			expect(serialize(testCase[0])).toBe(testCase[0]);
+		});
+	});
+
+	it("should not count the blank line that opens a block body", function() {
+		function bodyRules(text, getBody) {
+			return getBody(parse(text)[0]).map(function(node) { return node.rule; });
+		}
+		var htmlBody = function(node) { return node.children; },
+			ifBody = function(node) { return node.children[0].children; };
+		expect(bodyRules("<div>\n\nfoo\n</div>", htmlBody)).toEqual(["parseblock"]);
+		expect(bodyRules("<div>\n\n\nfoo\n</div>", htmlBody)).toEqual(["blankline", "parseblock"]);
+		expect(serialize("<div>\n\n\nfoo\n</div>")).toBe("<div>\n\n\nfoo\n</div>");
+		expect(bodyRules("<%if [[x]]%>\n\nfoo\n<%endif%>", ifBody)).toEqual(["parseblock"]);
+		expect(bodyRules("<%if [[x]]%>\n\n\nfoo\n<%endif%>", ifBody)).toEqual(["blankline", "parseblock"]);
+		expect(bodyRules("<<<\n\nfoo\n<<<", htmlBody)).toEqual(["blankline", "parseblock"]);
+		expect(serialize("<<<\n\nfoo\n<<<")).toBe("<<<\n\nfoo\n<<<");
+	});
+
 	it("should preserve trailing empty paragraphs", function() {
 		expect(paragraphCount("A\n\n\n")).toBe(2);
 		expect(serialize("A\n\n\n")).toBe("A\n\n\n");
