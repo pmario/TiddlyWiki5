@@ -123,6 +123,8 @@ describe("wikitextParseTree factory and classification", function() {
 		// The walker ends a trailing block macro call with its line end, so it stays a block on reparse
 		roundTrip([f.macroCall("now",["YYYY"],{block: true})],"<<now YYYY>>\n");
 		roundTrip([f.paragraph([f.text("at "), f.macroCall("now",[{value: "YYYY", quoted: true}, {name: "tz", value: "a b"}])])],'at <<now "YYYY" tz:"a b">>');
+		// A numeric name is positional, as the parser names them
+		roundTrip([f.paragraph([f.text("at "), f.macroCall("m",[{name: "0", value: "x"}, {name: "k", value: "v", assignmentOperator: ":"}])])],"at <<m x k:v>>");
 	});
 
 	it("should build widgets at block and inline position", function() {

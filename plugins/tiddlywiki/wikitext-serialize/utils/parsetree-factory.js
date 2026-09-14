@@ -270,8 +270,9 @@ api.image = function(source,options) {
 };
 
 /*
-params: strings for positional parameters, or {name, value, quoted} for named
-ones; quoted: true forces quotes on a value that would not need them
+params: strings for positional parameters, or {name, value, quoted,
+assignmentOperator}; a numeric name is positional too; quoted: true forces
+quotes on a value that would not need them
 */
 api.macroCall = function(name,params,options) {
 	options = options || {};
@@ -282,14 +283,15 @@ api.macroCall = function(name,params,options) {
 	},{$variable: name});
 	var position = 0;
 	$tw.utils.each(params || [],function(param) {
-		var named = param && typeof param === "object" && param.name !== undefined,
+		var isObject = param && typeof param === "object",
+			named = isObject && param.name !== undefined && !(parseInt(param.name,10) >= 0),
 			attr;
 		if(named) {
-			attr = attribute(param.name,param.value,{quoted: param.quoted, assignmentOperator: ":"});
+			attr = attribute(param.name,param.value,{quoted: param.quoted, assignmentOperator: param.assignmentOperator || ":"});
 		} else {
-			var value = param && typeof param === "object" ? param.value : param,
-				quoted = param && typeof param === "object" ? param.quoted : undefined;
-			attr = attribute(String(position),value,{quoted: quoted, isPositional: true});
+			var value = isObject ? param.value : param,
+				quoted = isObject ? param.quoted : undefined;
+			attr = attribute(isObject && param.name !== undefined ? param.name : String(position),value,{quoted: quoted, isPositional: true});
 			position++;
 		}
 		node.attributes[attr.name] = attr;
