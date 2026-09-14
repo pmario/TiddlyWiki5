@@ -164,8 +164,12 @@ if(!$tw.browser) {
 
 		it("should round-trip external link", () => {
 			const input = "Visit [ext[example|https://example.com]]";
-			const result = roundTrip(input);
-			expect(result).toContain("https://example.com");
+			expect(roundTrip(input)).toBe(input);
+		});
+
+		it("should round-trip a link around formatted text", () => {
+			const input = "See <$link to=\"MyTiddler\">''bold''</$link> now";
+			expect(roundTrip(input)).toBe(input);
 		});
 
 		// --- Images ---

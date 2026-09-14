@@ -36,10 +36,7 @@ module.exports = function text(builders, node) {
 		return sortedMarks.reduce((wrappedNode, mark) => {
 			if(mark.type === "link") {
 				const href = mark.attrs && mark.attrs.href || "";
-				const isExternal = /^(?:https?|ftp|mailto):/i.test(href);
-				const displayText = wrappedNode.text || "";
-				// An external link with its own caption keeps the pretty link form
-				if(isExternal && (!displayText || displayText === href)) {
+				if(/^(?:https?|ftp|mailto):/i.test(href)) {
 					return factory.externalLink(href, [wrappedNode]);
 				}
 				return factory.link(href, [wrappedNode]);

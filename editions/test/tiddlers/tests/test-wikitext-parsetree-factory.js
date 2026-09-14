@@ -119,6 +119,12 @@ describe("wikitextParseTree factory and classification", function() {
 		roundTrip([f.paragraph([f.image("pic.png",{tooltip: "tip", width: "10"})])],'[img width="10" [tip|pic.png]]');
 	});
 
+	it("should write a link around formatted text in the widget or html form", function() {
+		// The bracket forms hold plain text only
+		roundTrip([f.paragraph([f.link("Target",[f.emphasis("bold",[f.text("b")])])])],"<$link to=\"Target\">''b''</$link>");
+		roundTrip([f.paragraph([f.externalLink("https://x.y/",[f.emphasis("bold",[f.text("b")])])])],"<a class=\"tc-tiddlylink-external\" href=\"https://x.y/\" target=\"_blank\" rel=\"noopener noreferrer\">''b''</a>");
+	});
+
 	it("should build macro calls with positional and named parameters", function() {
 		// The walker ends a trailing block macro call with its line end, so it stays a block on reparse
 		roundTrip([f.macroCall("now",["YYYY"],{block: true})],"<<now YYYY>>\n");
