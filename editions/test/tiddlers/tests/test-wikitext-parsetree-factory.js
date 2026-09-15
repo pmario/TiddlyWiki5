@@ -169,7 +169,16 @@ describe("wikitextParseTree factory and classification", function() {
 		expect(parse("a ''b'' //c// [[d]] [ext[https://e/]] [img[f]] `g` <br> {{h}} <<i>>")[0].children.map(f.kindOf))
 			.toEqual(["text","emphasis","text","emphasis","text","link","text","externalLink","text","image","text","emphasis","text","hardBreak","text","transclusion","text","macroCall"]);
 		expect(f.emphasisKind(parse("''b''")[0].children[0])).toBe("bold");
+		// A <$text> widget has the node type "text" too
+		expect(f.kindOf(parse('a <$text text="b"/>')[0].children[1])).toBe("widget");
 		expect(f.kindOf(null)).toBe("unknown");
+	});
+
+	it("should tell an element closed by the end of the text from one with a close tag", function() {
+		expect(f.hasImplicitCloseTag(parse('<$let a="x">\n\ntext')[0])).toBe(true);
+		expect(f.hasImplicitCloseTag(parse('<$let a="x">\n\ntext\n\n</$let>')[0])).toBe(false);
+		expect(f.hasImplicitCloseTag(parse('a <$text text="b"/>')[0].children[1])).toBe(false);
+		expect(f.hasImplicitCloseTag(f.widget("$let",{a: "x"},[f.text("t")]))).toBe(false);
 	});
 
 	it("should take a region, a quote block and a list apart", function() {

@@ -48,5 +48,6 @@ $tw.utils.serializeWikitextParseTree([
 |`tableCellOptions(node)` |the options `tableCell` takes, read back from a cell |
 |`isBlock(node)` |whether the walker writes a blank line after the node |
 |`sourceSlice(node, source)` |the exact text of a parsed node, or null |
+|`hasImplicitCloseTag(node)` |whether the end of the text closed the element, e.g. `<$let>` without `</$let>` |
 
 The plugin is experimental: names may still change.
