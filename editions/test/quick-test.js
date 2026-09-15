@@ -2,13 +2,13 @@
 Fast test runner that boots the test edition and runs selected test specs.
 Skips the expensive --rendertiddler step from --build index.
 
-Usage:
-  node quick-test.js [test-files...]
+Usage, from the repository root:
+	node editions/test/quick-test.js [test-files...]
 
 Examples:
-  node quick-test.js                                     # Run ALL specs
-  node quick-test.js test-wikitext-parser                # Run one spec file
-  node quick-test.js test-wikitext-parser test-filters   # Run multiple spec files
+	node editions/test/quick-test.js # Run ALL specs
+	node editions/test/quick-test.js test-wikitext-parser # Run one spec file
+	node editions/test/quick-test.js test-wikitext-parser test-filters # Run multiple spec files
 */
 
 "use strict";
