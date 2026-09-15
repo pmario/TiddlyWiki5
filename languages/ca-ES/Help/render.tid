@@ -23,17 +23,17 @@ També es pot indicar opcionalment un nom i un valor per a una altra variable.
   valor               Valor de variable opcional
 ```
 
-Per omissió, el nom del fitxer es resol en relació amb la subcarpeta `output ' de la carpeta d’edició. L'ordre `--output` es pot utilitzar per dirigir la sortida a una altra carpeta.
+Per omissió, el nom del fitxer es resol en relació amb la subcarpeta `output` de la carpeta d’edició. L'ordre `--output` es pot utilitzar per dirigir la sortida a una altra carpeta.
 
 Notes:
 
 * A la carpeta de sortida no s'esborra cap fitxer existent
 * Es generen automàticament les carpetes que falten a la ruta del nom del fitxer.
-* En referir un tiddler amb espais al seu títol, tingueu cura de fer servir tant les cometes necessàries pel vostre intèrpret d'ordres com els dobles claudàtors de TiddlyWiki: `--render" [[Motovun Jack.jpg]] "`
+* En referir un tiddler amb espais al seu títol, tingueu cura de fer servir tant les cometes necessàries pel vostre intèrpret d'ordres com els dobles claudàtors de TiddlyWiki: `--render "[[Motovun Jack.jpg]]"`
 
 * El nom del filtre s'avalua amb els elements seleccionats establerts al títol del tiddler que s'està generant, el que permet que el títol s’utilitzi com a base per calcular el nom del fitxer. Per exemple `[encodeuricomponent[]addprefix[static/]]` s'aplica la codificació URI a cada títol i després afegeix el prefix `static/`
 
-* L'ordre `--render` reemplaça, i és més flexible, que les ordres` --rendertiddler` i `--rendertiddlers`, que estan obsoletes.
+* L'ordre `--render` reemplaça, i és més flexible, que les ordres `--rendertiddler` i `--rendertiddlers`, que estan obsoletes.
 
 Exemples:
 

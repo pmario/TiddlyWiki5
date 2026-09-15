@@ -13,15 +13,15 @@ Desa els tiddlers individuals indicats per un filtre en text cru o en binari als
                      noms de ruta (per omissió: [is[tiddler]])
 ```
 
-Per omissió, el nom del fitxer es resol en relació amb el subcarpeta `output 'de la carpeta d’edició. L'ordre `--output` es pot utilitzar per dirigir la sortida a una altra carpeta.
+Per omissió, el nom del fitxer es resol en relació amb el subcarpeta `output` de la carpeta d’edició. L'ordre `--output` es pot utilitzar per dirigir la sortida a una altra carpeta.
 
 Notes:
 
 * A la carpeta de sortida no s'esborra cap fitxer existent
 * Es generen automàticament les carpetes que falten a la ruta del nom del fitxer.
-* En guardar un tiddler amb espais en el seu títol, tingueu cura de fer servir tant les cometes necessàries pel vostre intèrpret d'ordres com els dobles claudàtors de TiddlyWiki: `--save" [[Motovun Jack.jpg]] "`
+* En guardar un tiddler amb espais en el seu títol, tingueu cura de fer servir tant les cometes necessàries pel vostre intèrpret d'ordres com els dobles claudàtors de TiddlyWiki: `--save "[[Motovun Jack.jpg]]"`
 * El nom del filtre s'avalua amb els elements seleccionats establerts al títol del tiddler que s'està desant, el que permet que el títol s’utilitzi com a base per calcular el nom del fitxer. Per exemple `[encodeuricomponent[]addprefix[static/]]` s'aplica la codificació URI a cada títol i després afegeix el prefix `static/`
-* L'ordre `--save` reemplaça, i és més flexible, que les ordres` --savetiddler` i `--savetiddlers`, que estan obsoletes.
+* L'ordre `--save` reemplaça, i és més flexible, que les ordres `--savetiddler` i `--savetiddlers`, que estan obsoletes.
 
 Exemples:
 
