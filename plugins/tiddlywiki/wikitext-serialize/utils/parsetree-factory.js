@@ -382,7 +382,8 @@ api.kindOf = function(node) {
 	if(!node || typeof node !== "object") {
 		return "unknown";
 	}
-	if(node.type === "text") {
+	// A <$text> widget has the node type "text" too, but keeps its tag
+	if(node.type === "text" && !node.tag) {
 		return "text";
 	}
 	var rule = node.rule,
@@ -525,6 +526,11 @@ api.sourceSlice = function(node,source) {
 		return null;
 	}
 	return source.substring(node.start,node.end);
+};
+
+// Whether the end of the text closed an element, e.g. <$let a="x"> without </$let>: the parser records equal close tag positions
+api.hasImplicitCloseTag = function(node) {
+	return !!node && typeof node.closeTagStart === "number" && node.closeTagStart === node.closeTagEnd;
 };
 
 exports.wikitextParseTree = api;

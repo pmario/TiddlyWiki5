@@ -57,8 +57,8 @@ exports.serialize = function(tree,serialize,options) {
 		if(typeof tree.openTagEnd === "number" && typeof tree.closeTagStart === "number") {
 			inner = $tw.utils.serializeStitched({start: tree.openTagEnd, end: tree.closeTagStart, children: tree.children},serialize,{source: source});
 		}
-		// An implicit close tag (closeTagStart equals closeTagEnd) is not written out
-		var hasCloseTag = !(typeof tree.closeTagStart === "number" && tree.closeTagStart === tree.closeTagEnd);
+		// An implicit close tag is not written out
+		var hasCloseTag = !$tw.utils.wikitextParseTree.hasImplicitCloseTag(tree);
 		if(inner === null) {
 			inner = serialize(tree.children || []);
 			if(tree.blockContent) {

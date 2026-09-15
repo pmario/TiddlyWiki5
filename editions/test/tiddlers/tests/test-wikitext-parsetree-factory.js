@@ -90,8 +90,14 @@ describe("wikitextParseTree factory and classification", function() {
 		],"|c|k\n|cap|c\n|!h| r|\n|wide|<|");
 	});
 
-	it("should build the three kinds of hard line break", function() {
+	it("should build a hard break", function() {
+		if(!$tw.modules.titles["$:/plugins/tiddlywiki/hard-line-breaks/ssnl.js"]) {
+			pending("needs the hard-line-breaks plugin");
+		}
 		roundTrip([f.paragraph([f.text("a"), f.hardBreak(), f.text("b")])],"a  \\\nb");
+	});
+
+	it("should build an html break and a hard line break region", function() {
 		roundTrip([f.paragraph([f.text("a"), f.htmlBreak(), f.text("b")])],"a<br>b");
 		roundTrip([f.paragraph([f.hardLineBreaksRegion([[f.text("line one")],[f.text("line two")]])])],'"""\nline one\nline two\n"""');
 	});
@@ -163,7 +169,16 @@ describe("wikitextParseTree factory and classification", function() {
 		expect(parse("a ''b'' //c// [[d]] [ext[https://e/]] [img[f]] `g` <br> {{h}} <<i>>")[0].children.map(f.kindOf))
 			.toEqual(["text","emphasis","text","emphasis","text","link","text","externalLink","text","image","text","emphasis","text","hardBreak","text","transclusion","text","macroCall"]);
 		expect(f.emphasisKind(parse("''b''")[0].children[0])).toBe("bold");
+		// A <$text> widget has the node type "text" too
+		expect(f.kindOf(parse('a <$text text="b"/>')[0].children[1])).toBe("widget");
 		expect(f.kindOf(null)).toBe("unknown");
+	});
+
+	it("should tell an element closed by the end of the text from one with a close tag", function() {
+		expect(f.hasImplicitCloseTag(parse('<$let a="x">\n\ntext')[0])).toBe(true);
+		expect(f.hasImplicitCloseTag(parse('<$let a="x">\n\ntext\n\n</$let>')[0])).toBe(false);
+		expect(f.hasImplicitCloseTag(parse('a <$text text="b"/>')[0].children[1])).toBe(false);
+		expect(f.hasImplicitCloseTag(f.widget("$let",{a: "x"},[f.text("t")]))).toBe(false);
 	});
 
 	it("should take a region, a quote block and a list apart", function() {

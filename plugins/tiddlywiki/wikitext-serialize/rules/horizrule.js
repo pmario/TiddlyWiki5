@@ -8,7 +8,9 @@ module-type: wikiruleserializer
 
 exports.name = "horizrule";
 
-exports.serialize = function(tree,serialize) {
-	// The dash count stays normalized by choice
-	return "---";
+exports.serialize = function(tree,serialize,options) {
+	options = options || {};
+	// The source keeps the written dash count, e.g. -----; a tree without it gets three dashes
+	var slice = $tw.utils.serializeFromSource(tree,{source: options.source, fragments: ["---"]});
+	return slice !== null ? slice.replace(/\r?\n$/,"") : "---";
 };
