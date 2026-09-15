@@ -13,13 +13,13 @@ Compares the standard interactive <<.def "tabs">> macro with `<<.def "static-tab
 +
 title: Output
 
-;Interactive tabs (default)
+''Interactive tabs (default)''
 
 <$transclude $tiddler="StaticTabs" $mode="block"/>
 
 -----
 
-;Static render (the import sees tv-config-static="yes", so tabs become static-tabs; tv-static-tabs-mode forces details)
+''Static render (the import sees tv-config-static="yes", so tabs become static-tabs; tv-static-tabs-mode forces details)''
 
 <$let tv-config-static="yes" tv-static-tabs-mode="details">
 <$importvariables filter="[subfilter{$:/core/config/GlobalImportFilter}]">

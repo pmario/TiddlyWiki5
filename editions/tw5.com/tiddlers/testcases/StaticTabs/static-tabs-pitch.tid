@@ -36,7 +36,7 @@ caption: Meet
 
 !! Meet Static Tabs.
 
-A new way for `<<tabs>>` to render itself. Same macro. Same call. Same tab list. But when the moment is right — when you're publishing, not browsing — every tab unfolds into a beautiful, complete, self-contained section.
+A static stand-in for `<<tabs>>`. Same call. Same tab list. The core macro stays untouched. But when the moment is right — when you're publishing, not browsing — every tab unfolds into a beautiful, complete, self-contained section.
 
 You don't change a thing.
 
@@ -86,7 +86,7 @@ caption: Built for TW
 
 It uses the colour palette. So it themes. It uses `tv-adjust-heading-level`. So it nests. It uses `<details>`. So it prints, accordions, and works without JS.
 
-It is not a plugin. It is not a workaround. It may be a part of `$:/core`.
+It is not a plugin. It is not a workaround. It may be a part of `$:/core`. And the trick scales: tag a static version of any interactive macro with `$:/tags/Global/Static`, and static renders use it too.
 
 +
 title: YouKnow
