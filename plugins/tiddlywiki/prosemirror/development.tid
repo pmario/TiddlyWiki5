@@ -49,10 +49,11 @@ The widget block system provides WYSIWYG rendering for TiddlyWiki widget syntax 
 
 ''Architecture:''
 
-* `widget-block/utils.js` - Widget syntax parser and recognizer
-* `widget-block/nodeview.js` - Custom NodeView implementation for widget rendering
-* `widget-block/plugin.js` - ProseMirror plugins for decoration and node views
-* `widget-block/styles.css` - Visual styling for widget blocks
+* `blocks/widget/utils.js` - Widget syntax parser and recognizer
+* `blocks/widget/nodeview.js` - Custom NodeView implementation for widget rendering
+* `blocks/widget/plugin.js` - ProseMirror plugins for decoration and node views
+* `blocks/widget/actions.js` - Widget block actions
+* `blocks/widget/styles.css` - Visual styling for widget blocks
 
 ''Features Implemented:''
 
