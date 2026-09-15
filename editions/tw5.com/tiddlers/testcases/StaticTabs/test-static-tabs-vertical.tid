@@ -21,8 +21,10 @@ title: Output
 
 -----
 
-;Static-render mode (tv-config-static="yes" auto-delegates; class="tc-vertical" passes through but has no effect on stacked cards)
+;Static render (the import sees tv-config-static="yes", so tabs become static-tabs; class="tc-vertical" passes through but has no effect on stacked cards)
 
 <$let tv-config-static="yes" pitch-class="tc-vertical">
+<$importvariables filter="[subfilter{$:/core/config/GlobalImportFilter}]">
 <$transclude $tiddler="StaticTabs" $mode="block"/>
+</$importvariables>
 </$let>

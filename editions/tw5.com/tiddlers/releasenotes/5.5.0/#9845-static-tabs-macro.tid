@@ -9,5 +9,5 @@ tags: $:/tags/ChangeNote
 title: $:/changenotes/5.5.0/#9845
 type: text/vnd.tiddlywiki
 
-* New `static-tabs` macro renders a tab set as static HTML that works without JavaScript, using collapsible `details` elements by default, with `sections` and `vertical` modes
-* The standard `tabs` macro delegates to `static-tabs` automatically when `tv-config-static` is `yes`, so static site builds get working tabs without template changes
+* New `static-tabs` macro renders a tab set as static HTML that works without JavaScript, using collapsible `details` elements by default, or `sections`
+* Static renders also import tiddlers tagged `$:/tags/Global/Static`, so they can replace an interactive macro there only; the core uses this to render `tabs` as `static-tabs`

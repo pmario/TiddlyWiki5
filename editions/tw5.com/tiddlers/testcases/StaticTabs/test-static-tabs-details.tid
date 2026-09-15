@@ -19,8 +19,10 @@ title: Output
 
 -----
 
-;Static-render mode (tv-config-static="yes" auto-delegates; tv-static-tabs-mode forces details)
+;Static render (the import sees tv-config-static="yes", so tabs become static-tabs; tv-static-tabs-mode forces details)
 
 <$let tv-config-static="yes" tv-static-tabs-mode="details">
+<$importvariables filter="[subfilter{$:/core/config/GlobalImportFilter}]">
 <$transclude $tiddler="StaticTabs" $mode="block"/>
+</$importvariables>
 </$let>

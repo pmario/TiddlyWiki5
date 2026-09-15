@@ -68,7 +68,7 @@ caption: One variable
 
 !! One variable. That's it.
 
-`tv-config-static="yes"` — already set during static-render. Do nothing, and your interactive tabs print themselves into beautiful static HTML. Add a single `<$let>` block, and you turn any page into a printable document.
+`tv-config-static="yes"` — already set during static-render. Do nothing, and your interactive tabs print themselves into beautiful static HTML. Static renders import tiddlers tagged `$:/tags/Global/Static`, and that is where `<<tabs>>` becomes `<<static-tabs>>`.
 
 That's the whole API.
 
